@@ -1,0 +1,1 @@
+# BSCH2-semestralni-prace

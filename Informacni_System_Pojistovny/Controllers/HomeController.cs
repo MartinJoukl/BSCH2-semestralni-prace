@@ -1,4 +1,5 @@
 ﻿using Informacni_System_Pojistovny.Models;
+using Informacni_System_Pojistovny.Models.Dao.BlogPostApi;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,6 +16,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         public IActionResult Index()
         {
+            Db db = new Db();
             return View();
         }
 

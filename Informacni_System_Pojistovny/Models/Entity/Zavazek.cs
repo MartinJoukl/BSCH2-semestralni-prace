@@ -8,6 +8,6 @@
         public int Vyse { get; set; }
         public DateTime DatumSplaceni { get; set; }
         public string Popis { get; set; }
-        public PojistnaUdalost PojistnaUdalost { get; set; };
+        public PojistnaUdalost PojistnaUdalost { get; set; }
     }
 }

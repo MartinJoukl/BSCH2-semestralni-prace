@@ -12,12 +12,12 @@
             "USER ID=xxx; " +
             "password=xxx; " +
             "Pooling = False;" +
-            "Connection Timeout=120;";
+            "Connection Timeout=5000;";
             public OracleConnection Connection { get; }
-
             public Db()
             {
                 OracleConnection conn = new OracleConnection(connString);
+
                 conn.Open();
                 Console.WriteLine(conn.State);
                 conn.Dispose();

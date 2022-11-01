@@ -7,6 +7,6 @@
         public List<HistorieClenstvi> HistorieClenstvi { get; set; } = new List<HistorieClenstvi>();
         public List<Adresa> Adresy { get; set; } = new List<Adresa>();
         public List<PojistnaUdalost> PojistneUdalosti { get; set; } = new List<PojistnaUdalost>();
-        //public List<Pojistka> pojistky { get; set; }
+        public List<Pojistka> Pojistky { get; set; }
     }
 }

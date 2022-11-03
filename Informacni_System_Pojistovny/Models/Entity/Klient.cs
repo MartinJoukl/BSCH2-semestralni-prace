@@ -1,6 +1,6 @@
 ﻿namespace Informacni_System_Pojistovny.Models.Entity
 {
-    public abstract class Klient
+    public class Klient
     {
         public int KlientId { get; set; }
         public bool Stav { get; set; }

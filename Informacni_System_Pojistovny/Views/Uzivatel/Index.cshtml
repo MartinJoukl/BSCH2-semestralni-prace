@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Uzivatel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <th>Mail</th>
+            <th>Jméno</th>
+            <th>Příjmení</th>
+            <th>Úroveň oprávnění</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td>
+                        @item.ID
+                    </td>
+                    <td>
+                        @item.Mail
+                    </td>
+                    <td>
+                        @item.Jmeno
+                    </td>
+                    <td>
+                        @item.Prijmeni
+                    </td>
+                    <td>
+                    @item.UrovenOpravneni
+                    </td>
+                    <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

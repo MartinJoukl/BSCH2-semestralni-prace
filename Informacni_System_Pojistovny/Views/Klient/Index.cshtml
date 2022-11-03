@@ -1,0 +1,93 @@
+﻿@using Informacni_System_Pojistovny.Models.Entity
+@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Klient>
+
+@{
+    ViewData["Title"] = "Správa klientů";
+}
+
+<h1>View</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.KlientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stav)
+            </th>
+            <th>
+                Ičo
+            </th>
+            <th>
+                Jméno
+            </th>
+            <th>
+                Příjmení
+            </th>
+            <th>
+                Rodné číslo
+            </th>
+            <th>
+                Telefon
+            </th>
+            <th>
+                Email
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var klient in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => klient.KlientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => klient.Stav)
+            </td>
+
+            @if (klient.GetType() == typeof(FyzickaOsoba))
+                    {
+                        FyzickaOsoba klientFyz = klient as FyzickaOsoba;
+                        <td>
+                            <!-- Fyz. osoba nema ico -->
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => klientFyz.Jmeno)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => klientFyz.Prijmeni)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => klientFyz.RodneCislo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => klientFyz.Telefon)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => klientFyz.Email)
+                        </td>
+                    } else
+                    {
+                        PravnickaOsoba pravnickaOsoba = (PravnickaOsoba)klient;
+                        @Html.DisplayFor(modelItem => pravnickaOsoba.Ico)
+                        @Html.DisplayFor(modelItem => pravnickaOsoba.Nazev)
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    }
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

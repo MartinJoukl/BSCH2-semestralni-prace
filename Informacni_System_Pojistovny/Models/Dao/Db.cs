@@ -10,11 +10,10 @@
 
             string connString = " Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = fei-sql1.upceucebny.cz)(PORT = 1521))) " +
                 "(CONNECT_DATA = (SERVER = DEDICATED)(SID = IDAS))); User Id = st64134;Password=jouklj;";
-            public OracleConnection Connection { get; }
+            public OracleConnection Connection { get; set; }
             public Db()
             {
-                OracleConnection conn = new OracleConnection(connString);
-                conn.Open();
+                Connection = new OracleConnection(connString);
             }
 
             public void Dispose() => Connection.Dispose();

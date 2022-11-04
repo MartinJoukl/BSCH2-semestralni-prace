@@ -1,0 +1,76 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.KlientCreateModel
+
+
+@{
+    ViewData["Title"] = "Vytvoření klienta";
+}
+<h1>Vytvoření nového klienta</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="radio" name="typOsoby" value="Fo" checked/> Fyzická osoba 
+                <input type="radio" name="typOsoby" value="Po"/> Právnická oboba
+             </div>
+            <!-- Pokud se jedna o fyzickou osobu -->
+            <div id="fyzO">
+                <div class="form-group">
+                    <label asp-for="Jmeno" class="control-label">Jméno</label>
+                    <input asp-for="Jmeno" class="form-control" />
+                    <span asp-validation-for="Jmeno" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Prijmeni" class="control-label">Přijmení</label>
+                    <input asp-for="Prijmeni" class="form-control" />
+                    <span asp-validation-for="Prijmeni" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RodneCislo" class="control-label">Rodné číslo</label>
+                    <input asp-for="RodneCislo" class="form-control" />
+                    <span asp-validation-for="RodneCislo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefon" class="control-label"></label>
+                    <input asp-for="Telefon" class="form-control" />
+                    <span asp-validation-for="Telefon" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <!-- Pokud se jedna o pravnickou osobu -->
+            <div id="pravO" class="noDisplay">
+                <div class="form-group">
+                    <label asp-for="Ico" class="control-label">Ičo</label>
+                    <input asp-for="Ico" class="form-control" />
+                    <span asp-validation-for="Ico" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Nazev" class="control-label">Název</label>
+                    <input asp-for="Nazev" class="form-control" />
+                    <span asp-validation-for="Nazev" class="text-danger"></span>
+                </div>
+            </div>
+
+            <input type="hidden" name="zvolenyTypOsoby" value="F"/>
+
+            <div class="form-group">
+                <input type="submit" value="Vytvořit klienta" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Zpět na přehled klientů</a>
+</div>
+
+<script src="~/js/createNewClient.js" asp-append-version="true"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

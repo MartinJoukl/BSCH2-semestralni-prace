@@ -32,6 +32,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             try
             {
+                String s = collection["jmeno"];
                 return RedirectToAction(nameof(Index));
             }
             catch

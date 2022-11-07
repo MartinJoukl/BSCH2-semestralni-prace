@@ -63,5 +63,18 @@ namespace Informacni_System_Pojistovny.Models.Model
             db.Dispose();
             return klients;
         }
+
+        public bool createClient(IFormCollection collection) {
+            db.executeRetrievingCommand("INSERT INTO KLIENTI (STAV, TYP_KLIENTA) VALUES (:ss, :aa)");
+
+            if (collection["zvolenyTypOsoby"].Equals("F"))
+            {
+
+            }
+            else { 
+                
+            }
+            return true;
+        }
     }
 }

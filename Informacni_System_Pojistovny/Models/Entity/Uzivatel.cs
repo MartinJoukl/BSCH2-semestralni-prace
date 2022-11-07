@@ -7,7 +7,8 @@
         public string Prijmeni { get; set; }
         public int UrovenOpravneni { get; set; }
 
-        public string hesloHast { get; set; }
+        public string HesloHash { get; set; }
+        public string Salt { get; set; }
         public int ID { get; set; }
     }
 }

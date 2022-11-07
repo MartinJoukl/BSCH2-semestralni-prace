@@ -11,7 +11,7 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Index()
         {
 
-            return View("Index",UzivatelModel.ListUzivatel());
+            return View("Index", UzivatelModel.ListUzivatel());
         }
 
         // GET: UzivatelController/Details/5
@@ -37,6 +37,23 @@ namespace Informacni_System_Pojistovny.Controllers
                 return RedirectToAction(nameof(Index));
             }
             catch
+            {
+                return View();
+            }
+        }
+
+        // POST: UzivatelController/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(IFormCollection collection)
+        {
+            Uzivatel uzivatel = UzivatelModel.Login(collection["jmeno"], collection["heslo"]);
+            if (uzivatel != null)
+            {
+                HttpContext.Session.SetInt32("authorizedUserId", uzivatel.ID);
+                return RedirectToAction("Index", "HomeController");
+            }
+
             {
                 return View();
             }

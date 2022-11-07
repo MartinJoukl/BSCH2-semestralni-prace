@@ -17,9 +17,19 @@
                 Connection = new OracleConnection(connString);
             }
 
-            public OracleDataReader executeRetrievingCommand(string command)
+            public OracleDataReader executeRetrievingCommand(string command, Dictionary<string, object> parameters = null)
             {
+                parameters = parameters ?? new Dictionary<string, object>();
                 OracleCommand oracleCommand = new OracleCommand(command, Connection);
+                foreach (var paramKey in parameters.Keys)
+                {
+                    oracleCommand.Parameters.Add(paramKey, parameters[paramKey]);
+                }
+                if (parameters.Count > 0)
+                {
+                    oracleCommand.Prepare();
+                }
+
                 Connection.Open();
                 return oracleCommand.ExecuteReader();
             }

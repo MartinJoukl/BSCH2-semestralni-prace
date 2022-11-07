@@ -16,3 +16,23 @@ html {
 body {
   margin-bottom: 60px;
 }
+.nav-item{
+    justify-content: center;
+    align-items: center;
+    display:flex;
+    flex-direction:column;
+}
+.emptyLoginWrapper {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.loginWindow{
+    position: absolute;
+    right:20px;
+    top: 0px;
+    background-color: red;
+}
+.loginButton {
+    position:relative;
+}

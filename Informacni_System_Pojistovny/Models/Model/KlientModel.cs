@@ -64,17 +64,33 @@ namespace Informacni_System_Pojistovny.Models.Model
             return klients;
         }
 
-        public bool createClient(IFormCollection collection) {
-            db.executeRetrievingCommand("INSERT INTO KLIENTI (STAV, TYP_KLIENTA) VALUES (:ss, :aa)");
+        public int CreateClient(IFormCollection collection) {
+            Dictionary<string, object> klientParametry = new Dictionary<string, object>();
+            klientParametry.Add(":typKlienta", collection["zvolenyTypOsoby"]);
+
+            int klientId = db.executeNonQuery("INSERT INTO KLIENTI (STAV, TYP_KLIENTA) VALUES ('a', :typKlienta) returning klient_id into :id", klientParametry);
+
+            Dictionary<string, object> typOsobyParametry = new Dictionary<string, object>();
+            typOsobyParametry.Add(":klient_id", klientId);
 
             if (collection["zvolenyTypOsoby"].Equals("F"))
             {
+                typOsobyParametry.Add(":jmeno", collection["jmeno"]);
+                typOsobyParametry.Add(":prijmeni", collection["prijmeni"]);
+                typOsobyParametry.Add(":rc", collection["rodneCislo"]);
+                typOsobyParametry.Add(":telefon", collection["telefon"]);
+                typOsobyParametry.Add(":email", collection["email"]);
+                db.executeNonQuery("INSERT into fyzicke_osoby (klient_id, jmeno, prijmeni, rodne_cislo, telefon, email) values (:klient_id, :jmeno, :prijmeni, :rc, :telefon, :email) returning klient_id into :id", typOsobyParametry);
+            }
+            else {
+                typOsobyParametry.Add(":nazev", collection["nazev"]);
+                typOsobyParametry.Add(":ico", collection["ico"]);
+                db.executeNonQuery("INSERT into pravnicke_osoby (klient_id, nazev, ico) values (:klient_id, :nazev, :ico) returning klient_id into :id", typOsobyParametry);
+            }
 
-            }
-            else { 
-                
-            }
-            return true;
+            db.Dispose();
+
+            return klientId;
         }
     }
 }

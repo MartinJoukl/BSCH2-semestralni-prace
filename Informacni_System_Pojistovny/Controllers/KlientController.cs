@@ -30,15 +30,15 @@ namespace Informacni_System_Pojistovny.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
-            try
-            {
-                String s = collection["jmeno"];
+            //try {
+                KlientModel model = new KlientModel();
+                model.CreateClient(collection);
                 return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
+            //}
+            /*
+            catch {
                 return View();
-            }
+            }*/
         }
 
         // GET: KlientController/Edit/5

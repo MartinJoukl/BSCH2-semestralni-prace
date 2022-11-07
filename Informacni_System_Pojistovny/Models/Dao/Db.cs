@@ -10,7 +10,7 @@
         {
 
             string connString = " Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = fei-sql1.upceucebny.cz)(PORT = 1521))) " +
-                "(CONNECT_DATA = (SERVER = DEDICATED)(SID = IDAS))); User Id = st64135;Password=xxx;";
+                "(CONNECT_DATA = (SERVER = DEDICATED)(SID = IDAS))); User Id = st64135;Password=opice;";
             public OracleConnection Connection { get; }
             public Db()
             {
@@ -30,7 +30,10 @@
                     oracleCommand.Prepare();
                 }
 
-                Connection.Open();
+                if (Connection != null && Connection.State != System.Data.ConnectionState.Open)
+                {
+                    Connection.Open();
+                }
                 return oracleCommand.ExecuteReader();
             }
 

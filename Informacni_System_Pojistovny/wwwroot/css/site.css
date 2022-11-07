@@ -16,6 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.noDisplay {
+    display: none;
+}
+}
 .nav-item{
     justify-content: center;
     align-items: center;

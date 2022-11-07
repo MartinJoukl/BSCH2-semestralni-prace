@@ -18,4 +18,8 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Content\Images\" />
+  </ItemGroup>
+
 </Project>

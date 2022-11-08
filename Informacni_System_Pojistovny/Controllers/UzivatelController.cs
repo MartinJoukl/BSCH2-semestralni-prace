@@ -2,6 +2,7 @@
 using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -45,15 +46,16 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: UzivatelController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(IFormCollection collection)
+        public ActionResult Login(UzivatelLoginFormModel model)
         {
-            Uzivatel uzivatel = UzivatelModel.Login(collection["jmeno"], collection["heslo"]);
+            bool a = ModelState.IsValid;
+            Uzivatel uzivatel = UzivatelModel.Login(model.Mail, model.Heslo);
             if (uzivatel != null)
             {
                 HttpContext.Session.SetInt32("authorizedUserId", uzivatel.ID);
                 return RedirectToAction("Index", "HomeController");
             }
-
+            else
             {
                 return View();
             }

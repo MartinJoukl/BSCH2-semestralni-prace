@@ -33,10 +33,14 @@ body {
     bottom: 0;
 }
 .loginWindow{
+    background-color: white;
+    border: 1px solid black;
+    padding: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
     position: absolute;
     right:20px;
     top: 0px;
-    background-color: red;
 }
 .loginButton {
     position:relative;

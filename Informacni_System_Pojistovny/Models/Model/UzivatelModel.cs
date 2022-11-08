@@ -72,7 +72,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             HashSalt hashSalt = new HashSalt { Hash = hashPassword, Salt = salt };
             return hashSalt;
         }
-
+        //SO :D
         public static bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
         {
             var saltBytes = Convert.FromBase64String(storedSalt);

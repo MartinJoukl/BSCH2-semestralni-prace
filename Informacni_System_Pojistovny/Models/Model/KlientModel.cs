@@ -1,4 +1,4 @@
-﻿using Informacni_System_Pojistovny.Models.Dao.BlogPostApi;
+﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Oracle.ManagedDataAccess.Client;
 
@@ -6,7 +6,12 @@ namespace Informacni_System_Pojistovny.Models.Model
 {
     public class KlientModel
     {
-        private Db db = new Db();
+        private readonly Db db;
+        public KlientModel(Db db)
+        {
+            this.db = db;
+        }
+
         public List<Klient> klients() {
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob

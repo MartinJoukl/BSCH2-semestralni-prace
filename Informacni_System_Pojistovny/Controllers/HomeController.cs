@@ -1,5 +1,5 @@
 ﻿using Informacni_System_Pojistovny.Models;
-using Informacni_System_Pojistovny.Models.Dao.BlogPostApi;
+using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,10 @@
+using Informacni_System_Pojistovny.Models.Dao;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<Db>();
 
 var app = builder.Build();
 

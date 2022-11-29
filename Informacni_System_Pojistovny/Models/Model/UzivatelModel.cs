@@ -1,4 +1,4 @@
-﻿using Informacni_System_Pojistovny.Models.Dao.BlogPostApi;
+﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;

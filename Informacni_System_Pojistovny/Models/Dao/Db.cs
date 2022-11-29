@@ -4,8 +4,7 @@
     using Oracle.ManagedDataAccess.Client;
     using System;
 
-    namespace BlogPostApi
-    {
+    
         public class Db : IDisposable
         {
 
@@ -63,4 +62,3 @@
             public void Dispose() => Connection.Dispose();
         }
     }
-}

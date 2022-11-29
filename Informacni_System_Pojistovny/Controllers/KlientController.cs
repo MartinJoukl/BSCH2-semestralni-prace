@@ -1,4 +1,5 @@
-﻿using Informacni_System_Pojistovny.Models.Model;
+﻿using Informacni_System_Pojistovny.Models.Dao;
+using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,10 +7,18 @@ namespace Informacni_System_Pojistovny.Controllers
 {
     public class KlientController : Controller
     {
+        private readonly Db _db;
+
+        public KlientController(Db db)
+        {
+            _db = db;
+        }
+
+
         // GET: KlientController
         public ActionResult Index()
         {
-            KlientModel klientModel = new KlientModel();
+            KlientModel klientModel = new KlientModel(_db);
             return View(klientModel.klients());
         }
 
@@ -31,7 +40,7 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Create(IFormCollection collection)
         {
             //try {
-                KlientModel model = new KlientModel();
+                KlientModel model = new KlientModel(_db);
                 model.CreateClient(collection);
                 return RedirectToAction(nameof(Index));
             //}

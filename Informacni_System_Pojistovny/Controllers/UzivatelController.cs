@@ -11,8 +11,8 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: UzivatelController
         public ActionResult Index()
         {
-
-            return View("Index", UzivatelModel.ListUzivatel());
+            UzivatelModel uzivatelModel = new UzivatelModel();
+            return View("Index", uzivatelModel.ListUzivatel());
         }
 
         // GET: UzivatelController/Details/5
@@ -48,17 +48,28 @@ namespace Informacni_System_Pojistovny.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(UzivatelLoginFormModel model)
         {
-            bool a = ModelState.IsValid;
-            Uzivatel uzivatel = UzivatelModel.Login(model.Mail, model.Heslo);
+            UzivatelModel uzivatelModel = new UzivatelModel();
+            Uzivatel uzivatel = null;
+            if (ModelState.IsValid)
+            {
+                uzivatel = uzivatelModel.Login(model.Mail, model.Heslo);
+            }
+            //ASP VALIDACE
             if (uzivatel != null)
             {
-                HttpContext.Session.SetInt32("authorizedUserId", uzivatel.ID);
-                return RedirectToAction("Index", "HomeController");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Home");
             }
+        }
+        // POST: UzivatelController/Login
+        [HttpGet]
+        [ActionName("Login")]
+        public ActionResult LoginGet()
+        {
+            return View();
         }
 
         // GET: UzivatelController/Edit/5

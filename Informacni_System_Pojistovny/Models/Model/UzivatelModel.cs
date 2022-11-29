@@ -8,7 +8,7 @@ namespace Informacni_System_Pojistovny.Models.Model
 {
     public class UzivatelModel
     {
-        public static List<Uzivatel> ListUzivatel()
+        public List<Uzivatel> ListUzivatel()
         {
             List<Uzivatel> list = new List<Uzivatel>();
 
@@ -32,7 +32,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             return list;
         }
 
-        public static Uzivatel? Login(string mail, string password)
+        public Uzivatel? Login(string mail, string password)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add(":mail", mail);
@@ -59,7 +59,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             return null;
         }
         //SO :)
-        public static HashSalt GenerateSaltedHash(int size, string password)
+        public HashSalt GenerateSaltedHash(int size, string password)
         {
             var saltBytes = new byte[size];
             var provider = new RNGCryptoServiceProvider();
@@ -73,7 +73,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             return hashSalt;
         }
         //SO :D
-        public static bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
+        public bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
         {
             var saltBytes = Convert.FromBase64String(storedSalt);
             var rfc2898DeriveBytes = new Rfc2898DeriveBytes(enteredPassword, saltBytes, 10000);

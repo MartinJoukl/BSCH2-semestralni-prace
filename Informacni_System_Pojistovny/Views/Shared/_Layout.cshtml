@@ -25,13 +25,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Klient" asp-action="Index">Sprava klientů</a>
-                        </li>
-                        <li class="nav-item">
-                         <a class="nav-link text-dark" asp-area="" asp-controller="Uzivatel" asp-action="Login">Přihlášení</a>
-                        </li>
+                        @if (Context.User.IsInRole("0"))
+                        {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Klient" asp-action="Index">Správa klientů</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Uzivatel" asp-action="Index">Správa uživatelů</a>
+                                </li>
+                        }
                     </ul>
+                    <partial name="_LoginPartial"/>
                 </div>
             </div>
             <div class="emptyLoginWrapper">

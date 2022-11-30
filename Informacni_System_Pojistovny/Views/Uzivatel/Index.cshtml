@@ -27,10 +27,10 @@
         {
                 <tr>
                     <td>
-                        @item.ID
+                        @item.Id
                     </td>
                     <td>
-                        @item.Mail
+                        @item.Email
                     </td>
                     <td>
                         @item.Jmeno
@@ -44,7 +44,8 @@
                     <td>
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Impersonifikuj", "Impersonifikace", new {  id=item.Id },HttpMethod.Post)
                     </td>
                 </tr>
         }

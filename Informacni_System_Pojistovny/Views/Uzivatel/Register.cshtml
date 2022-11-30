@@ -1,0 +1,53 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.UzivatelRegisterFormModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Registrace nového uživatele</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Jmeno" class="control-label"></label>
+                <input asp-for="Jmeno" class="form-control" />
+                <span asp-validation-for="Jmeno" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Prijmeni" class="control-label"></label>
+                <input asp-for="Prijmeni" class="form-control" />
+                <span asp-validation-for="Prijmeni" class="text-danger"></span>
+            </div>
+                        <div class="form-group">
+                <label asp-for="Mail" class="control-label"></label>
+                <input asp-for="Mail" class="form-control" />
+                <span asp-validation-for="Mail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Heslo" class="control-label"></label>
+                <input asp-for="Heslo" class="form-control" />
+                <span asp-validation-for="Heslo" class="text-danger"></span>
+            </div>
+                        <div class="form-group">
+                <label asp-for="HesloZnovu" class="control-label"></label>
+                <input asp-for="HesloZnovu" class="form-control" />
+                <span asp-validation-for="HesloZnovu" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Registrovat" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-controller="Home">Zpět domů</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

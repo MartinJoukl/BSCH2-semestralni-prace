@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Informacni_System_Pojistovny.Models.Entity
+@using System.Security.Claims
+
+<ul class="navbar-nav">
+    @if (Context.User.Identity.IsAuthenticated)
+{
+    <li class="nav-item">
+                                        <a id="manage" class="nav-link text-dark" asp-route="/Account/Manage/Index" title="Manage">@Context.User.Claims.First(c => c.Type == ClaimTypes.Email).Value</a>
+            @if (Context.Session.GetString("ImpId") != null) {
+                <br/><a id="manage" class="nav-link text-dark" asp-route="/Account/Manage/Index" title="Manage">Impersonifikován jako: @Context.Session.GetString("ImpMail")</a>
+            }
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-controller="Uzivatel" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Odhlásit</button>
+                @if (Context.Session.GetString("ImpId") != null)
+                { 
+                        <br/> <a id="manage" class="nav-link text-dark" asp-controller="Uzivatel" asp-action="ZrusImpersonifikaci" title="Manage">Zrušit impesonifikaci</a>
+                }
+            </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="register" asp-controller="Uzivatel" asp-action="Login">Přihlášení</a>
+    </li>
+    <li class="nav-item">
+                    <a class="nav-link text-dark" id="login" asp-controller="Uzivatel"  asp-action="Register">Registrace</a>
+    </li>
+}
+</ul>

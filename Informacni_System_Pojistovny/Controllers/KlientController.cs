@@ -1,7 +1,9 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -16,6 +18,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
 
         // GET: KlientController
+        [Authorize(Roles = "0")]
         public ActionResult Index()
         {
             KlientModel klientModel = new KlientModel(_db);
@@ -23,12 +26,14 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Details/5
+        [Authorize(Roles = "0")]
         public ActionResult Details(int id)
         {
             return View();
         }
 
         // GET: KlientController/Create
+        [Authorize(Roles = "0")]
         public ActionResult Create()
         {
             return View();
@@ -37,6 +42,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: KlientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "0")]
         public ActionResult Create(IFormCollection collection)
         {
             //try {
@@ -51,6 +57,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Edit/5
+        [Authorize(Roles = "0")]
         public ActionResult Edit(int id)
         {
             return View();
@@ -59,6 +66,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: KlientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "0")]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             try
@@ -72,6 +80,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Delete/5
+        [Authorize(Roles = "0")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -80,6 +89,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: KlientController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "0")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

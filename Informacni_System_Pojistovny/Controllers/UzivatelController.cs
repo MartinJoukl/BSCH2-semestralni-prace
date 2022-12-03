@@ -21,7 +21,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: UzivatelController
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Index()
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
@@ -29,7 +29,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: UzivatelController/Details/5
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Details(int id)
         {
             return View();
@@ -58,6 +58,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 }
                 catch
                 {
+                    ViewData["error"] = "Registrace selhala";
                     return View();
                 }
             }
@@ -79,26 +80,10 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 uzivatel = uzivatelModel.Login(model.Mail, model.Heslo);
             }
+
             if (uzivatel != null)
             {
-                var claims = new List<Claim>
-                 {
-                 new Claim(ClaimTypes.Email, uzivatel.Email),
-                 new Claim(ClaimTypes.Name, uzivatel.Jmeno),
-                 new Claim(ClaimTypes.Surname, uzivatel.Prijmeni),
-                 new Claim(ClaimTypes.Role, uzivatel.UrovenOpravneni.ToString()),
-                 new Claim("CasZmeny", uzivatel.casZmeny.ToString()),
-                 new Claim("Id", uzivatel.Id.ToString())
-                 };
-
-                var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties();
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
+                await LoginUser(uzivatel);
 
                 if (model.RedirectToUrl != null)
                 {
@@ -114,6 +99,29 @@ namespace Informacni_System_Pojistovny.Controllers
                 return LoginGet(model.RedirectToUrl);
             }
         }
+
+        private async Task LoginUser(Uzivatel uzivatel)
+        {
+            var claims = new List<Claim>
+                 {
+                 new Claim(ClaimTypes.Email, uzivatel.Email),
+                 new Claim(ClaimTypes.Name, uzivatel.Jmeno),
+                 new Claim(ClaimTypes.Surname, uzivatel.Prijmeni),
+                 new Claim(ClaimTypes.Role, uzivatel.Role.ToString()),
+                 new Claim("CasZmeny", uzivatel.casZmeny.ToString()),
+                 new Claim("Id", uzivatel.Id.ToString())
+                 };
+
+            var claimsIdentity = new ClaimsIdentity(
+            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties();
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+        }
+
         // POST: UzivatelController/Login
         [HttpGet]
         [ActionName("Login")]
@@ -132,7 +140,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: UzivatelController/Edit/5
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Edit(int id)
         {
             return View();
@@ -141,7 +149,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: UzivatelController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             try
@@ -153,8 +161,8 @@ namespace Informacni_System_Pojistovny.Controllers
                 return View();
             }
         }
-        [Authorize(Roles = "0")]
-        public ActionResult Impersonifikace(int id)
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public async Task<ActionResult> ImpersonifikaceAsync(int id)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
             Uzivatel impersonifikovany = uzivatelModel.Impersonifikuj(id);
@@ -162,30 +170,77 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 throw new Exception("Impersonifikace selhala!");
             }
-            HttpContext.Session.SetString("ImpJmeno", impersonifikovany.Jmeno);
-            HttpContext.Session.SetString("ImpPrijmeni", impersonifikovany.Prijmeni);
-            HttpContext.Session.SetInt32("ImpId", impersonifikovany.Id);
-            HttpContext.Session.SetString("ImpMail", impersonifikovany.Email);
-            HttpContext.Session.SetInt32("ImpOpravneni", impersonifikovany.UrovenOpravneni);
+
+
+            var claims = new List<Claim>
+                 {
+                 new Claim(ClaimTypes.Email, impersonifikovany.Email),
+                 new Claim(ClaimTypes.Name, impersonifikovany.Jmeno),
+                 new Claim(ClaimTypes.Surname, impersonifikovany.Prijmeni),
+                 new Claim(ClaimTypes.Role, impersonifikovany.Role.ToString()),
+                 new Claim("CasZmeny", impersonifikovany.casZmeny.ToString()),
+                 new Claim("Id", impersonifikovany.Id.ToString())
+                 };
+
+            //check if impersonification is already active
+            if (HttpContext.User.Claims.Where((claim) => claim.Type == "originalId").FirstOrDefault()?.Value != null)
+            {
+                //defaultValues of new Claims dont change
+                string originalMail = HttpContext.User.Claims.Where((claim) => claim.Type == "originalMail").First().Value;
+                string originalRole = HttpContext.User.Claims.Where((claim) => claim.Type == "originalRole").First().Value;
+                string originalCasZmeny = HttpContext.User.Claims.Where((claim) => claim.Type == "originalCasZmeny").First().Value;
+                string originalId = HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value;
+
+                claims.Add(new Claim("originalMail", originalMail));
+                claims.Add(new Claim("originalRole", originalRole));
+                claims.Add(new Claim("originalCasZmeny", originalCasZmeny));
+                claims.Add(new Claim("originalId", originalId));
+            }
+            else
+            {
+                //keep originnal claims
+                string originalMail = HttpContext.User.Claims.Where((claim) => claim.Type == ClaimTypes.Email).First().Value;
+                string originalRole = HttpContext.User.Claims.Where((claim) => claim.Type == ClaimTypes.Role).First().Value;
+                string originalCasZmeny = HttpContext.User.Claims.Where((claim) => claim.Type == "CasZmeny").First().Value;
+                string originalId = HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value;
+
+                claims.Add(new Claim("originalMail", originalMail));
+                claims.Add(new Claim("originalRole", originalRole));
+                claims.Add(new Claim("originalCasZmeny", originalCasZmeny));
+                claims.Add(new Claim("originalId", originalId));
+            }
+
+            var claimsIdentity = new ClaimsIdentity(
+            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties();
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
 
             return RedirectToAction(nameof(Index), "Home");
         }
         [HttpGet]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult ZrusImpersonifikaci()
         {
-            HttpContext.Session.Remove("ImpJmeno");
-            HttpContext.Session.Remove("ImpPrijmeni");
-            HttpContext.Session.Remove("ImpId");
-            HttpContext.Session.Remove("ImpMail");
-            HttpContext.Session.Remove("ImpOpravneni");
+            string originalId = HttpContext.User.Claims.Where((claim) => claim.Type == "originalId").First().Value;
+            UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel uzivatel = uzivatelModel.ForceLogin(int.Parse(originalId));
+            if (uzivatel == null)
+            {
+                throw new Exception("Zrušení impersonifikace selhalo!");
+            }
+
+            LoginUser(uzivatel);
 
             return RedirectToAction(nameof(Index), "Home");
         }
 
 
         // GET: UzivatelController/Delete/5
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Delete(int id)
         {
             return View();
@@ -194,7 +249,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: UzivatelController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

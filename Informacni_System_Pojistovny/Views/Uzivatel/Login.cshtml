@@ -27,6 +27,10 @@
             <div class="form-group">
                 <input type="submit" value="Přihlásit se" class="btn btn-primary" />
             </div>
+            @if (ViewData["error"] != null)
+            { 
+                     <span class="text-danger field-validation-error">Přihlášení selhalo. Ujistěte se, že zadáváte správně své přihlašovací údaje.</span>
+            }
         </form>
     </div>
 </div>

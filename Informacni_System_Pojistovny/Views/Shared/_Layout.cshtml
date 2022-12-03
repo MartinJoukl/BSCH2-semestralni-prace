@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,8 +11,20 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+        <div>
+            @if (Context.User.Identity.IsAuthenticated)
+            {
+                Claim claim = Context.User.Claims.Where((claim) => claim.Type == "originalMail").FirstOrDefault();
+                if (claim != null)
+                {
+                    <div  class="impersonification">
+                                         <span>Impersonifikace je aktivní. Originální účet: <b>@claim.Value</b> <a asp-controller="Uzivatel" asp-action="ZrusImpersonifikaci">Zrušit&nbspimpersonifikaci</a></span>
+                    </div>               
+                }
+            }
+        </div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+            <div class="container-fluid text-light">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Informační systém pojišťovny</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -20,19 +33,19 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        @if (Context.User.IsInRole("0"))
+                        @if (Context.User.IsInRole(UzivateleRole.User.ToString()))
                         {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Klient" asp-action="Index">Správa klientů</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Uzivatel" asp-action="Index">Správa uživatelů</a>
-                                </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-light" asp-area="" asp-controller="Klient" asp-action="Index">Správa klientů</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-light" asp-area="" asp-controller="Uzivatel" asp-action="Index">Správa uživatelů</a>
+                                        </li>
                         }
                     </ul>
                     <partial name="_LoginPartial"/>

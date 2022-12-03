@@ -36,6 +36,10 @@
                 <input asp-for="HesloZnovu" class="form-control" />
                 <span asp-validation-for="HesloZnovu" class="text-danger"></span>
             </div>
+            @if (ViewData["error"] != null)
+            { 
+                 <span class="text-danger field-validation-error">Registrace nového uživatele se nezdařila.</span>
+            }
 
             <div class="form-group">
                 <input type="submit" value="Registrovat" class="btn btn-primary" />

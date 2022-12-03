@@ -1,51 +1,151 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .noDisplay {
     display: none;
 }
+
 }
-.nav-item{
+
+.nav-item {
     justify-content: center;
     align-items: center;
-    display:flex;
-    flex-direction:column;
+    display: flex;
+    flex-direction: column;
 }
+
 .emptyLoginWrapper {
     position: absolute;
     right: 0;
     bottom: 0;
 }
-.loginWindow{
+
+.loginWindow {
     background-color: white;
     border: 1px solid black;
     padding: 10px;
     margin-top: 10px;
     box-sizing: border-box;
     position: absolute;
-    right:20px;
+    right: 20px;
     top: 0px;
 }
-.loginWindow form {
-    min-width: 300px;
-}
+
+    .loginWindow form {
+        min-width: 300px;
+    }
 
 .loginButton {
-    position:relative;
+    position: relative;
+}
+
+div.impersonification {
+    text-align: center;
+    padding: 5px 10px;
+    background-color: #15db95;
+    width: 100%;
+    /*color: #0d19a3;*/
+    color: black;
+}
+
+nav.navbar {
+    background-color: #080F5B;
+}
+
+.navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover {
+    color: white;
+}
+
+.text-light {
+    color: white;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white;
+    font-weight: 500;
+}
+
+.navbar-light .navbar-brand {
+    color: white;
+}
+
+a:hover {
+    color: #0D19A3;
+}
+
+a {
+    color: #080F5B;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+button {
+    font-weight: 500;
+}
+
+footer {
+    /* 
+
+       */
+    background-color: #080F5B;
+    color: white;
+}
+
+.text-muted {
+    --bs-text-opacity: 1;
+    color: white !important;
+}
+
+footer a {
+    color: white;
+}
+
+    footer a:hover {
+        color: white;
+    }
+
+.navbar {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+nav .nav-link:hover {
+    background-color: #0D19A3;
+}
+
+@media screen and (max-width: 576px) {
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }

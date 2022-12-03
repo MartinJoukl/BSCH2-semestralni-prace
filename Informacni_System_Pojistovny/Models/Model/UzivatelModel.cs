@@ -25,17 +25,16 @@ namespace Informacni_System_Pojistovny.Models.Model
                     string mail = dr["mail"]?.ToString();
                     string jmeno = dr["jmeno"]?.ToString();
                     string prijmeni = dr["prijmeni"]?.ToString();
-                    string urovenOpravneniString = dr["uroven_opravneni"]?.ToString();
+                    string role = dr["uzivatel_role"]?.ToString();
                     string idString = dr["id"]?.ToString();
                     DateTime.TryParse(dr["cas_zmeny"]?.ToString(), out DateTime casZmeny);
                     int.TryParse(idString, out var id);
-                    int.TryParse(urovenOpravneniString, out var urovenOpravneni);
                     list.Add(new Uzivatel
                     {
                         Email = mail,
                         Jmeno = jmeno,
                         Prijmeni = prijmeni,
-                        UrovenOpravneni = urovenOpravneni,
+                        Role = UzivateleRoleRetriever.GetByName(role),
                         Id = id,
                         casZmeny = casZmeny
                     });
@@ -61,7 +60,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                     HesloHash = recievedResult["heslohash"]?.ToString(),
                     Salt = recievedResult["salt"]?.ToString(),
                     Id = int.Parse(recievedResult["ID"]?.ToString()),
-                    UrovenOpravneni = int.Parse(recievedResult["uroven_opravneni"]?.ToString()),
+                    Role = UzivateleRoleRetriever.GetByName(recievedResult["uzivatel_role"]?.ToString()),
                     casZmeny = casZmeny
                 };
 
@@ -69,6 +68,30 @@ namespace Informacni_System_Pojistovny.Models.Model
                 {
                     return user;
                 }
+            }
+            return null;
+        }
+
+        public Uzivatel? ForceLogin(int id)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add(":id", id);
+            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele where id = :id", parameters);
+            if (recievedResult.Read())
+            {
+                DateTime.TryParse(recievedResult["cas_zmeny"]?.ToString(), out DateTime casZmeny);
+                Uzivatel user = new Uzivatel
+                {
+                    Jmeno = recievedResult["jmeno"]?.ToString(),
+                    Email = recievedResult["mail"]?.ToString(),
+                    Prijmeni = recievedResult["prijmeni"]?.ToString(),
+                    HesloHash = recievedResult["heslohash"]?.ToString(),
+                    Salt = recievedResult["salt"]?.ToString(),
+                    Id = int.Parse(recievedResult["ID"]?.ToString()),
+                    Role = UzivateleRoleRetriever.GetByName(recievedResult["uzivatel_role"]?.ToString()),
+                    casZmeny = casZmeny
+                };
+                return user;
             }
             return null;
         }
@@ -88,7 +111,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                     HesloHash = recievedResult["heslohash"]?.ToString(),
                     Salt = recievedResult["salt"]?.ToString(),
                     Id = int.Parse(recievedResult["ID"]?.ToString()),
-                    UrovenOpravneni = int.Parse(recievedResult["uroven_opravneni"]?.ToString())
+                    Role = UzivateleRoleRetriever.GetByName(recievedResult["uzivatel_role"]?.ToString())
                 };
                 return user;
             }
@@ -114,7 +137,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             parameters.Add(":heslohash", hashSalt.Hash);
             parameters.Add(":salt", hashSalt.Salt);
 
-            return db.ExecuteNonQuery("INSERT into Uzivatele (mail,jmeno,prijmeni,heslohash,salt, uroven_opravneni) Values ( :mail, :jmeno, :prijmeni, :heslohash, :salt ,0) returning id into :id", parameters);
+            return db.ExecuteNonQuery("INSERT into Uzivatele (mail,jmeno,prijmeni,heslohash,salt, uzivatel_role) Values ( :mail, :jmeno, :prijmeni, :heslohash, :salt ,'user') returning id into :id", parameters);
         }
         //SO :)
         public HashSalt GenerateSaltedHash(int size, string password)

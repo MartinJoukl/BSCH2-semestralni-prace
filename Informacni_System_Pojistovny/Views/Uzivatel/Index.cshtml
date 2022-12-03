@@ -21,7 +21,7 @@
             <th>Mail</th>
             <th>Jméno</th>
             <th>Příjmení</th>
-            <th>Úroveň oprávnění</th>
+            <th>Přiřazené role</th>
         </tr>
         @foreach (var item in Model)
         {
@@ -39,7 +39,7 @@
                         @item.Prijmeni
                     </td>
                     <td>
-                    @item.UrovenOpravneni
+                    @item.Role
                     </td>
                     <td>
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |

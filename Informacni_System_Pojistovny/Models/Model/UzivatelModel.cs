@@ -44,6 +44,49 @@ namespace Informacni_System_Pojistovny.Models.Model
             return list;
         }
 
+        public Uzivatel? EditUzivatel(EditOwnProfileModel model)
+        {
+            HashSalt hashSalt;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string updateString = "";
+            string parameterString = "";
+            if (!string.IsNullOrEmpty(model.Mail))
+            {
+                updateString += "mail, ";
+                parameters.Add(":mail", model.Mail);
+                parameterString += ":mail, ";
+            }
+            if (!string.IsNullOrEmpty(model.Jmeno))
+            {
+                updateString += "jmeno, ";
+                parameters.Add(":jmeno", model.Jmeno);
+                parameterString += ":jmeno, ";
+            }
+            if (!string.IsNullOrEmpty(model.Prijmeni))
+            {
+                updateString += "prijmeni, ";
+                parameters.Add(":prijmeni", model.Prijmeni);
+                parameterString += ":prijmeni, ";
+            }
+            if (!string.IsNullOrEmpty(model.Heslo))
+            {
+                updateString += "hashSalt, ";
+                hashSalt = GenerateSaltedHash(100, model.Heslo);
+                parameters.Add(":hashSalt", hashSalt);
+                parameterString += ":hashSalt, ";
+            }
+            updateString = updateString.Trim();
+            parameterString = parameterString.Trim();
+            //deletes ,
+            updateString = updateString.Substring(0, updateString.Length - 2);
+            parameterString = parameterString.Substring(0, updateString.Length - 2);
+
+            db.ExecuteNonQuery("select * from uzivatele", parameters, false);
+            db.Dispose();
+            return null;
+        }
+
         public Uzivatel? Login(string mail, string password)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -96,7 +139,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             return null;
         }
 
-        public Uzivatel? Impersonifikuj(int id)
+        public Uzivatel? GetUzivatel(int id)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add(":id", id);

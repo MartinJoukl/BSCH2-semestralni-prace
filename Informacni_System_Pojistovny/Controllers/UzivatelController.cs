@@ -165,7 +165,7 @@ namespace Informacni_System_Pojistovny.Controllers
         public async Task<ActionResult> ImpersonifikaceAsync(int id)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
-            Uzivatel impersonifikovany = uzivatelModel.Impersonifikuj(id);
+            Uzivatel impersonifikovany = uzivatelModel.GetUzivatel(id);
             if (impersonifikovany == null)
             {
                 throw new Exception("Impersonifikace selhala!");
@@ -185,11 +185,11 @@ namespace Informacni_System_Pojistovny.Controllers
             //check if impersonification is already active
             if (HttpContext.User.Claims.Where((claim) => claim.Type == "originalId").FirstOrDefault()?.Value != null)
             {
-                //defaultValues of new Claims dont change
+                //default values of new Claims dont change
                 string originalMail = HttpContext.User.Claims.Where((claim) => claim.Type == "originalMail").First().Value;
                 string originalRole = HttpContext.User.Claims.Where((claim) => claim.Type == "originalRole").First().Value;
                 string originalCasZmeny = HttpContext.User.Claims.Where((claim) => claim.Type == "originalCasZmeny").First().Value;
-                string originalId = HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value;
+                string originalId = HttpContext.User.Claims.Where((claim) => claim.Type == "originalId").First().Value;
 
                 claims.Add(new Claim("originalMail", originalMail));
                 claims.Add(new Claim("originalRole", originalRole));
@@ -244,6 +244,29 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Delete(int id)
         {
             return View();
+        }
+
+        // GET: UzivatelController/EditOwnProfile
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult EditOwnProfile()
+        {
+            int id = int.Parse(HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value);
+            UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel uzivatel = uzivatelModel.GetUzivatel(id);
+            return View(new EditOwnProfileModel() { Jmeno = uzivatel.Jmeno, Mail = uzivatel.Email, Prijmeni = uzivatel.Prijmeni });
+        }
+
+        // GET: UzivatelController/EditOwnProfile
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [HttpPost]
+        [ActionName("EditOwnProfile")]
+        public ActionResult EditOwnProfilePost(EditOwnProfileModel model)
+        {
+            int id = int.Parse(HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value);
+            UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel uzivatel = uzivatelModel.EditUzivatel(model);
+
+            return View(nameof(EditOwnProfile), new EditOwnProfileModel() { Jmeno = uzivatel.Jmeno, Mail = uzivatel.Email, Prijmeni = uzivatel.Prijmeni });
         }
 
         // POST: UzivatelController/Delete/5

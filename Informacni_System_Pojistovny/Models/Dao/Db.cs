@@ -2,14 +2,13 @@
 {
     using Microsoft.AspNetCore.Http;
     using Oracle.ManagedDataAccess.Client;
-    using System;
 
 
     public class Db : IDisposable
     {
 
         string connString = "Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = fei-sql1.upceucebny.cz)(PORT = 1521))) " +
-            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = IDAS))); User Id = st64135;Password=opice;";
+            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = IDAS))); User Id = st64134;Password=jouklj;";
         public OracleConnection Connection { get; }
         public Db()
         {
@@ -36,10 +35,14 @@
             return oracleCommand.ExecuteReader();
         }
 
-        public int ExecuteNonQuery(string command, Dictionary<string, object> parameters = null, bool returnsId = true)
+        public int ExecuteNonQuery(string command, Dictionary<string, object> parameters = null, bool returnsId = true, bool isProcedure = false)
         {
             parameters = parameters ?? new Dictionary<string, object>();
             OracleCommand oracleCommand = new OracleCommand(command, Connection);
+            if (isProcedure)
+            {
+                oracleCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            }
             foreach (var paramKey in parameters.Keys)
             {
                 oracleCommand.Parameters.Add(paramKey, parameters[paramKey].ToString());

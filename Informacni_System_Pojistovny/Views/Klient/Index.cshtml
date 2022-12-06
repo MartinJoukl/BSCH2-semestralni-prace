@@ -47,11 +47,11 @@
                 @Html.DisplayFor(modelItem => klient.KlientId)
             </td>
             <td>
-                @if (klient.Stav == true)
+                @if (klient.Stav)
                 {
                     @Html.DisplayName("Aktivní")
                 }
-                @if (klient.Stav == false)
+                else
                 {
                     @Html.DisplayName("Neaktivní")
                 }
@@ -92,10 +92,9 @@
                         <td></td>
                         <td></td>
                     }
-
             <td>
-                @Html.ActionLink("Editovat", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Smazat", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Editovat", "Edit", new { id=klient.KlientId }) |
+                @Html.ActionLink(klient.Stav? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=klient.KlientId })
             </td>
         </tr>
 

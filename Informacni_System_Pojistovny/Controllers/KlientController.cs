@@ -1,4 +1,5 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
+using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +23,7 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Index()
         {
             KlientModel klientModel = new KlientModel(_db);
-            return View(klientModel.klients());
+            return View(klientModel.ReadClients());
         }
 
         // GET: KlientController/Details/5
@@ -43,24 +44,36 @@ namespace Informacni_System_Pojistovny.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(KlientCreateModel model, IFormCollection collection)
         {
-            //try {
-                KlientModel model = new KlientModel(_db);
-                model.CreateClient(collection);
+            if (collection["zvolenyTypOsoby"].Equals("F"))
+            {
+                ModelState.Remove("Ico");
+                ModelState.Remove("Nazev");
+            } else {
+                ModelState.Remove("Jmeno");
+                ModelState.Remove("Prijmeni");
+                ModelState.Remove("Telefon");
+                ModelState.Remove("RodneCislo");
+                ModelState.Remove("Email");
+            }
+            if (ModelState.IsValid) {
+                KlientModel klientDb = new KlientModel(_db);
+                klientDb.CreateClient(collection);
                 return RedirectToAction(nameof(Index));
-            //}
-            /*
-            catch {
+            }
+            else {
                 return View();
-            }*/
+            }
         }
 
         // GET: KlientController/Edit/5
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Edit(int id)
         {
-            return View();
+            KlientModel klientDb = new KlientModel(_db);
+            KlientCreateModel klient = new KlientCreateModel();
+            return View(klient);
         }
 
         // POST: KlientController/Edit/5
@@ -83,22 +96,31 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Delete(int id)
         {
-            return View();
+            KlientModel klientDb = new KlientModel(_db);
+            Klient klient = klientDb.GetClient(id);
+
+            if(klient == null) {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(klient);
         }
 
         // POST: KlientController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, KlientCreateModel klient)
         {
             try
             {
+                KlientModel klientDb = new KlientModel(_db);
+                klientDb.ChangeClientStatus(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
     }

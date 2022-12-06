@@ -12,7 +12,57 @@ namespace Informacni_System_Pojistovny.Models.Model
             this.db = db;
         }
 
-        public List<Klient> klients() {
+        public Klient GetClient(int klientId) {
+            Dictionary<string, object> clientIdBinding = new Dictionary<string, object>();
+            clientIdBinding.Add(":klient_id", klientId);
+
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_vsechny_osoby o where o.klient_id = :klient_id", clientIdBinding);
+            if(dr.HasRows)
+            {
+                while(dr.Read())
+                {
+                    string typKlienta = dr["typ_klienta"].ToString();
+                    if (typKlienta.Equals("F")){
+                        FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
+                        fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
+                        fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
+                        fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
+                        string stav = dr["STAV"].ToString();
+                        if (stav != null && stav.Equals("a"))
+                        {
+                            fyzickaOsoba.Stav = true;
+                        }
+                        else
+                        {
+                            fyzickaOsoba.Stav = false;
+                        }
+                        fyzickaOsoba.Email = dr["EMAIL"].ToString();
+                        fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
+                        fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
+                        return fyzickaOsoba;
+                    } else {
+                        PravnickaOsoba pravnickaOsoba = new PravnickaOsoba();
+                        pravnickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
+                        pravnickaOsoba.Nazev = dr["NAZEV"].ToString();
+                        string stav = dr["STAV"].ToString();
+                        if (stav != null && stav.Equals("a"))
+                        {
+                            pravnickaOsoba.Stav = true;
+                        }
+                        else
+                        {
+                            pravnickaOsoba.Stav = false;
+                        }
+                        pravnickaOsoba.Ico = dr["ICO"].ToString();
+                        return pravnickaOsoba;
+                    }
+                }
+            }
+            throw new Exception("Person not found!");
+        }
+
+        public List<Klient> ReadClients() {
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob
             Db db = new Db();
@@ -26,7 +76,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                     fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
                     fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
                     string stav = dr["STAV"].ToString();
-                    if (stav != null && stav.Equals("a"))
+                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
                     {
                         fyzickaOsoba.Stav = true;
                     }
@@ -51,7 +101,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                     pravnickaOsoba.KlientId = int.Parse(dr2["KLIENT_ID"].ToString());
                     pravnickaOsoba.Nazev = dr2["NAZEV"].ToString();
                     string stav = dr2["STAV"].ToString();
-                    if (stav != null && stav.Equals("a"))
+                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
                     {
                         pravnickaOsoba.Stav = true;
                     }
@@ -96,6 +146,14 @@ namespace Informacni_System_Pojistovny.Models.Model
             db.Dispose();
 
             return klientId;
+        }
+
+        public void ChangeClientStatus(int id)
+        {
+            Dictionary<string, object> klientParametry = new Dictionary<string, object>();
+            klientParametry.Add(":id", id);
+            db.ExecuteNonQuery("zmenStavKlienta", klientParametry, false, true);
+            db.Dispose();
         }
     }
 }

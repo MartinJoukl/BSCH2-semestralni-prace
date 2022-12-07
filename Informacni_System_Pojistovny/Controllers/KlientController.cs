@@ -30,7 +30,9 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Details(int id)
         {
-            return View();
+            KlientModel klientDb = new KlientModel(_db);
+            Klient klient = klientDb.GetClient(id);
+            return View(klient);
         }
 
         // GET: KlientController/Create
@@ -72,21 +74,43 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Edit(int id)
         {
             KlientModel klientDb = new KlientModel(_db);
-            KlientCreateModel klient = new KlientCreateModel();
-            return View(klient);
+            KlientCreateModel klient = klientDb.GetEditClient(id);
+            if (klient == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View(klient);
+            }
         }
 
         // POST: KlientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, KlientCreateModel model, IFormCollection collection)
         {
-            try
+            if (collection["zvolenyTypOsoby"].Equals("F"))
             {
+                ModelState.Remove("Ico");
+                ModelState.Remove("Nazev");
+            }
+            else
+            {
+                ModelState.Remove("Jmeno");
+                ModelState.Remove("Prijmeni");
+                ModelState.Remove("Telefon");
+                ModelState.Remove("RodneCislo");
+                ModelState.Remove("Email");
+            }
+            if (ModelState.IsValid)
+            {
+                KlientModel klientDb = new KlientModel(_db);
+                klientDb.RealizeEditClient(model, id, collection["zvolenyTypOsoby"]);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            else
             {
                 return View();
             }

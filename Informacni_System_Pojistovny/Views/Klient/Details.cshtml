@@ -2,36 +2,27 @@
 @model Informacni_System_Pojistovny.Models.Entity.Klient
 
 @{
-    ViewData["Title"] = "Activate or deactivate";
+    ViewData["Title"] = "View";
 }
 
-<h1>                
-    @if (Model.Stav == true)
-    {
-        @Html.DisplayName("Zneaktivnění ")        
-    }
-    @if (Model.Stav == false)
-    {
-        @Html.DisplayName("Zaktivnění ")
-    } 
-klienta</h1>
+<h1>Detail</h1>
 
-<h3>Chcete opravdu zneaktivnit tohoto klienta?</h3>
 <div>
+    <h4>Informace o klientovi</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Stav)
         </dt>
-        <dd class = "col-sm-10">
-                @if (Model.Stav == true)
-                {
-                    @Html.DisplayName("Aktivní")
-                }
-                @if (Model.Stav == false)
-                {
-                    @Html.DisplayName("Neaktivní")
-                }
+        <dd class="col-sm-10">
+            @if (Model.Stav == true)
+            {
+                @Html.DisplayName("Aktivní")
+            }
+            @if (Model.Stav == false)
+            {
+                @Html.DisplayName("Neaktivní")
+            }
         </dd>
 
         @if (Model.GetType() == typeof(FyzickaOsoba))
@@ -84,11 +75,13 @@ klienta</h1>
                 @pravnickaOsoba.Ico
             </dd>
         }
-
     </dl>
-    
-    <form asp-action="Delete">
-        <input type="submit" value="Změnit stav" class="btn btn-danger" /> |
-        <a asp-action="Index">Zpět na přehled klientů</a>
-    </form>
+    <h4>Adresy klienta</h4>
+    <hr />
+    TODO adresy do nejake tabulky?
+
+</div>
+<div>
+    @Html.ActionLink("Upravit klienta", "Edit", new { id = ViewContext.RouteData.Values["id"] }) |
+    <a asp-action="Index">Zpět na přehled klientů</a>
 </div>

@@ -1,0 +1,43 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Adresa
+
+@{
+    ViewData["Title"] = "AddAddressToClient";
+}
+
+<h1>AddAddressToClient</h1>
+
+<h4>Adresa</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddAddressToClient">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AdresaId" class="control-label"></label>
+                <input asp-for="AdresaId" class="form-control" />
+                <span asp-validation-for="AdresaId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CisloPopisne" class="control-label"></label>
+                <input asp-for="CisloPopisne" class="form-control" />
+                <span asp-validation-for="CisloPopisne" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ulice" class="control-label"></label>
+                <input asp-for="Ulice" class="form-control" />
+                <span asp-validation-for="Ulice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

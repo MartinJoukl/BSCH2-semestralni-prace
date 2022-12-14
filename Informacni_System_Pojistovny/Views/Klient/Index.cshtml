@@ -94,6 +94,7 @@
                     }
             <td>
                 @Html.ActionLink("Editovat", "Edit", new { id=klient.KlientId }) |
+                @Html.ActionLink("Detail", "Details", new { id=klient.KlientId }) |
                 @Html.ActionLink(klient.Stav? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=klient.KlientId })
             </td>
         </tr>

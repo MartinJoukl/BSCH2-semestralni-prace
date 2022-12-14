@@ -12,8 +12,8 @@ namespace Informacni_System_Pojistovny.Models.Model
             this.db = db;
         }
 
-        public Klient GetClient(int klientId)
-        {
+        //TODO cist adresy klienta
+        public Klient GetClient(int klientId) {
             Dictionary<string, object> clientIdBinding = new Dictionary<string, object>();
             clientIdBinding.Add(":klient_id", klientId);
 
@@ -71,13 +71,13 @@ namespace Informacni_System_Pojistovny.Models.Model
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from Fyzicke_osoby f JOIN klienti k on f.klient_id = k.klient_id");
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_fyzicke_osoby");
             if (dr.HasRows)
             {
                 while (dr.Read())
                 {
                     FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
-                    fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
+                    fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID_0"].ToString());
                     fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
                     fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
                     string stav = dr["STAV"].ToString();
@@ -97,7 +97,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             }
             dr.Close();
             //SELECT pravnickych osob
-            OracleDataReader dr2 = db.ExecuteRetrievingCommand("select * from Pravnicke_osoby f JOIN klienti k on f.klient_id = k.klient_id");
+            OracleDataReader dr2 = db.ExecuteRetrievingCommand("select * from view_pravnicke_osoby");
             if (dr2.HasRows)
             {
                 while (dr2.Read())
@@ -157,6 +157,62 @@ namespace Informacni_System_Pojistovny.Models.Model
             Dictionary<string, object> klientParametry = new Dictionary<string, object>();
             klientParametry.Add(":id", id);
             db.ExecuteNonQuery("zmenStavKlienta", klientParametry, false, true);
+            db.Dispose();
+        }
+
+        public void RealizeEditClient(KlientCreateModel klient, int id, string typKlienta)
+        {
+            Dictionary<string, object> klientParametry = new Dictionary<string, object>();
+            klientParametry.Add(":v_id", id);
+
+            if (typKlienta.Equals("F"))
+            {
+                klientParametry.Add(":v_jmeno", klient.Jmeno);
+                klientParametry.Add(":v_prijmeni", klient.Prijmeni);
+                klientParametry.Add(":v_rodne_cislo", klient.RodneCislo);
+                klientParametry.Add(":v_telefon", klient.Telefon);
+                klientParametry.Add(":v_email", klient.Email);
+                db.ExecuteNonQuery("zmenitKlientaFO", klientParametry, false, true);
+                db.Dispose();
+            }
+            else {
+                klientParametry.Add(":v_nazev", klient.Nazev);
+                klientParametry.Add(":v_ico", klient.Ico);
+                db.ExecuteNonQuery("zmenitKlientaPO", klientParametry, false, true);
+                db.Dispose();
+            }
+        }
+
+        public KlientCreateModel GetEditClient(int id) {
+            Dictionary<string, object> klientParametry = new Dictionary<string, object>();
+            klientParametry.Add(":id", id);
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("SELECT * FROM view_vsechny_osoby where klient_id = :id", klientParametry);
+
+            KlientCreateModel klientCreateModel = null;
+            if (dr.HasRows)
+            {
+                if (dr.Read())
+                {
+                    klientCreateModel = new KlientCreateModel();
+                    string typKlienta = dr["typ_klienta"].ToString();
+                    if (typKlienta.Equals("F"))
+                    {
+                        klientCreateModel.Jmeno = dr["JMENO"].ToString();
+                        klientCreateModel.Prijmeni = dr["PRIJMENI"].ToString();
+                        klientCreateModel.Email = dr["EMAIL"].ToString();
+                        klientCreateModel.Telefon = dr["TELEFON"].ToString();
+                        klientCreateModel.RodneCislo = dr["RODNE_CISLO"].ToString();
+                    }
+                    else
+                    {
+                        klientCreateModel.Nazev = dr["NAZEV"].ToString();
+                        klientCreateModel.Ico = dr["ICO"].ToString();
+                    }
+                }
+            }
+            db.Dispose();
+            return klientCreateModel;
         }
     }
 }

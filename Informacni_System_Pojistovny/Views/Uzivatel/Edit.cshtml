@@ -1,16 +1,16 @@
-﻿@model Informacni_System_Pojistovny.Models.Model.EditOwnProfileModel
+﻿@model Informacni_System_Pojistovny.Models.Model.EditUserModel
 
 @{
     ViewData["Title"] = "Úprava vlastního profilu";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Úprava vlastního profilu</h1>
+<h1>Úprava profilu uživatele </h1>
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditOwnProfile">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Mail" class="control-label"></label>
@@ -27,11 +27,8 @@
                 <input asp-for="Prijmeni" class="form-control" />
                 <span asp-validation-for="Prijmeni" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label autocomplete="new-password" asp-for="Heslo" class="control-label"></label>
-                <input asp-for="Heslo" class="form-control" />
-                <span asp-validation-for="Heslo" class="text-danger"></span>
-            </div>
+            <input asp-for="Id" hidden class="form-control" />
+
             <div class="form-group">
                 <input type="submit" value="Uložit změny" class="btn btn-primary" />
             </div>
@@ -40,7 +37,7 @@
 </div>
 
 <div>
-    <a asp-controller="Home" asp-action="Index">Zpět na úvodní stránku</a>
+    <a asp-action="Index">Zpět na přehled uživatelů</a>
 </div>
 
 @section Scripts {

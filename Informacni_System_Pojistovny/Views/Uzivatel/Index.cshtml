@@ -1,14 +1,11 @@
 ﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Uzivatel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Přehled uživatelů";
 }
 
-<h1>Index</h1>
+<h1>Přehled uživatelů</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -21,7 +18,7 @@
             <th>Mail</th>
             <th>Jméno</th>
             <th>Příjmení</th>
-            <th>Přiřazené role</th>
+            <th>Přiřazená role</th>
         </tr>
         @foreach (var item in Model)
         {
@@ -42,9 +39,9 @@
                     @item.Role
                     </td>
                     <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.Id }) |
                     @Html.ActionLink("Impersonifikuj", "Impersonifikace", new {  id=item.Id },HttpMethod.Post)
                     </td>
                 </tr>

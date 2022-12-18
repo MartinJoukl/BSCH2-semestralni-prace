@@ -1,22 +1,17 @@
-﻿@model Informacni_System_Pojistovny.Models.Entity.Adresa
+﻿@model Informacni_System_Pojistovny.Models.Model.AdresaInputModel
 
 @{
-    ViewData["Title"] = "AddAddressToClient";
+    ViewData["Title"] = "Přidat adresu";
 }
 
-<h1>AddAddressToClient</h1>
+<h1>Přidat adresu</h1>
 
-<h4>Adresa</h4>
+<h4>AdresaInputModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddAddressToClient">
+        <form asp-action="AddAddress">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="AdresaId" class="control-label"></label>
-                <input asp-for="AdresaId" class="form-control" />
-                <span asp-validation-for="AdresaId" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="CisloPopisne" class="control-label"></label>
                 <input asp-for="CisloPopisne" class="form-control" />
@@ -26,6 +21,11 @@
                 <label asp-for="Ulice" class="control-label"></label>
                 <input asp-for="Ulice" class="form-control" />
                 <span asp-validation-for="Ulice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Psc" class="control-label"></label>
+                <select name="Psc" class="form-control" asp-items="@ViewBag.pscs"></select>
+                <span asp-validation-for="Psc" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

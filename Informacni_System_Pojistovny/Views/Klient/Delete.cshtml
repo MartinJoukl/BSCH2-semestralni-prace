@@ -2,7 +2,7 @@
 @model Informacni_System_Pojistovny.Models.Entity.Klient
 
 @{
-    ViewData["Title"] = "Activate or deactivate";
+    ViewData["Title"] = "Správa stavu klienta";
 }
 
 <h1>                
@@ -16,7 +16,16 @@
     } 
 klienta</h1>
 
-<h3>Chcete opravdu zneaktivnit tohoto klienta?</h3>
+<h3>Chcete opravdu 
+        @if (Model.Stav == true)
+    {
+        @Html.DisplayName("Zneaktivnit ")        
+    }
+    @if (Model.Stav == false)
+    {
+        @Html.DisplayName("Zaktivnit ")
+    } 
+    tohoto klienta?</h3>
 <div>
     <hr />
     <dl class="row">

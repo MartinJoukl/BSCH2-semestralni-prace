@@ -66,7 +66,6 @@ namespace Informacni_System_Pojistovny.Models.Model
         public List<Klient> ReadClients() {
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob
-            Db db = new Db();
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_fyzicke_osoby");
             if (dr.HasRows)
             {
@@ -210,6 +209,45 @@ namespace Informacni_System_Pojistovny.Models.Model
             }
             db.Dispose();
             return klientCreateModel;
+        }
+
+        public bool AddAddressToClient(int klientId, AdresaInputModel adresa) {
+            //PRIDEJ_ADRESU_KLIENTA
+            //v_cislo_popisne NUMBER, v_ulice varchar2, v_psc varchar2, v_klient_id varchar2
+
+            Dictionary<string, object> adresaParametry = new Dictionary<string, object>();
+            adresaParametry.Add(":v_cislo_popisne", adresa.CisloPopisne);
+            adresaParametry.Add(":v_ulice", adresa.Ulice);
+            adresaParametry.Add(":v_psc", adresa.Psc);
+            adresaParametry.Add(":v_klient_id", klientId);
+            db.ExecuteNonQuery("PRIDEJ_ADRESU_KLIENTA", adresaParametry, false, true);
+            return true;
+        }
+
+        public List<Adresa> GetClientAddresses(int KlientId) {
+            PscModel pscModel = new PscModel(db);
+            List<Adresa> adresas = new List<Adresa>();
+            Dictionary<string, object> adresaParametry = new Dictionary<string, object>();
+            adresaParametry.Add("klient_id", KlientId);
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_adresy where klient_klient_id = :klient_id", adresaParametry);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    // string stav = dr2["STAV"].ToString();
+                    Adresa adresa = new Adresa();
+                    adresa.CisloPopisne = int.Parse(dr["cislo_popisne"].ToString());
+                    adresa.Ulice = dr["ulice"].ToString();
+                    adresa.Psc = pscModel.ReadPsc(dr["psc_psc"].ToString());
+                    adresas.Add(adresa);
+                }
+            }
+
+            dr.Close();
+            db.Dispose();
+
+            return adresas;
         }
     }
 }

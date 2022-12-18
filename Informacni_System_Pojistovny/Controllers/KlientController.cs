@@ -4,6 +4,8 @@ using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
@@ -32,6 +34,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             KlientModel klientDb = new KlientModel(_db);
             Klient klient = klientDb.GetClient(id);
+            klient.Adresy = klientDb.GetClientAddresses(id);
             return View(klient);
         }
 
@@ -40,6 +43,31 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Create()
         {
             return View();
+        }
+
+        // GET: KlientController/AddAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        //TODO [Route("Klient/{Id}/AddAddress")] - pridat neco podobneho vsude nebo i klidne nechat? nechat
+        public ActionResult AddAddress(int id)
+        {
+            Console.WriteLine(id);
+            PscModel pscModel = new PscModel(_db);
+            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+            ViewBag.pscs = pscs;
+            return View();
+        }
+
+        // GET: KlientController/AddAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [HttpPost]
+        public ActionResult AddAddress(AdresaInputModel adresa, int id)
+        {
+            if (ModelState.IsValid) {
+                KlientModel klientModel = new KlientModel(_db);
+                klientModel.AddAddressToClient(id, adresa);
+
+                return RedirectToAction(nameof(Index));
+            } else return View();
         }
 
         // POST: KlientController/Create

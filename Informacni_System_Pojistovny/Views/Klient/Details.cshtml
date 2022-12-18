@@ -77,10 +77,48 @@
         }
     </dl>
     <h4>Adresy klienta</h4>
+    @Html.ActionLink("Přidat adresu", "AddAddress", new { id = ViewContext.RouteData.Values["id"] })
     <hr />
-    TODO adresy do nejake tabulky?
-
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Město
+            </th>
+            <th>
+                PSČ
+            </th>
+            <th>
+                Ulice
+            </th>
+            <th>
+                Číslo popisné
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var adresa in Model.Adresy)
+    {
+            <tr>
+                <td>
+                    @adresa.Psc.Mesto
+                </td>
+                <td>
+                    @adresa.Psc.PscCislo
+                </td>
+                <td>
+                    @adresa.Ulice
+                </td>
+                <td>
+                    @adresa.CisloPopisne
+                </td>
+                <td></td>
+            </tr>
+    }
+    </tbody>
+</table>
 <div>
     @Html.ActionLink("Upravit klienta", "Edit", new { id = ViewContext.RouteData.Values["id"] }) |
     <a asp-action="Index">Zpět na přehled klientů</a>

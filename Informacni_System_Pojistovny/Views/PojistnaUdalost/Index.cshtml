@@ -1,0 +1,66 @@
+﻿@using Informacni_System_Pojistovny.Models.Entity;
+@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.PojistnaUdalost>
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>View</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Vznik)
+            </th>
+            <th>
+                Klient
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Popis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NarokovanaVysePojistky)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vznik)
+            </td>
+             <td>
+                    @{
+                        string displayName;
+                        if (item.Klient.GetType().Equals(typeof(PravnickaOsoba)))
+                        {
+                            displayName = ((PravnickaOsoba)(item.Klient)).Nazev;
+                        }
+                        else
+                        {
+                            displayName = $"{((FyzickaOsoba)(item.Klient)).Jmeno} {((FyzickaOsoba)(item.Klient)).Prijmeni}";
+                        }
+                    }
+                    @displayName
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Popis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NarokovanaVysePojistky)
+            </td>
+            <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.PojistnaUdalostId }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.PojistnaUdalostId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.PojistnaUdalostId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

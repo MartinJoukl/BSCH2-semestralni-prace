@@ -1,0 +1,50 @@
+﻿@using Informacni_System_Pojistovny.Models.Entity
+@model Informacni_System_Pojistovny.Models.Entity.Uzivatel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Smazání uživatele</h1>
+
+<h3>Chcete opravdu smazat daného uživatele?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Jmeno)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Jmeno)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Prijmeni)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Prijmeni)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Role)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Role)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.casZmeny)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.casZmeny)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Smazat" class="btn btn-danger" /> |
+        <a asp-action="Index">Zpět na přehled uživatelů</a>
+    </form>
+</div>

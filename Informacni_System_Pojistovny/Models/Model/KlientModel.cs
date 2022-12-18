@@ -19,12 +19,13 @@ namespace Informacni_System_Pojistovny.Models.Model
 
             Db db = new Db();
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_vsechny_osoby o where o.klient_id = :klient_id", clientIdBinding);
-            if(dr.HasRows)
+            if (dr.HasRows)
             {
-                while(dr.Read())
+                while (dr.Read())
                 {
                     string typKlienta = dr["typ_klienta"].ToString();
-                    if (typKlienta.Equals("F")){
+                    if (typKlienta.Equals("F"))
+                    {
                         FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
                         fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
                         fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
@@ -42,7 +43,9 @@ namespace Informacni_System_Pojistovny.Models.Model
                         fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
                         fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
                         return fyzickaOsoba;
-                    } else {
+                    }
+                    else
+                    {
                         PravnickaOsoba pravnickaOsoba = new PravnickaOsoba();
                         pravnickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
                         pravnickaOsoba.Nazev = dr["NAZEV"].ToString();
@@ -63,7 +66,8 @@ namespace Informacni_System_Pojistovny.Models.Model
             throw new Exception("Person not found!");
         }
 
-        public List<Klient> ReadClients() {
+        public List<Klient> ReadClients()
+        {
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_fyzicke_osoby");
@@ -115,11 +119,11 @@ namespace Informacni_System_Pojistovny.Models.Model
             }
             dr2.Close();
 
-            db.Dispose();
             return klients;
         }
 
-        public int CreateClient(IFormCollection collection) {
+        public int CreateClient(IFormCollection collection)
+        {
             Dictionary<string, object> klientParametry = new Dictionary<string, object>();
             klientParametry.Add(":typKlienta", collection["zvolenyTypOsoby"]);
 
@@ -137,13 +141,12 @@ namespace Informacni_System_Pojistovny.Models.Model
                 typOsobyParametry.Add(":email", collection["email"]);
                 db.ExecuteNonQuery("INSERT into fyzicke_osoby (klient_id, jmeno, prijmeni, rodne_cislo, telefon, email) values (:klient_id, :jmeno, :prijmeni, :rc, :telefon, :email) returning klient_id into :id", typOsobyParametry);
             }
-            else {
+            else
+            {
                 typOsobyParametry.Add(":nazev", collection["nazev"]);
                 typOsobyParametry.Add(":ico", collection["ico"]);
                 db.ExecuteNonQuery("INSERT into pravnicke_osoby (klient_id, nazev, ico) values (:klient_id, :nazev, :ico) returning klient_id into :id", typOsobyParametry);
             }
-
-            db.Dispose();
 
             return klientId;
         }

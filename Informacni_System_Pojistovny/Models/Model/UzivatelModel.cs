@@ -1,7 +1,9 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Microsoft.AspNetCore.Identity;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 
 namespace Informacni_System_Pojistovny.Models.Model
@@ -17,7 +19,7 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             List<Uzivatel> list = new List<Uzivatel>();
 
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from uzivatele");
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from uzivatele_view");
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -44,45 +46,32 @@ namespace Informacni_System_Pojistovny.Models.Model
             return list;
         }
 
-        public Uzivatel? EditUzivatel(EditOwnProfileModel model)
+        public Uzivatel? EditUzivatel(EditUserModel model, int id)
         {
             HashSalt hashSalt;
             Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("p_id", id);
 
-            string updateString = "";
-            string parameterString = "";
             if (!string.IsNullOrEmpty(model.Mail))
             {
-                updateString += "mail, ";
-                parameters.Add(":mail", model.Mail);
-                parameterString += ":mail, ";
+                parameters.Add("p_mail", model.Mail);
             }
             if (!string.IsNullOrEmpty(model.Jmeno))
             {
-                updateString += "jmeno, ";
-                parameters.Add(":jmeno", model.Jmeno);
-                parameterString += ":jmeno, ";
+                parameters.Add("p_jmeno", model.Jmeno);
             }
             if (!string.IsNullOrEmpty(model.Prijmeni))
             {
-                updateString += "prijmeni, ";
-                parameters.Add(":prijmeni", model.Prijmeni);
-                parameterString += ":prijmeni, ";
+                parameters.Add("p_prijmeni", model.Prijmeni);
             }
             if (!string.IsNullOrEmpty(model.Heslo))
             {
-                updateString += "hashSalt, ";
                 hashSalt = GenerateSaltedHash(100, model.Heslo);
-                parameters.Add(":hashSalt", hashSalt);
-                parameterString += ":hashSalt, ";
+                parameters.Add("p_hesloHash", hashSalt.Hash);
+                parameters.Add("p_hesloSalt", hashSalt.Salt);
             }
-            updateString = updateString.Trim();
-            parameterString = parameterString.Trim();
-            //deletes ,
-            updateString = updateString.Substring(0, updateString.Length - 2);
-            parameterString = parameterString.Substring(0, updateString.Length - 2);
 
-            db.ExecuteNonQuery("select * from uzivatele", parameters, false);
+            db.ExecuteNonQuery("update_uzivatel", parameters, false, true);
             db.Dispose();
             return null;
         }
@@ -91,7 +80,7 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add(":mail", mail);
-            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele where LOWER(mail) = LOWER(:mail)", parameters);
+            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele_view where LOWER(mail) = LOWER(:mail)", parameters);
             if (recievedResult.Read())
             {
                 DateTime.TryParse(recievedResult["cas_zmeny"]?.ToString(), out DateTime casZmeny);
@@ -109,9 +98,11 @@ namespace Informacni_System_Pojistovny.Models.Model
 
                 if (VerifyPassword(password, user.HesloHash, user.Salt))
                 {
+                    db.Dispose();
                     return user;
                 }
             }
+            db.Dispose();
             return null;
         }
 
@@ -119,7 +110,7 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add(":id", id);
-            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele where id = :id", parameters);
+            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele_view where id = :id", parameters);
             if (recievedResult.Read())
             {
                 DateTime.TryParse(recievedResult["cas_zmeny"]?.ToString(), out DateTime casZmeny);
@@ -134,8 +125,10 @@ namespace Informacni_System_Pojistovny.Models.Model
                     Role = UzivateleRoleRetriever.GetByName(recievedResult["uzivatel_role"]?.ToString()),
                     casZmeny = casZmeny
                 };
+                db.Dispose();
                 return user;
             }
+            db.Dispose();
             return null;
         }
 
@@ -143,9 +136,10 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add(":id", id);
-            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele where id = :id", parameters);
+            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele_view where id = :id", parameters);
             if (recievedResult.Read())
             {
+                DateTime.TryParse(recievedResult["cas_zmeny"]?.ToString(), out DateTime casZmeny);
                 Uzivatel user = new Uzivatel
                 {
                     Jmeno = recievedResult["jmeno"]?.ToString(),
@@ -154,33 +148,44 @@ namespace Informacni_System_Pojistovny.Models.Model
                     HesloHash = recievedResult["heslohash"]?.ToString(),
                     Salt = recievedResult["salt"]?.ToString(),
                     Id = int.Parse(recievedResult["ID"]?.ToString()),
-                    Role = UzivateleRoleRetriever.GetByName(recievedResult["uzivatel_role"]?.ToString())
+                    Role = UzivateleRoleRetriever.GetByName(recievedResult["uzivatel_role"]?.ToString()),
+                    casZmeny = casZmeny
                 };
+                db.Dispose();
                 return user;
             }
+            db.Dispose();
             return null;
         }
 
-        public int Register(UzivatelRegisterFormModel uzivatelRegisterModel)
+        public void DeleteUzivatel(int id)
+        {
+            db.ExecuteNonQuery("DELETE_UZIVATEL", new Dictionary<string, object>() { { "p_id", id } }, false, true);
+        }
+
+        public void Create(UzivatelRegisterFormModel uzivatelRegisterModel)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add(":mail", uzivatelRegisterModel.Mail);
-            Db db = new Db();
-            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele where mail = :mail", parameters);
+            var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele_view where mail = :mail", parameters);
             if (recievedResult.HasRows)
             {
                 throw new Exception("Uživatel se stejným mailem už je registrován!");
             }
             HashSalt hashSalt = GenerateSaltedHash(100, uzivatelRegisterModel.Heslo);
+            //int id = 0;
+            parameters = new Dictionary<string, object>
+            {
+                { "p_mail", uzivatelRegisterModel.Mail },
+                { "p_jmeno", uzivatelRegisterModel.Jmeno },
+                { "p_prijmeni", uzivatelRegisterModel.Prijmeni },
+                { "p_heslohash", hashSalt.Hash },
+                { "p_salt", hashSalt.Salt }
+            };
+            //parameters.Add("p_out_id", id);
 
-            parameters = new Dictionary<string, object>();
-            parameters.Add(":mail", uzivatelRegisterModel.Mail);
-            parameters.Add(":jmeno", uzivatelRegisterModel.Jmeno);
-            parameters.Add(":prijmeni", uzivatelRegisterModel.Prijmeni);
-            parameters.Add(":heslohash", hashSalt.Hash);
-            parameters.Add(":salt", hashSalt.Salt);
-
-            return db.ExecuteNonQuery("INSERT into Uzivatele (mail,jmeno,prijmeni,heslohash,salt, uzivatel_role) Values ( :mail, :jmeno, :prijmeni, :heslohash, :salt ,'user') returning id into :id", parameters);
+            db.ExecuteNonQuery("CREATE_UZIVATEL", parameters, false, true);
+            db.Dispose();
         }
         //SO :)
         public HashSalt GenerateSaltedHash(int size, string password)

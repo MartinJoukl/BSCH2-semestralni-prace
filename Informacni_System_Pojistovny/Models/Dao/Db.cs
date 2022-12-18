@@ -8,8 +8,8 @@
     {
 
         string connString = "Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = fei-sql1.upceucebny.cz)(PORT = 1521))) " +
-            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = IDAS))); User Id = st64134;Password=jouklj;";
-        public OracleConnection Connection { get; }
+            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = IDAS))); User Id = st64135;Password=opice;";
+        public OracleConnection Connection { get; private set; }
         public Db()
         {
             Connection = new OracleConnection(connString);
@@ -28,8 +28,14 @@
                 oracleCommand.Prepare();
             }
 
+            //reset connection
             if (Connection != null && Connection.State != System.Data.ConnectionState.Open)
             {
+                if (Connection.State == System.Data.ConnectionState.Closed)
+                {
+                    Connection = new OracleConnection(connString);
+                    oracleCommand.Connection = Connection;
+                }
                 Connection.Open();
             }
             return oracleCommand.ExecuteReader();
@@ -54,6 +60,11 @@
 
             if (Connection != null && Connection.State != System.Data.ConnectionState.Open)
             {
+                if (Connection.State == System.Data.ConnectionState.Closed)
+                {
+                    Connection = new OracleConnection(connString);
+                    oracleCommand.Connection = Connection;
+                }
                 Connection.Open();
             }
 

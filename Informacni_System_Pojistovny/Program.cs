@@ -36,7 +36,7 @@ builder.Services.AddSession(options =>
 });
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddScoped<Db>();
 
 var app = builder.Build();

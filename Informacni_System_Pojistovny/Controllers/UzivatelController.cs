@@ -3,13 +3,9 @@ using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -32,12 +28,25 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Details(int id)
         {
-            return View();
+            UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel uzivatel = uzivatelModel.GetUzivatel(id);
+            if (uzivatel != null)
+            {
+                return View(uzivatel);
+            }
+            else
+            {
+                return Index();
+            }
         }
 
         // GET: UzivatelController/Register
         public ActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -47,13 +56,17 @@ namespace Informacni_System_Pojistovny.Controllers
         [ActionName("Register")]
         public async Task<ActionResult> RegisterAsync(UzivatelRegisterFormModel model)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             Uzivatel uzivatel;
             if (ModelState.IsValid)
             {
                 try
                 {
                     UzivatelModel uzivatelModel = new UzivatelModel(_db);
-                    uzivatelModel.Register(model);
+                    uzivatelModel.Create(model);
                     return await LoginAsync(new UzivatelLoginFormModel() { Heslo = model.Heslo, Mail = model.Mail });
                 }
                 catch
@@ -74,6 +87,10 @@ namespace Informacni_System_Pojistovny.Controllers
         [ActionName("Login")]
         public async Task<ActionResult> LoginAsync(UzivatelLoginFormModel model)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
             Uzivatel uzivatel = null;
             if (ModelState.IsValid)
@@ -127,6 +144,10 @@ namespace Informacni_System_Pojistovny.Controllers
         [ActionName("Login")]
         public ActionResult LoginGet(string returnUrl)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View("Login", new UzivatelLoginFormModel { RedirectToUrl = returnUrl });
         }
         // POST: UzivatelController/Logout
@@ -137,29 +158,6 @@ namespace Informacni_System_Pojistovny.Controllers
             await HttpContext.SignOutAsync(
     CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(Index), "Home");
-        }
-
-        // GET: UzivatelController/Edit/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UzivatelController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public async Task<ActionResult> ImpersonifikaceAsync(int id)
@@ -243,7 +241,16 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Delete(int id)
         {
-            return View();
+            UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel uzivatel = uzivatelModel.GetUzivatel(id);
+            if (uzivatel != null)
+            {
+                return View(uzivatel);
+            }
+            else
+            {
+                return Index();
+            }
         }
 
         // GET: UzivatelController/EditOwnProfile
@@ -256,6 +263,33 @@ namespace Informacni_System_Pojistovny.Controllers
             return View(new EditOwnProfileModel() { Jmeno = uzivatel.Jmeno, Mail = uzivatel.Email, Prijmeni = uzivatel.Prijmeni });
         }
 
+        // GET: UzivatelController/Edit
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult Edit(int id)
+        {
+            UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel editovany = uzivatelModel.GetUzivatel(id);
+            return View(new EditUserModel() { Id = id, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni });
+        }
+
+        // GET: UzivatelController/EditOwnProfile
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [HttpPost]
+        [ActionName("Edit")]
+        public ActionResult EditPost(EditUserModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                UzivatelModel uzivatelModel = new UzivatelModel(_db);
+                Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, model.Id);
+                return Index();
+            }
+            else
+            {
+                return View();
+            }
+        }
+
         // GET: UzivatelController/EditOwnProfile
         [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
@@ -264,9 +298,9 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             int id = int.Parse(HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value);
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
-            Uzivatel uzivatel = uzivatelModel.EditUzivatel(model);
+            Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, id);
 
-            return View(nameof(EditOwnProfile), new EditOwnProfileModel() { Jmeno = uzivatel.Jmeno, Mail = uzivatel.Email, Prijmeni = uzivatel.Prijmeni });
+            return RedirectToAction(nameof(Index), "Home");
         }
 
         // POST: UzivatelController/Delete/5
@@ -277,6 +311,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             try
             {
+                UzivatelModel uzivatelModel = new UzivatelModel(_db);
+                uzivatelModel.DeleteUzivatel(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

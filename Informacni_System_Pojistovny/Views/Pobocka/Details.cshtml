@@ -1,0 +1,71 @@
+﻿@using Informacni_System_Pojistovny.Models.Entity;
+@model Informacni_System_Pojistovny.Models.Entity.Pobocka
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Pobocka</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nazev)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nazev)
+        </dd>
+    </dl>
+    <h4>Adresa klienta</h4>
+    @if (Model.Adresa == null)
+    {
+        @Html.ActionLink("Přidat adresu", "AddAddress", new { id = ViewContext.RouteData.Values["id"] })
+    }
+    <hr />
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Město
+            </th>
+            <th>
+                PSČ
+            </th>
+            <th>
+                Ulice
+            </th>
+            <th>
+                Číslo popisné
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Adresa != null)
+        {
+            Adresa adresa = Model.Adresa;
+            <tr>
+                <td>
+                @adresa.Psc.Mesto
+                </td>
+                <td>
+                @adresa.Psc.PscCislo
+                </td>
+                <td>
+                @adresa.Ulice
+                </td>
+                <td>
+                @adresa.CisloPopisne
+                </td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    @Html.ActionLink("Upravit pobočku", "Edit", new { id=Model.PobockaId }) |
+    <a asp-action="Index">Zpět na přehled poboček</a>
+</div>

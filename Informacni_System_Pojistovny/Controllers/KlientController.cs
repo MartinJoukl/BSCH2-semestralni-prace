@@ -47,7 +47,6 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: KlientController/AddAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        //TODO [Route("Klient/{Id}/AddAddress")] - pridat neco podobneho vsude nebo i klidne nechat? nechat
         public ActionResult AddAddress(int id)
         {
             Console.WriteLine(id);
@@ -67,7 +66,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 klientModel.AddAddressToClient(id, adresa);
 
                 return RedirectToAction(nameof(Index));
-            } else return View();
+            } else return View(id);
         }
 
         // POST: KlientController/Create

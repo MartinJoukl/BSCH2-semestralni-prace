@@ -40,6 +40,9 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Create()
         {
+            PscModel pscModel = new PscModel(_db);
+            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+            ViewBag.pscs = pscs;
             return View();
         }
 
@@ -47,19 +50,12 @@ namespace Informacni_System_Pojistovny.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Create(PobockaEditModel pobockaEditModel)
+        public ActionResult Create(PobockaCreateModel pobockaEditModel)
         {
             if (ModelState.IsValid) {
-                try
-                {
-                    PobockaModel pobockaModel = new PobockaModel(_db);
-                    pobockaModel.CreateBranch(pobockaEditModel);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch
-                {
-                    return View();
-                }
+                PobockaModel pobockaModel = new PobockaModel(_db);
+                pobockaModel.CreateBranch(pobockaEditModel);
+                return RedirectToAction(nameof(Index));
             } else { return View(); }
         }
 
@@ -67,7 +63,6 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult AddAddress(int id)
         {
-            Console.WriteLine(id);
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             ViewBag.pscs = pscs;
@@ -92,6 +87,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // Post: PobockaController/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Edit(int id, PobockaEditModel pobockaEditModel)
         {
@@ -103,13 +99,12 @@ namespace Informacni_System_Pojistovny.Controllers
                     return RedirectToAction(nameof(Index));
                 } catch (Exception ex)
                 {
-                    return View(id);
+                    return View();
                 }
-            } else return View(id);
+            } else return View();
         }
 
         // GET: PobockaController/Edit/5
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Edit(int id)
         {

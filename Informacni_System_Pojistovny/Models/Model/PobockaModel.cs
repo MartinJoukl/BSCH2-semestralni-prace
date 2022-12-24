@@ -12,20 +12,19 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             this.db = db;
         }
-        public bool CreateBranch(PobockaEditModel pobockaEditModel)
+        public bool CreateBranch(PobockaCreateModel pobockaCreateModel)
         {
             Dictionary<string, object> pobockaParametry = new Dictionary<string, object>();
-            pobockaParametry.Add("v_nazev", pobockaEditModel.Nazev);
-
-            try
-            {
-                db.ExecuteNonQuery("vytvorit_pobocku", pobockaParametry, false, true);
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+            pobockaParametry.Add("v_nazev", pobockaCreateModel.Nazev);
+            
+            int pobockaId = db.ExecuteNonQuery("vytvorit_pobocku", pobockaParametry, true, true);
+            AdresaInputModel adresa = new AdresaInputModel();
+            adresa.Psc = pobockaCreateModel.Psc;
+            adresa.CisloPopisne = pobockaCreateModel.CisloPopisne;
+            adresa.Ulice = pobockaCreateModel.Ulice;
+            AddAddressesToBranch(pobockaId, adresa);
+            return true;
+            
         }
 
         public List<Pobocka> ReadBranches()
@@ -82,8 +81,8 @@ namespace Informacni_System_Pojistovny.Models.Model
 
         public bool RealizePobockaEdit(PobockaEditModel pobockaEditModel, int id) {
             Dictionary<string, object> pobockaParametry = new Dictionary<string, object>();
-            pobockaParametry.Add(":v_id", id);
             pobockaParametry.Add(":v_nazev", pobockaEditModel.Nazev);
+            pobockaParametry.Add(":v_id", id);
             db.ExecuteNonQuery("zmenit_Pobocku", pobockaParametry, false, true);
             db.Dispose();
 
@@ -107,6 +106,17 @@ namespace Informacni_System_Pojistovny.Models.Model
             adresaParametry.Add(":v_psc", adresa.Psc);
             adresaParametry.Add(":v_pobocka_id", pobockaId);
             db.ExecuteNonQuery("PRIDEJ_ADRESU_POBOCKY", adresaParametry, false, true);
+            return true;
+        }
+
+        public bool EditBranchAddress(int addressId, AdresaInputModel adresa)
+        {
+            Dictionary<string, object> adresaParametry = new Dictionary<string, object>();
+            adresaParametry.Add(":v_cislo_popisne", adresa.CisloPopisne);
+            adresaParametry.Add(":v_ulice", adresa.Ulice);
+            adresaParametry.Add(":v_psc", adresa.Psc);
+            adresaParametry.Add(":v_adresa_id", addressId);
+            db.ExecuteNonQuery("zmen_adresu", adresaParametry, false, true);
             return true;
         }
 

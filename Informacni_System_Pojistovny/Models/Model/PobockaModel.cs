@@ -27,6 +27,14 @@ namespace Informacni_System_Pojistovny.Models.Model
             
         }
 
+        public bool DeleteBranch(int id) {
+            Db db = new Db();
+            Dictionary<string, object> pobockaParametry = new Dictionary<string, object>();
+            pobockaParametry.Add(":v_id", id);
+            db.ExecuteNonQuery("smazat_pobocku", pobockaParametry, false, true);
+            return true;
+        }
+
         public List<Pobocka> ReadBranches()
         {
             List<Pobocka> pobockas = new List<Pobocka>();

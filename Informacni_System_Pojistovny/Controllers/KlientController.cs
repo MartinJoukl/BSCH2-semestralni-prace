@@ -58,7 +58,7 @@ namespace Informacni_System_Pojistovny.Controllers
             return View();
         }
 
-        // GET: KlientController/EditAddress
+        // GET: KlientController/AddAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
         public ActionResult AddAddress(AdresaInputModel adresa, int id)

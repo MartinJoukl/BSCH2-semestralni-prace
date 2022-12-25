@@ -1,0 +1,52 @@
+﻿@using Informacni_System_Pojistovny.Models.Entity;
+@model Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels.PojistnaUdalostCreateEditModel
+
+@{
+    ViewData["Title"] = "Úprava pojistné události";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Úprava pojistné události</h1>
+
+<h4>Pojistná událost</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group col-md-4">
+                <label asp-for="PojistnaUdalost.Vznik" class="control-label"></label>
+                <input asp-for="PojistnaUdalost.Vznik" class="form-control" />
+                <span asp-validation-for="PojistnaUdalost.Vznik" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-12">
+                <label asp-for="PojistnaUdalost.Popis" class="control-label"></label>
+                <textarea asp-for="PojistnaUdalost.Popis" class="form-control"></textarea>
+                <span asp-validation-for="PojistnaUdalost.Popis" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="PojistnaUdalost.NarokovanaVysePojistky" class="control-label"></label>
+                <input asp-for="PojistnaUdalost.NarokovanaVysePojistky" class="form-control" />
+                <span asp-validation-for="PojistnaUdalost.NarokovanaVysePojistky" class="text-danger"></span>
+            </div>
+             <div class="form-group col-md-4">
+                                 <label asp-for="PojistnaUdalost.Klient" class="control-label"></label>
+             <select class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno),Model.PojistnaUdalost.Klient.KlientId))" asp-for="PojistnaUdalost.Klient.KlientId"></select>
+                            <span asp-validation-for="PojistnaUdalost.Klient" class="text-danger"></span>
+             </div>
+            <div class="form-group">
+                <input type="submit" value="Uložit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Zpět na přehled</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

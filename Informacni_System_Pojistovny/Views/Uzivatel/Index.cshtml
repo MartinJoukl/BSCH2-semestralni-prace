@@ -6,20 +6,22 @@
 
 <h1>Přehled uživatelů</h1>
 
+<p>
+
+</p>
+
 <table class="table">
     <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
         <tr>
             <th>ID</th>
             <th>Mail</th>
             <th>Jméno</th>
             <th>Příjmení</th>
             <th>Přiřazená role</th>
+            <th></th>
         </tr>
+    </thead>
+    <tbody>
         @foreach (var item in Model)
         {
                 <tr>
@@ -39,9 +41,9 @@
                     @item.Role
                     </td>
                     <td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.Id }) |
+                    @Html.ActionLink("Upravit", "Edit", new { id=item.Id }) |
+                    @Html.ActionLink("Detail", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Smazat", "Delete", new { id=item.Id }) |
                     @Html.ActionLink("Impersonifikuj", "Impersonifikace", new {  id=item.Id },HttpMethod.Post)
                     </td>
                 </tr>

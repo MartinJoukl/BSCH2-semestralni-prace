@@ -1,0 +1,38 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.PojistnaUdalost
+
+@{
+    ViewData["Title"] = "Smazání pojistné události";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Smazání pojistné události</h1>
+
+<h3>Opravdu chcete smazat tuto pojistnou událost?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Vznik)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Vznik)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Popis)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Popis)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NarokovanaVysePojistky)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NarokovanaVysePojistky)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Smazat" class="btn btn-danger" /> |
+        <a asp-action="Index">Zpět na přehled</a>
+    </form>
+</div>

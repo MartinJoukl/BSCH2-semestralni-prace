@@ -8,5 +8,10 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public string Nazev { get; set; }
         [Display(Name = "Ičo")]
         public string Ico { get; set; }
+
+        public override string ToString()
+        {
+            return Nazev;
+        }
     }
 }

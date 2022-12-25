@@ -1,0 +1,57 @@
+﻿@using Informacni_System_Pojistovny.Models.Entity;
+@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.PojistnaUdalost>
+
+@{
+    ViewData["Title"] = "Pojistné události";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Přehled pojistných událostí</h1>
+
+<p>
+    <a asp-action="Create">Vytvořit novou pojistnou událost</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Vznik)
+            </th>
+            <th>
+                Klient
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Popis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NarokovanaVysePojistky)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vznik)
+            </td>
+             <td>
+                    @item.Klient
+                </td>
+            <td>
+                @Html.DisplayTextFor(modelItem => item.Popis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NarokovanaVysePojistky)
+            </td>
+                <td>
+                    <div class="noWrap">
+                    @Html.ActionLink("Upravit", "Edit", new { id=item.PojistnaUdalostId }) |
+                    @Html.ActionLink("Detail", "Details", new { id=item.PojistnaUdalostId }) |
+                    @Html.ActionLink("Smazat", "Delete", new { id=item.PojistnaUdalostId })
+                    </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

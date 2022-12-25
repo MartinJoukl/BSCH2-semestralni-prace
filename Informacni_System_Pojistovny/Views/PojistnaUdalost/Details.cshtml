@@ -1,0 +1,43 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.PojistnaUdalost
+
+@{
+    ViewData["Title"] = "Detail pojistné události";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Detail</h1>
+
+<div>
+    <h4>Pojistná událost</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Vznik)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Vznik)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Popis)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Popis)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NarokovanaVysePojistky)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NarokovanaVysePojistky)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Klient)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Klient
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Upravit", "Edit",new { id= Model.PojistnaUdalostId}) |
+    <a asp-action="Index">Zpět na přehled</a>
+</div>

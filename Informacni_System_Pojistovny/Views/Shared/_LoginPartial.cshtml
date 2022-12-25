@@ -2,11 +2,11 @@
 @using Informacni_System_Pojistovny.Models.Entity
 @using System.Security.Claims
 
-<ul class="navbar-nav">
+<ul class="navbar-nav flex-grow-1 right">
     @if (Context.User.Identity.IsAuthenticated)
 {
     <li class="nav-item">
-                                                <a id="manage" class="nav-link text-light" asp-controller="Uzivatel" asp-action="EditOwnProfile" title="Manage">@Context.User.Claims.First(c => c.Type == ClaimTypes.Email).Value</a>
+    <a id="manage" class="nav-link text-light" asp-controller="Uzivatel" asp-action="EditOwnProfile" title="Manage">@Context.User.Claims.First(c => c.Type == ClaimTypes.Email).Value</a>
 
         </li>
         <li class="nav-item">

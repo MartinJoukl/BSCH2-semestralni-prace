@@ -18,6 +18,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PscController
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Index()
         {
             PscModel pscModel = new PscModel(_db);
@@ -25,6 +26,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PscController/Details/5
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Details(int id)
         {
             return View();
@@ -55,24 +57,25 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PscController/Edit/5
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Edit(int id)
         {
             return View();
         }
 
         // POST: PscController/Edit/5
+        [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(string pscCislo, PscEditModel pscEditModel)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                PscModel pscModel = new PscModel(_db);
+                if (pscModel.EditPsc(pscCislo, pscEditModel)) {
+                    return RedirectToAction(nameof(Index));
+                } else return View();
+            } else return View();
         }
 
         // GET: PscController/Delete/5
@@ -84,7 +87,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PscController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(string pscCislo, PscModel pscModel)
         {
             try
             {

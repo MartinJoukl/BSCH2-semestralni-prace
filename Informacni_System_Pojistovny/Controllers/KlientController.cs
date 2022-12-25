@@ -42,15 +42,6 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Create()
         {
-            return View();
-        }
-
-        // GET: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
-        //TODO [Route("Klient/{Id}/AddAddress")] - pridat neco podobneho vsude nebo i klidne nechat? nechat
-        public ActionResult AddAddress(int id)
-        {
-            Console.WriteLine(id);
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             ViewBag.pscs = pscs;
@@ -58,6 +49,16 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/AddAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult AddAddress(int id)
+        {
+            PscModel pscModel = new PscModel(_db);
+            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+            ViewBag.pscs = pscs;
+            return View();
+        }
+
+        // GET: KlientController/EditAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
         public ActionResult AddAddress(AdresaInputModel adresa, int id)
@@ -68,6 +69,60 @@ namespace Informacni_System_Pojistovny.Controllers
 
                 return RedirectToAction(nameof(Index));
             } else return View();
+        }
+
+        // GET: KlientController/EditAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult EditAddress(int id)
+        {
+            PscModel pscModel = new PscModel(_db);
+            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+            AdresaModel adresaModel = new AdresaModel(_db);
+            AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
+            ViewBag.pscs = pscs;
+            return View(adresaInputModel);
+        }
+
+        // ´POST: KlientController/AddAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [HttpPost]
+        public ActionResult EditAddress(AdresaInputModel adresa, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                AdresaModel adresaModel = new AdresaModel(_db);
+                adresaModel.EditAddress(id, adresa);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else return View();
+        }
+
+        // GET: KlientController/DeleteAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult DeleteAddress(int id)
+        {
+            PscModel pscModel = new PscModel(_db);
+            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+            AdresaModel adresaModel = new AdresaModel(_db);
+            AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
+            ViewBag.pscs = pscs;
+            return View(adresaInputModel);
+        }
+
+        // ´POST: KlientController/AddAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [HttpPost]
+        public ActionResult DeleteAddress(AdresaInputModel adresa, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                AdresaModel adresaModel = new AdresaModel(_db);
+                adresaModel.DeleteAddress(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else return View();
         }
 
         // POST: KlientController/Create
@@ -102,7 +157,7 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Edit(int id)
         {
             KlientModel klientDb = new KlientModel(_db);
-            KlientCreateModel klient = klientDb.GetEditClient(id);
+            KlientEditModel klient = klientDb.GetEditClient(id);
             if (klient == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -117,7 +172,7 @@ namespace Informacni_System_Pojistovny.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Edit(int id, KlientCreateModel model, IFormCollection collection)
+        public ActionResult Edit(int id, KlientEditModel model, IFormCollection collection)
         {
             if (collection["zvolenyTypOsoby"].Equals("F"))
             {
@@ -162,7 +217,7 @@ namespace Informacni_System_Pojistovny.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Delete(int id, KlientCreateModel klient)
+        public ActionResult Delete(int id, KlientEditModel klient)
         {
             try
             {
@@ -172,7 +227,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             catch
             {
-                return RedirectToAction(nameof(Index));
+                return View();
             }
         }
     }

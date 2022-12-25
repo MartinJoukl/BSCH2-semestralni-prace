@@ -1,0 +1,31 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.AdresaInputModel
+    @{
+        ViewData["Title"] = "Smazat adresu";
+    }
+
+<h1>Smazat adresu</h1>
+
+<h3>Opravdu chcete smazat tuto adresu?</h3>
+<div>
+    <h4>Adresa</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CisloPopisne)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CisloPopisne)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ulice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ulice)
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteAddress">
+        <input type="submit" value="Smazat adresu" class="btn btn-danger" /> |
+        <a asp-action="Index">Zpět na přehled klientů</a>
+    </form>
+</div>

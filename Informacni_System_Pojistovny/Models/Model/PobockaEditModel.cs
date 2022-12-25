@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace Informacni_System_Pojistovny.Models.Entity
+namespace Informacni_System_Pojistovny.Models.Model
 {
-    public class Pobocka
+    public class PobockaEditModel
     {
-        public int PobockaId { get; set; }
         [StringLength(200, ErrorMessage = "Maximální délka je 200 znaků")]
         [Display(Name = "Název pobočky")]
         public string Nazev { get; set; }
-        public Adresa Adresa { get; set; }
     }
 }

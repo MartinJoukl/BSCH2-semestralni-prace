@@ -8,7 +8,7 @@
     {
 
         string connString = "Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = fei-sql3.upceucebny.cz)(PORT = 1521))) " +
-            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = BDAS))); User Id = st64135;Password=opice;";
+            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = BDAS))); User Id = st64135;Password=XXX;";
         public OracleConnection Connection { get; private set; }
         public Db()
         {
@@ -70,7 +70,13 @@
 
             if (returnsId)
             {
-                oracleCommand.Parameters.Add("id", OracleDbType.Decimal, System.Data.ParameterDirection.ReturnValue);
+                if (isProcedure)
+                {
+                    oracleCommand.Parameters.Add("id", OracleDbType.Decimal, System.Data.ParameterDirection.Output);
+                }
+                else { 
+                    oracleCommand.Parameters.Add("id", OracleDbType.Decimal, System.Data.ParameterDirection.ReturnValue); 
+                }
             }
             oracleCommand.ExecuteNonQuery();
             if (returnsId)

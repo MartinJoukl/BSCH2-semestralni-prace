@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Configuration;
-using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
-
-namespace Informacni_System_Pojistovny.Models.Model
+﻿namespace Informacni_System_Pojistovny.Models.Model
 {
-    public class KlientCreateModel
+    using Informacni_System_Pojistovny.Models.Entity;
+    using System.ComponentModel.DataAnnotations;
+    using System.Configuration;
+
+    using System.Diagnostics.CodeAnalysis;
+
+    //DAO
+    public class KlientEditModel
     {
         [Display(Name = "Název"), StringLength(200), Required(ErrorMessage = "Název musí být vyplněn", AllowEmptyStrings = false)]
         public string Nazev { get; set; }
@@ -25,12 +27,6 @@ namespace Informacni_System_Pojistovny.Models.Model
         [Required(ErrorMessage = "Email musí být vyplněn", AllowEmptyStrings = false), StringLength(200)]
         [EmailAddress(ErrorMessage = "Emailová adresa není validní")]
         public string Email { get; set; }
-        [IntegerValidator(MinValue = 0)]
-        public int CisloPopisne { get; set; }
-        [StringValidator(MaxLength = 200)]
-        [NotNull]
-        public string Ulice { get; set; }
-        [StringValidator(MaxLength = 5, MinLength = 5)]
-        public string Psc { get; set; }
     }
+
 }

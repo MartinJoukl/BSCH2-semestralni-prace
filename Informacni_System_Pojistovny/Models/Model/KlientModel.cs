@@ -125,30 +125,28 @@ namespace Informacni_System_Pojistovny.Models.Model
         public int CreateClient(IFormCollection collection)
         {
             Dictionary<string, object> klientParametry = new Dictionary<string, object>();
-            klientParametry.Add(":typKlienta", collection["zvolenyTypOsoby"]);
-
-            int klientId = db.ExecuteNonQuery("INSERT INTO KLIENTI (STAV, TYP_KLIENTA) VALUES ('a', :typKlienta) returning klient_id into :id", klientParametry);
-
             Dictionary<string, object> typOsobyParametry = new Dictionary<string, object>();
-            typOsobyParametry.Add(":klient_id", klientId);
+            typOsobyParametry.Add(":v_cislo_popisne", collection["cisloPopisne"]);
+            typOsobyParametry.Add(":v_ulice", collection["ulice"]);
+            typOsobyParametry.Add(":v_psc", collection["psc"]);
 
             if (collection["zvolenyTypOsoby"].Equals("F"))
             {
-                typOsobyParametry.Add(":jmeno", collection["jmeno"]);
-                typOsobyParametry.Add(":prijmeni", collection["prijmeni"]);
-                typOsobyParametry.Add(":rc", collection["rodneCislo"]);
-                typOsobyParametry.Add(":telefon", collection["telefon"]);
-                typOsobyParametry.Add(":email", collection["email"]);
-                db.ExecuteNonQuery("INSERT into fyzicke_osoby (klient_id, jmeno, prijmeni, rodne_cislo, telefon, email) values (:klient_id, :jmeno, :prijmeni, :rc, :telefon, :email) returning klient_id into :id", typOsobyParametry);
+                typOsobyParametry.Add(":v_jmeno", collection["jmeno"]);
+                typOsobyParametry.Add(":v_prijmeni", collection["prijmeni"]);
+                typOsobyParametry.Add(":v_rc", collection["rodneCislo"]);
+                typOsobyParametry.Add(":v_telefon", collection["telefon"]);
+                typOsobyParametry.Add(":v_email", collection["email"]);
+                db.ExecuteNonQuery("vytvor_fyz_o", typOsobyParametry, false, true);
             }
             else
             {
-                typOsobyParametry.Add(":nazev", collection["nazev"]);
-                typOsobyParametry.Add(":ico", collection["ico"]);
-                db.ExecuteNonQuery("INSERT into pravnicke_osoby (klient_id, nazev, ico) values (:klient_id, :nazev, :ico) returning klient_id into :id", typOsobyParametry);
+                typOsobyParametry.Add(":v_nazev", collection["nazev"]);
+                typOsobyParametry.Add(":v_ico", collection["ico"]);
+                db.ExecuteNonQuery("vytvor_prav_o", typOsobyParametry, false, true);
             }
 
-            return klientId;
+            return 0;
         }
 
         public void ChangeClientStatus(int id)
@@ -159,7 +157,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             db.Dispose();
         }
 
-        public void RealizeEditClient(KlientCreateModel klient, int id, string typKlienta)
+        public void RealizeEditClient(KlientEditModel klient, int id, string typKlienta)
         {
             Dictionary<string, object> klientParametry = new Dictionary<string, object>();
             klientParametry.Add(":v_id", id);
@@ -182,18 +180,18 @@ namespace Informacni_System_Pojistovny.Models.Model
             }
         }
 
-        public KlientCreateModel GetEditClient(int id) {
+        public KlientEditModel GetEditClient(int id) {
             Dictionary<string, object> klientParametry = new Dictionary<string, object>();
             klientParametry.Add(":id", id);
 
             OracleDataReader dr = db.ExecuteRetrievingCommand("SELECT * FROM view_vsechny_osoby where klient_id = :id", klientParametry);
 
-            KlientCreateModel klientCreateModel = null;
+            KlientEditModel klientCreateModel = null;
             if (dr.HasRows)
             {
                 if (dr.Read())
                 {
-                    klientCreateModel = new KlientCreateModel();
+                    klientCreateModel = new KlientEditModel();
                     string typKlienta = dr["typ_klienta"].ToString();
                     if (typKlienta.Equals("F"))
                     {
@@ -227,6 +225,16 @@ namespace Informacni_System_Pojistovny.Models.Model
             return true;
         }
 
+        public bool EditClientAddress(int addressId, AdresaInputModel adresa) {
+            Dictionary<string, object> adresaParametry = new Dictionary<string, object>();
+            adresaParametry.Add(":v_cislo_popisne", adresa.CisloPopisne);
+            adresaParametry.Add(":v_ulice", adresa.Ulice);
+            adresaParametry.Add(":v_psc", adresa.Psc);
+            adresaParametry.Add(":v_adresa_id", addressId);
+            db.ExecuteNonQuery("zmen_adresu", adresaParametry, false, true);
+            return true;
+        }
+
         public List<Adresa> GetClientAddresses(int KlientId) {
             PscModel pscModel = new PscModel(db);
             List<Adresa> adresas = new List<Adresa>();
@@ -240,6 +248,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                 {
                     // string stav = dr2["STAV"].ToString();
                     Adresa adresa = new Adresa();
+                    adresa.AdresaId = int.Parse(dr["adresa_id"].ToString());
                     adresa.CisloPopisne = int.Parse(dr["cislo_popisne"].ToString());
                     adresa.Ulice = dr["ulice"].ToString();
                     adresa.Psc = pscModel.ReadPsc(dr["psc_psc"].ToString());

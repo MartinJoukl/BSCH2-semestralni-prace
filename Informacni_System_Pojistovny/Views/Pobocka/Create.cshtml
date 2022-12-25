@@ -1,17 +1,23 @@
-﻿@model Informacni_System_Pojistovny.Models.Model.AdresaInputModel
+﻿@model Informacni_System_Pojistovny.Models.Model.PobockaCreateModel
 
 @{
-    ViewData["Title"] = "Přidat adresu";
+    ViewData["Title"] = "Create";
 }
 
-<h1>Přidat adresu</h1>
+<h1>Create</h1>
 
-<h4>AdresaInputModel</h4>
+<h4>Pobocka</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddAddress">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nazev" class="control-label"></label>
+                <input asp-for="Nazev" class="form-control" />
+                <span asp-validation-for="Nazev" class="text-danger"></span>
+            </div>
+            <h5>Adresa pobočky</h5>
             <div class="form-group">
                 <label asp-for="CisloPopisne" class="control-label"></label>
                 <input asp-for="CisloPopisne" class="form-control" />
@@ -35,7 +41,7 @@
 </div>
 
 <div>
-    <a asp-action="Details">Zpět na přehled klientů</a>
+    <a asp-action="Index">Zpět na přehled poboček</a>
 </div>
 
 @section Scripts {

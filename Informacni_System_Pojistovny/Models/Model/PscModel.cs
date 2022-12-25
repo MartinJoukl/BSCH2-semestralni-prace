@@ -79,5 +79,22 @@ namespace Informacni_System_Pojistovny.Models.Model
                 return false;
             }
         }
+
+        public bool EditPsc(String pscCislo, PscEditModel pscEditModel)
+        {
+            Dictionary<string, object> pscParametry = new Dictionary<string, object>();
+            pscParametry.Add("v_psc", pscCislo);
+            pscParametry.Add("v_mesto", pscEditModel.Mesto);
+
+            try
+            {
+                db.ExecuteNonQuery("zmenit_psc", pscParametry, false, true);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
     }
 }

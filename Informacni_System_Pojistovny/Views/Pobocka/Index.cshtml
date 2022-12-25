@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Pobocka>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Seznam poboček</h1>
+
+<p>
+    <a asp-action="Create">Přidat novou pobočku</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nazev)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nazev)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.PobockaId }) |
+                @Html.ActionLink("Detaily", "Details", new { id=item.PobockaId }) |
+                @Html.ActionLink("Smazat", "Smazat", new { id=item.PobockaId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

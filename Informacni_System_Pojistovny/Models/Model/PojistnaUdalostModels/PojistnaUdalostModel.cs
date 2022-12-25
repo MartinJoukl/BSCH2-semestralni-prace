@@ -37,6 +37,35 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
             return list;
         }
 
+        public void CreatePojistnaUdalost(PojistnaUdalost pojistnaUdalost)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "p_klientId", pojistnaUdalost.Klient.KlientId },
+                { "p_vznik", pojistnaUdalost.Vznik.ToString("dd-MM-yyyy")},
+                { "p_popis", pojistnaUdalost.Popis },
+                { "p_narokovana_vyse_pojistky", pojistnaUdalost.NarokovanaVysePojistky }
+            };
+
+            db.ExecuteNonQuery("CREATE_POJISTNA_UDALOST", parameters, false, true);
+            db.Dispose();
+        }
+
+        public void UpdatePojistnaUdalost(int id, PojistnaUdalost pojistnaUdalost)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "p_udalost_id", id },
+                { "p_klient_id", pojistnaUdalost.Klient.KlientId },
+                { "p_vznik", pojistnaUdalost.Vznik.ToString("dd-MM-yyyy")},
+                { "p_popis", pojistnaUdalost.Popis },
+                { "p_narokovana_vyse_pojistky", pojistnaUdalost.NarokovanaVysePojistky }
+            };
+
+            db.ExecuteNonQuery("UPDATE_POJISTNA_UDALOST", parameters, false, true);
+            db.Dispose();
+        }
+
         public PojistnaUdalost GetPojistnaUdalost(int id)
         {
             PojistnaUdalost pojistnaUdalost = null;

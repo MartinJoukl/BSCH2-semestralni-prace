@@ -27,27 +27,52 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
             PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
+            if(pojistneUdalosti == null)
+            {
+                RedirectToAction(nameof(Index));
+            }
             return View(pojistneUdalosti);
         }
 
         // GET: PojistnaUdalostController/Create
         public ActionResult Create()
         {
-            return View();
+            PojistnaUdalost pojistneUdalosti = new PojistnaUdalost();
+            KlientModel klientModel = new KlientModel(_db);
+            List<Klient> klients = klientModel.ReadClients();
+
+            return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
         }
 
         // POST: PojistnaUdalostController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(IFormCollection form)
         {
+            string klientId = form["PojistnaUdalost.Klient.KlientId"];
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             try
             {
+                KlientModel klientModel = new KlientModel(_db);
+                Klient klient = klientModel.GetClient(int.Parse(klientId));
+                if (klient == null)
+                {
+                    return View();
+                }
+                PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
+                pojistnaUdalostModel.CreatePojistnaUdalost(new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = int.Parse(form["PojistnaUdalost.NarokovanaVysePojistky"]), Popis = form["PojistnaUdalost.Popis"], Vznik = DateTime.Parse(form["PojistnaUdalost.Vznik"]) });
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                PojistnaUdalost pojistneUdalosti = new PojistnaUdalost();
+                KlientModel klientModel = new KlientModel(_db);
+                List<Klient> klients = klientModel.ReadClients();
+
+                return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
         }
 
@@ -57,21 +82,41 @@ namespace Informacni_System_Pojistovny.Controllers
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
             PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
             KlientModel klientModel = new KlientModel(_db);
-            return View();
+            List<Klient> klients = klientModel.ReadClients();
+
+            return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
         }
 
         // POST: PojistnaUdalostController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, IFormCollection form)
         {
+            string klientId = form["PojistnaUdalost.Klient.KlientId"];
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             try
             {
+                KlientModel klientModel = new KlientModel(_db);
+                Klient klient = klientModel.GetClient(int.Parse(klientId));
+                if (klient == null)
+                {
+                    return View();
+                }
+                PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
+                pojistnaUdalostModel.UpdatePojistnaUdalost(id,new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = int.Parse(form["PojistnaUdalost.NarokovanaVysePojistky"]), Popis = form["PojistnaUdalost.Popis"], Vznik = DateTime.Parse(form["PojistnaUdalost.Vznik"]) });
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
+                PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
+                KlientModel klientModel = new KlientModel(_db);
+                List<Klient> klients = klientModel.ReadClients();
+
+                return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
         }
 

@@ -175,6 +175,20 @@ nav .nav-link:hover {
         text-align: left;
     }
 }
+div.noWrap {
+    display: flex;
+    flex-direction: row;
+}
+
+div.noWrap > a {
+    margin: 0px 4px;
+}
+div.noWrap > a:last-child {
+        margin-right: 0px;
+    }
+th{
+    white-space: nowrap;
+}
 
 .navbar-light .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");

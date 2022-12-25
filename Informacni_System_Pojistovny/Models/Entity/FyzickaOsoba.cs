@@ -14,5 +14,10 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public string Telefon { get; set; }
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Jmeno} {Prijmeni}";
+        }
     }
 }

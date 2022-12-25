@@ -2,14 +2,14 @@
 @model IEnumerable<Informacni_System_Pojistovny.Models.Entity.PojistnaUdalost>
 
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Pojistné události";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>View</h1>
+<h1>Přehled pojistných událostí</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Vytvořit novou pojistnou událost</a>
 </p>
 <table class="table">
     <thead>
@@ -36,29 +36,20 @@
                 @Html.DisplayFor(modelItem => item.Vznik)
             </td>
              <td>
-                    @{
-                        string displayName;
-                        if (item.Klient.GetType().Equals(typeof(PravnickaOsoba)))
-                        {
-                            displayName = ((PravnickaOsoba)(item.Klient)).Nazev;
-                        }
-                        else
-                        {
-                            displayName = $"{((FyzickaOsoba)(item.Klient)).Jmeno} {((FyzickaOsoba)(item.Klient)).Prijmeni}";
-                        }
-                    }
-                    @displayName
+                    @item.Klient
                 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Popis)
+                @Html.DisplayTextFor(modelItem => item.Popis)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NarokovanaVysePojistky)
             </td>
-            <td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.PojistnaUdalostId }) |
-                    @Html.ActionLink("Details", "Details", new { id=item.PojistnaUdalostId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.PojistnaUdalostId })
+                <td>
+                    <div class="noWrap">
+                    @Html.ActionLink("Upravit", "Edit", new { id=item.PojistnaUdalostId }) |
+                    @Html.ActionLink("Detail", "Details", new { id=item.PojistnaUdalostId }) |
+                    @Html.ActionLink("Smazat", "Delete", new { id=item.PojistnaUdalostId })
+                    </div>
             </td>
         </tr>
 }

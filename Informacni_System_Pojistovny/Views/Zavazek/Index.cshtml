@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Zavazek>
+
+@{
+    ViewData["Title"] = "Závazky";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Závazky</h1>
+
+<p>
+    <a asp-action="Create">Vytvořit nový závazek</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Vznik)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatumSplatnosti)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vyse)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatumSplaceni)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Popis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PojistnaUdalost)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vznik)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatumSplatnosti)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vyse)
+                </td>
+                <td>
+                    @{
+                        if (item.DatumSplaceni != null)
+                        {
+                            Html.DisplayFor(modelItem => item.DatumSplaceni);
+                        }
+                        else
+                        {
+                          <span>Zatím nesplaceno</span>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Popis)
+                </td>
+                <td>
+                    @Html.ActionLink("Přejít na pojistnou událost", "Details","PojistnaUdalost", new { id=item.PojistnaUdalost.PojistnaUdalostId })
+                </td>
+                <td>
+                    @Html.ActionLink("Detail", "Details", new { item.ZavazekId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

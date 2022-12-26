@@ -1,0 +1,26 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.PobockaEditModel
+
+@{
+    ViewData["Title"] = "Smazat pobočku";
+}
+
+<h1>Smazat pobočku</h1>
+
+<h3>Opravdu chcete smazat tuto pobočku?</h3>
+<div>
+    <h4>Pobočka</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nazev)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nazev)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Smazat" class="btn btn-danger" /> |
+        <a asp-action="Index">Zpět na přehled poboček</a>
+    </form>
+</div>

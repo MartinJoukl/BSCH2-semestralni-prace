@@ -124,23 +124,74 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Delete(int id)
         {
-            return View();
+            PobockaModel pobockaModel = new PobockaModel(_db);
+            PobockaEditModel pobocka = pobockaModel.ReadBranchAsPobockaEdit(id);
+            return View(pobocka);
         }
 
         // POST: PobockaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, PobockaEditModel pobockaEditModel)
         {
-            try
+            PobockaModel pobockaModel = new PobockaModel(_db);
+            pobockaModel.DeleteBranch(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: PobockaController/EditAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult EditAddress(int id)
+        {
+            PscModel pscModel = new PscModel(_db);
+            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+            AdresaModel adresaModel = new AdresaModel(_db);
+            AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
+            ViewBag.pscs = pscs;
+            return View(adresaInputModel);
+        }
+
+        // ´POST: PobockaController/AddAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [HttpPost]
+        public ActionResult EditAddress(AdresaInputModel adresa, int id)
+        {
+            if (ModelState.IsValid)
             {
+                AdresaModel adresaModel = new AdresaModel(_db);
+                adresaModel.EditAddress(id, adresa);
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            else return View();
+        }
+
+        // GET: PobockaController/DeleteAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult DeleteAddress(int id)
+        {
+            PscModel pscModel = new PscModel(_db);
+            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+            AdresaModel adresaModel = new AdresaModel(_db);
+            AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
+            ViewBag.pscs = pscs;
+            return View(adresaInputModel);
+        }
+
+        // POST: PobockaController/AddAddress
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [HttpPost]
+        public ActionResult DeleteAddress(AdresaInputModel adresa, int id)
+        {
+            if (ModelState.IsValid)
             {
-                return View();
+                AdresaModel adresaModel = new AdresaModel(_db);
+                adresaModel.DeleteAddress(id);
+
+                return RedirectToAction(nameof(Index));
             }
+            else return View();
         }
     }
 }

@@ -60,7 +60,9 @@
                 <td>
                 @adresa.CisloPopisne
                 </td>
-                <td></td>
+                <td>
+                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId })
+                </td>
             </tr>
         }
     </tbody>

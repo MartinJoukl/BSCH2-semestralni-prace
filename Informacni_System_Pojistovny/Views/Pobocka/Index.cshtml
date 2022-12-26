@@ -25,9 +25,9 @@
                 @Html.DisplayFor(modelItem => item.Nazev)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.PobockaId }) |
+                @Html.ActionLink("Editace", "Edit", new { id=item.PobockaId }) |
                 @Html.ActionLink("Detaily", "Details", new { id=item.PobockaId }) |
-                @Html.ActionLink("Smazat", "Smazat", new { id=item.PobockaId })
+                @Html.ActionLink("Smazat", "Delete", new { id=item.PobockaId })
             </td>
         </tr>
 }

@@ -96,7 +96,6 @@
                 Číslo popisné
             </th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -116,9 +115,7 @@
                     @adresa.CisloPopisne
                 </td>
                 <td>
-                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId })
-                </td>
-                <td>
+                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId }) |
                     @Html.ActionLink("Smazat adresu", "DeleteAddress", new { id = adresa.AdresaId })
                 </td>
             </tr>

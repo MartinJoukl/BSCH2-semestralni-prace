@@ -1,0 +1,53 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.Pojistka.PojistkaCreateModel
+
+@{
+    ViewData["Title"] = "Vytvořit pojistku";
+}
+
+<h1>Vytvořit pojistku</h1>
+
+<h4>Pojistka</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="KlientId" class="control-label"></label>
+                <select name="KlientId" class="form-control" asp-items="@ViewBag.klienti"></select>
+                <span asp-validation-for="KlientId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PojistnyProduktId" class="control-label"></label>
+                <select name="PojistnyProduktId" class="form-control" asp-items="@ViewBag.produkty"></select>
+                <span asp-validation-for="PojistnyProduktId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sjednano" class="control-label"></label>
+                <input asp-for="Sjednano" class="form-control" />
+                <span asp-validation-for="Sjednano" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Poplatek" class="control-label"></label>
+                <input asp-for="Poplatek" class="form-control" />
+                <span asp-validation-for="Poplatek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SjednanaVyse" class="control-label"></label>
+                <input asp-for="SjednanaVyse" class="form-control" />
+                <span asp-validation-for="SjednanaVyse" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Zpět na přehled pojistek</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

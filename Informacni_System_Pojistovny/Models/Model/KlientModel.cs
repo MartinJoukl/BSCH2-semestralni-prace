@@ -1,5 +1,6 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Oracle.ManagedDataAccess.Client;
 
 namespace Informacni_System_Pojistovny.Models.Model
@@ -64,6 +65,14 @@ namespace Informacni_System_Pojistovny.Models.Model
                 }
             }
             throw new Exception("Person not found!");
+        }
+
+        public List<SelectListItem> ReadClientsAsSelectList()
+        {
+            List<Klient> klienti = ReadClients();
+            List<SelectListItem> klientiAsSelectList = new List<SelectListItem>();
+            klienti.ForEach(p => { klientiAsSelectList.Add(new SelectListItem { Value = p.KlientId.ToString(), Text = p.CeleJmeno }); });
+            return klientiAsSelectList;
         }
 
         public List<Klient> ReadClients()

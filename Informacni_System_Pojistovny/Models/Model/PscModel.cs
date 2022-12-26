@@ -80,7 +80,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             }
         }
 
-        public bool EditPsc(String pscCislo, PscEditModel pscEditModel)
+        public bool EditPsc(string pscCislo, PscEditModel pscEditModel)
         {
             Dictionary<string, object> pscParametry = new Dictionary<string, object>();
             pscParametry.Add("v_psc", pscCislo);

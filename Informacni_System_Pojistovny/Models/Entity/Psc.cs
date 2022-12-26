@@ -10,6 +10,7 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public string PscCislo { get; set; }
         [StringLength(200, ErrorMessage = "Maximální délka je 200 znaků")]
         [Display(Name = "Město")]
+        [Required(ErrorMessage = "Město musí být vyplněno", AllowEmptyStrings = false)]
         public string Mesto { get; set; }
         public Adresa? Adresa { get; set; }
     }

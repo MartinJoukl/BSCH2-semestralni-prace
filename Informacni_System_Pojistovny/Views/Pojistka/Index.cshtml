@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Pojistka>
+
+@{
+    ViewData["Title"] = "Správa pojistek";
+}
+
+<h1>Správa pojistek</h1>
+
+<p>
+    <a asp-action="Create">Vytvořit novou pojistku</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sjednano)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Poplatek)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SjednanaVyse)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sjednano)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Poplatek)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SjednanaVyse)
+            </td>
+            <td>
+                @Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Detaily", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Smazat", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

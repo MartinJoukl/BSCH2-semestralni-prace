@@ -16,15 +16,12 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             Dictionary<string, object> pobockaParametry = new Dictionary<string, object>();
             pobockaParametry.Add("v_nazev", pobockaCreateModel.Nazev);
-            
-            int pobockaId = db.ExecuteNonQuery("vytvorit_pobocku", pobockaParametry, true, true);
-            AdresaInputModel adresa = new AdresaInputModel();
-            adresa.Psc = pobockaCreateModel.Psc;
-            adresa.CisloPopisne = pobockaCreateModel.CisloPopisne;
-            adresa.Ulice = pobockaCreateModel.Ulice;
-            AddAddressesToBranch(pobockaId, adresa);
-            return true;
-            
+            pobockaParametry.Add("v_cislo_popisne", pobockaCreateModel.CisloPopisne);
+            pobockaParametry.Add("v_ulice", pobockaCreateModel.Ulice);
+            pobockaParametry.Add("v_psc", pobockaCreateModel.Psc);
+
+            db.ExecuteNonQuery("vytvorit_pobocku", pobockaParametry, false, true);
+            return true;  
         }
 
         public bool DeleteBranch(int id) {
@@ -145,6 +142,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                     adresa.CisloPopisne = int.Parse(dr["cislo_popisne"].ToString());
                     adresa.Ulice = dr["ulice"].ToString();
                     adresa.Psc = pscModel.ReadPsc(dr["psc_psc"].ToString());
+                    adresa.AdresaId = int.Parse(dr["adresa_id"].ToString());
                     adresas.Add(adresa);
                 }
             }

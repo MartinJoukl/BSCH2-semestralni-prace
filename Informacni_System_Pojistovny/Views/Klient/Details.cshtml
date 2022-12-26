@@ -115,8 +115,12 @@
                     @adresa.CisloPopisne
                 </td>
                 <td>
-                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId }) |
-                    @Html.ActionLink("Smazat adresu", "DeleteAddress", new { id = adresa.AdresaId })
+                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId })
+                    @if (Model.Adresy.Count > 1)
+                    {
+                        <span>|</span>
+                        @Html.ActionLink("Smazat adresu", "DeleteAddress", new { id = adresa.AdresaId })
+                    }
                 </td>
             </tr>
     }

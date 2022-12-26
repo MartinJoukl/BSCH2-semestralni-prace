@@ -1,0 +1,67 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.ZavazekModels.RedirectableZavazek
+
+@{
+    ViewData["Title"] = "Smazání závazku";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Smazání závazku</h1>
+
+<h3>Opravdu chcete smazat tento závazek?</h3>
+<div>
+    <h4>Závazek</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Zavazek.Vznik)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Zavazek.Vznik)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Zavazek.DatumSplatnosti)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Zavazek.DatumSplatnosti)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Zavazek.Vyse)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Zavazek.Vyse)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Zavazek.DatumSplaceni)
+        </dt>
+        <dd class = "col-sm-10">
+            @{
+                if (Model.Zavazek.DatumSplaceni != null)
+                {
+                //Html.DisplayFor(modelItem => item.DatumSplaceni);
+                  <span>@(((DateTime)Model.Zavazek.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                }
+                else
+                {
+                  <span>Nesplaceno</span>
+                }
+            }
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Zavazek.Popis)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Zavazek.Popis)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input hidden asp-for="RedirectedFrom" class="form-control" />
+        <input type="submit" value="Smazat" class="btn btn-danger" /> |
+        @if (Model.RedirectedFrom == null)
+        {
+            <a asp-action="Index">Zpět na detail</a>
+        }else{
+            <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.Zavazek.PojistnaUdalost.PojistnaUdalostId>Zpět na pojistnou událost</a>
+        }
+    </form>
+</div>

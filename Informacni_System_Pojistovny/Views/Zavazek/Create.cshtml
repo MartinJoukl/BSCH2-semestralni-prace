@@ -1,0 +1,55 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Zavazek
+
+@{
+    ViewData["Title"] = "Vytvoření nového závazku";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Vytvoření nového závazku</h1>
+
+<h4>Závazek</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Vznik" class="control-label"></label>
+                <input asp-for="Vznik" class="form-control" />
+                <span asp-validation-for="Vznik" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DatumSplatnosti" class="control-label"></label>
+                <input asp-for="DatumSplatnosti" class="form-control" />
+                <span asp-validation-for="DatumSplatnosti" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vyse" class="control-label"></label>
+                <input asp-for="Vyse" class="form-control" />
+                <span asp-validation-for="Vyse" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DatumSplaceni" class="control-label"></label>
+                <input asp-for="DatumSplaceni" class="form-control" />
+                <span asp-validation-for="DatumSplaceni" class="text-danger"></span>
+            </div>
+            <input hidden name="pojistnaUdalostId" value="@ViewBag.pojistnaUdalostId" />
+            <div class="form-group">
+                <label asp-for="Popis" class="control-label"></label>
+                <input asp-for="Popis" class="form-control" />
+                <span asp-validation-for="Popis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Vytvořit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-controller="PojistnaUdalost" asp-route-id="@ViewBag.pojistnaUdalostId">Zpět na pojistnou událost</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

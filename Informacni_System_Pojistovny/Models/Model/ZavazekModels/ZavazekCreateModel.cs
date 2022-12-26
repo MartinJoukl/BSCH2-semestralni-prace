@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Informacni_System_Pojistovny.Models.Entity;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
-namespace Informacni_System_Pojistovny.Models.Entity
+namespace Informacni_System_Pojistovny.Models.Model.ZavazekModels
 {
-    public class Zavazek
+    public class ZavazekCreateModel
     {
-        public int ZavazekId { get; set; }
         [Display(Name = "Vznik")]
         [DataType(DataType.Date)]
         public DateTime Vznik { get; set; } = DateTime.Now;
@@ -19,7 +20,7 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public DateTime? DatumSplaceni { get; set; } = DateTime.Now;
         [Display(Name = "Popis")]
         public string Popis { get; set; }
-        [Display(Name = "Pojistná událost")]
-        public PojistnaUdalost PojistnaUdalost { get; set; }
+        [Display(Name = "Pojistná událost"), Required]
+        public int? PojistnaUdalostId { get; set; }
     }
 }

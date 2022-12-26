@@ -27,6 +27,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.SjednanaVyse)
             </th>
+             <th>
+                Pojistný produkt
+            </th>
+            <th>
+                Klient
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -42,11 +48,24 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Poplatek)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
+                <td>
+                    @if (item.Status)
+                    {
+                        @Html.DisplayName("Aktivní")
+                    }
+                    else
+                    {
+                        @Html.DisplayName("Neaktivní")
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SjednanaVyse)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PojistnyProdukt.Nazev)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Klient.CeleJmeno)
             </td>
             <td>
                 @Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |

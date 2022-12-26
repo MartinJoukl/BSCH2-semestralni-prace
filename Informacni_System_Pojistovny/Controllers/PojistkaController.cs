@@ -20,7 +20,8 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: PojistkaController
         public ActionResult Index()
         {
-            List<Pojistka> pojisky = new List<Pojistka>();
+            PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            List<Pojistka> pojisky = pojistkaModel.ReadInsurances();
             return View(pojisky);
         }
 
@@ -50,6 +51,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             if(ModelState.IsValid)
             {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.CreateInsurance(pojistkaCreateModel);
                 return RedirectToAction(nameof(Index));
             }
             else

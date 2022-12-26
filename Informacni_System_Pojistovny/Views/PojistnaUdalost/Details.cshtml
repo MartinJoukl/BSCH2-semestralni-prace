@@ -36,8 +36,82 @@
             @Model.Klient
         </dd>
     </dl>
-</div>
-<div>
     @Html.ActionLink("Upravit", "Edit",new { id= Model.PojistnaUdalostId}) |
     <a asp-action="Index">Zpět na přehled</a>
+            <p>
+
+</p>
+    <h1>Závazky</h1>
+        <p>
+        @Html.ActionLink("Vytvoření nového závazku", "Create","Zavazek", new { pojistnaUdalostId=Model.PojistnaUdalostId })
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                    Závazky k pojistné události
+            </th>
+            <th>
+                    Datum splatnosti
+            </th>
+            <th>
+                    Výše
+            </th>
+            <th>
+                    Datum splacení
+            </th>
+            <th>
+                    Popis
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var item in Model.Zavazky)
+            {
+                            <tr>
+                                <td>
+                        @Html.DisplayFor(modelItem => item.Vznik)
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => item.DatumSplatnosti)
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => item.Vyse)
+                                </td>
+                                <td>
+                        @{
+                            if (item.DatumSplaceni != null)
+                            {
+                    //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
+                                                                                                    <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                            }
+                            else
+                            {
+                                                                                      <span>Nesplaceno</span>
+                            }
+                        }
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => item.Popis)
+                                </td>
+                                <td>
+                        @Html.ActionLink("Detail", "Details", "Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" }) |
+
+                        @Html.ActionLink("Upravit", "Edit","Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" }) |
+                        @Html.ActionLink("Smazat", "Delete","Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" })
+                                </td>
+                            </tr>
+            }
+    </tbody>
+</table>
+    @{
+        if (Model.Zavazky == null || Model.Zavazky.Count == 0)
+        {
+                                                            <span>K této pojistné události nejsou evidovány žádné závazky.</span>
+        }
+    }
+</div>
+<div>
 </div>

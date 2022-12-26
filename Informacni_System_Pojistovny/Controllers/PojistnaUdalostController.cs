@@ -26,12 +26,12 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Details(int id)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
-            PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
-            if(pojistneUdalosti == null)
+            PojistnaUdalost pojistnaUdalost = pojistnaUdalostModel.GetPojistnaUdalost(id);
+            if (pojistnaUdalost == null)
             {
-                RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
-            return View(pojistneUdalosti);
+            return View(pojistnaUdalost);
         }
 
         // GET: PojistnaUdalostController/Create
@@ -106,7 +106,7 @@ namespace Informacni_System_Pojistovny.Controllers
                     return View();
                 }
                 PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
-                pojistnaUdalostModel.UpdatePojistnaUdalost(id,new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = int.Parse(form["PojistnaUdalost.NarokovanaVysePojistky"]), Popis = form["PojistnaUdalost.Popis"], Vznik = DateTime.Parse(form["PojistnaUdalost.Vznik"]) });
+                pojistnaUdalostModel.UpdatePojistnaUdalost(id, new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = int.Parse(form["PojistnaUdalost.NarokovanaVysePojistky"]), Popis = form["PojistnaUdalost.Popis"], Vznik = DateTime.Parse(form["PojistnaUdalost.Vznik"]) });
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -123,7 +123,13 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: PojistnaUdalostController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
+            PojistnaUdalost pojistnaUdalost = pojistnaUdalostModel.GetPojistnaUdalost(id);
+            if (pojistnaUdalost == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(pojistnaUdalost);
         }
 
         // POST: PojistnaUdalostController/Delete/5
@@ -131,13 +137,15 @@ namespace Informacni_System_Pojistovny.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
+            PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
             try
             {
+                pojistnaUdalostModel.DeletePojistnaUdalost(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Delete), new { id });
             }
         }
     }

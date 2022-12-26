@@ -1,0 +1,65 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.ZavazekModels.RedirectableZavazek
+
+@{
+    ViewData["Title"] = "Úprava závazku";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Úprava závazku</h1>
+
+<h4>Závazek</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Zavazek.Vznik" class="control-label"></label>
+                <input asp-for="Zavazek.Vznik" class="form-control" />
+                <span asp-validation-for="Zavazek.Vznik" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zavazek.DatumSplatnosti" class="control-label"></label>
+                <input asp-for="Zavazek.DatumSplatnosti" class="form-control" />
+                <span asp-validation-for="Zavazek.DatumSplatnosti" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zavazek.Vyse" class="control-label"></label>
+                <input asp-for="Zavazek.Vyse" class="form-control" />
+                <span asp-validation-for="Zavazek.Vyse" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zavazek.DatumSplaceni" class="control-label"></label>
+                <input asp-for="Zavazek.DatumSplaceni" class="form-control" />
+                <span asp-validation-for="Zavazek.DatumSplaceni" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zavazek.Popis" class="control-label"></label>
+                <input asp-for="Zavazek.Popis" class="form-control" />
+                <span asp-validation-for="Zavazek.Popis" class="text-danger"></span>
+            </div>
+               <input hidden asp-for="RedirectedFrom" class="form-control" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+
+        @if (Model.RedirectedFrom != null)
+        {
+           <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.Zavazek.PojistnaUdalost.PojistnaUdalostId>Zpět na pojistnou událost</a> <span>|</span>
+           <a asp-action="Details" asp-route-id=@Model.Zavazek.ZavazekId>Přejdi k detailu závazku</a>
+        }else{
+           <a asp-action="Details" asp-route-id=@Model.Zavazek.ZavazekId>Zpět na detail</a>
+        }
+    
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

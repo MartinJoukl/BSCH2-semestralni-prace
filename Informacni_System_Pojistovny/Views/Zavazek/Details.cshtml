@@ -1,14 +1,14 @@
 ﻿@model Informacni_System_Pojistovny.Models.Entity.Zavazek
 
 @{
-    ViewData["Title"] = "Detail";
+    ViewData["Title"] = "Detail závazku";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Detail</h1>
 
 <div>
-    <h4>Zavazek</h4>
+    <h4>Závazek</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -33,7 +33,17 @@
             @Html.DisplayNameFor(model => model.DatumSplaceni)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DatumSplaceni)
+            @{
+                if (Model.DatumSplaceni != null)
+                {
+                //Html.DisplayFor(modelItem => item.DatumSplaceni);
+                                                                    <span>@(((DateTime)Model.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                }
+                else
+                {
+                                          <span>Nesplaceno</span>
+                }
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Popis)
@@ -41,14 +51,16 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Popis)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PojistnaUdalost)
+        </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PojistnaUdalost)
+            @Html.ActionLink("Detail pojistné události", "Details","PojistnaUdalost", new { id=Model.PojistnaUdalost.PojistnaUdalostId })
         </dd>
-        <td>
-            @Html.ActionLink("Odkaz na pojistnou událost", "Details","PojistnaUdalost", new { id=Model.PojistnaUdalost.PojistnaUdalostId,source="ZavazekController", })
-        </td>
     </dl>
 </div>
 <div>
+    @Html.ActionLink("Upravit", "Edit", new {  id = Model.ZavazekId }) |
     <a asp-action="Index">Zpět na přehled</a>
-</div>
+
+    </div>

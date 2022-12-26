@@ -51,7 +51,7 @@
             }
             foreach (var paramKey in parameters.Keys)
             {
-                oracleCommand.Parameters.Add(paramKey, parameters[paramKey].ToString());
+                oracleCommand.Parameters.Add(paramKey, parameters[paramKey]?.ToString());
             }
             if (parameters.Count > 0)
             {
@@ -74,8 +74,9 @@
                 {
                     oracleCommand.Parameters.Add("id", OracleDbType.Decimal, System.Data.ParameterDirection.Output);
                 }
-                else { 
-                    oracleCommand.Parameters.Add("id", OracleDbType.Decimal, System.Data.ParameterDirection.ReturnValue); 
+                else
+                {
+                    oracleCommand.Parameters.Add("id", OracleDbType.Decimal, System.Data.ParameterDirection.ReturnValue);
                 }
             }
             oracleCommand.ExecuteNonQuery();

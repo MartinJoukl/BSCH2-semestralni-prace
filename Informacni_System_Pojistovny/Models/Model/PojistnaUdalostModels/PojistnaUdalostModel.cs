@@ -1,5 +1,6 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Informacni_System_Pojistovny.Models.Model.ZavazekModels;
 using Oracle.ManagedDataAccess.Client;
 
 namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
@@ -66,11 +67,23 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
             db.Dispose();
         }
 
+        public void DeletePojistnaUdalost(int id)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "p_udalost_id", id },
+            };
+
+            db.ExecuteNonQuery("DELETE_POJISTNA_UDALOST", parameters, false, true);
+            db.Dispose();
+        }
+
         public PojistnaUdalost GetPojistnaUdalost(int id)
         {
+            ZavazekModel zavazekModel = new ZavazekModel(new Db());
             PojistnaUdalost pojistnaUdalost = null;
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters["id"] = id;
+            parameters[":id"] = id;
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id where pojistna_Udalost_Id = :id", parameters);
             if (dr.HasRows)
             {
@@ -85,6 +98,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
                         Vznik = DateTime.Parse(dr["vznik"].ToString()),
                         Popis = dr["popis"].ToString(),
                         PojistnaUdalostId = int.Parse(dr["pojistna_Udalost_Id"].ToString()),
+                        Zavazky = zavazekModel.ListZavazek(id)
                     };
                 }
             }

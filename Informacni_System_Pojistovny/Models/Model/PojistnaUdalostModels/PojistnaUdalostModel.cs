@@ -52,12 +52,12 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
             db.Dispose();
         }
 
-        public void UpdatePojistnaUdalost(int id, PojistnaUdalost pojistnaUdalost)
+        public void UpdatePojistnaUdalost(int id, PojistnaUdalostEditModel pojistnaUdalost)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 { "p_udalost_id", id },
-                { "p_klient_id", pojistnaUdalost.Klient.KlientId },
+                { "p_klient_id", pojistnaUdalost.KlientId },
                 { "p_vznik", pojistnaUdalost.Vznik.ToString("dd-MM-yyyy")},
                 { "p_popis", pojistnaUdalost.Popis },
                 { "p_narokovana_vyse_pojistky", pojistnaUdalost.NarokovanaVysePojistky }

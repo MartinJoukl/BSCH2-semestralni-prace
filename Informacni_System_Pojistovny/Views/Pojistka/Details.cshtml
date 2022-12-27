@@ -1,0 +1,49 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Pojistka
+
+@{
+    ViewData["Title"] = "Detaily pojistky";
+}
+
+<h1>Detaily pojistky</h1>
+
+<div>
+    <h4>Pojistka</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Sjednano)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Sjednano)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Poplatek)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Poplatek)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Status == true)
+            {
+                @Html.DisplayName("Aktivní")
+            }
+            @if (Model.Status == false)
+            {
+                @Html.DisplayName("Neaktivní")
+            }
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SjednanaVyse)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SjednanaVyse)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Editovat", "Edit", new {  id = Model.ID }) |
+    <a asp-action="Index">Zpět na přehled pojistek</a>
+</div>

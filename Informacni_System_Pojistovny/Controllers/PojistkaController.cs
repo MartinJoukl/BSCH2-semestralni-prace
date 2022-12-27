@@ -21,14 +21,16 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Index()
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
-            List<Pojistka> pojisky = pojistkaModel.ReadInsurances();
-            return View(pojisky);
+            List<Pojistka> pojistky = pojistkaModel.ReadInsurances();
+            return View(pojistky);
         }
 
         // GET: PojistkaController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            return View(pojistka);
         }
 
         // GET: PojistkaController/Create
@@ -64,21 +66,25 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: PojistkaController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            PojistkaEditModel pojistkaEditModel = pojistkaModel.ReadInsuranceAsEditModel(id);
+            return View(pojistkaEditModel);
         }
 
         // POST: PojistkaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, PojistkaEditModel pojistkaEditModel)
         {
-            try
+            if(ModelState.IsValid)
             {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.ChangeInsurance(id, pojistkaEditModel);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            else
             {
-                return View();
+                return View(pojistkaEditModel);
             }
         }
 

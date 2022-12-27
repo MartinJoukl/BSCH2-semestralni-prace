@@ -14,6 +14,7 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
         public int? KlientId { get; set; }
         [Display(Name = "Datum uzavření pojistky")]
         [Required(ErrorMessage = "Datum uzavření pojistky je požadováno")]
+        [DataType(DataType.Date)]
         public DateTime Sjednano { get; set; }
         [Display(Name = "Výše poplatku")]
         [Required(ErrorMessage = "Výše poplatku musí být vyplněna")]

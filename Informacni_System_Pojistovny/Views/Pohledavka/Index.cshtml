@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Pohledavka>
+
+@{
+    ViewData["Title"] = "Pohledávky";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Pohledávky</h1>
+
+<p>
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Vznik)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatumSplatnosti)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vyse)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatumSplaceni)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Popis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pojistka)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+                    <tr>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.Vznik)
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.DatumSplatnosti)
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.Vyse)
+                        </td>
+                        <td>
+                    @{
+                        if (item.DatumSplaceni != null)
+                        {
+                        //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
+                                                                            <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                        }
+                        else
+                        {
+                                                              <span>Nesplaceno</span>
+                        }
+                    }
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.Popis)
+                        </td>
+                        <td>
+                    @Html.ActionLink("Přejít na pojistku", "Details","Pojistka", new { id=item.Pojistka.ID })
+                        </td>
+                        <td>
+                    @Html.ActionLink("Detail", "Details", new { id=item.ID }) |
+
+                    @Html.ActionLink("Upravit", "Edit", new { id=item.ID }) |
+                    @Html.ActionLink("Smazat", "Delete", new { id=item.ID })
+                        </td>
+                    </tr>
+        }
+    </tbody>
+</table>

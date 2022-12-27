@@ -1,13 +1,13 @@
-﻿@model Informacni_System_Pojistovny.Models.Model.ZavazekModels.RedirectableZavazekModel
+﻿@model Informacni_System_Pojistovny.Models.Model.PohledavkaModels.RedirectablePohledavka
 
 @{
-    ViewData["Title"] = "Úprava závazku";
+    ViewData["Title"] = "Úprava pohledávky";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Úprava závazku</h1>
+<h1>Úprava pohledávky</h1>
 
-<h4>Závazek</h4>
+<h4>Pohledávka</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -39,9 +39,8 @@
                 <span asp-validation-for="Popis" class="text-danger"></span>
             </div>
                <input hidden asp-for="RedirectedFrom" class="form-control" />
-               <input hidden asp-for="ZavazekId" class="form-control" />
-               <input hidden asp-for="PojistnaUdalostId" class="form-control" />
-
+               <input hidden asp-for="ID" class="form-control" />
+               <input hidden asp-for="PojistkaId" class="form-control" />
             <div class="form-group">
                 <input type="submit" value="Upravit" class="btn btn-primary" />
             </div>
@@ -53,10 +52,10 @@
 
         @if (Model.RedirectedFrom != null)
         {
-               <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistnaUdalostId>Zpět na pojistnou událost</a> <span>|</span>
-           <a asp-action="Details" asp-route-id=@Model.ZavazekId>Přejdi k detailu závazku</a>
+                   <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistkaId>Zpět na pojistnou událost</a> <span>|</span>
+               <a asp-action="Details" asp-route-id=@Model.ID>Přejdi k detailu pohledávky</a>
         }else{
-           <a asp-action="Details" asp-route-id=@Model.ZavazekId>Zpět na detail</a>
+               <a asp-action="Details" asp-route-id=@Model.ID>Zpět na detail</a>
         }
     
 </div>

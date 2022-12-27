@@ -46,9 +46,9 @@ namespace Informacni_System_Pojistovny.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ZavazekCreateModel zavazekCreateModel)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || zavazekCreateModel.Vznik > zavazekCreateModel.DatumSplatnosti)
             {
-
+                ViewBag.pojistnaUdalostId = zavazekCreateModel.PojistnaUdalostId;
                 return View();
             }
             try
@@ -64,6 +64,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             catch
             {
+                ViewBag.pojistnaUdalostId = zavazekCreateModel.PojistnaUdalostId;
                 return View();
             }
         }
@@ -77,23 +78,23 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            return View(new RedirectableZavazek() { Zavazek = zavazek, RedirectedFrom = redirectedFrom });
+            return View(new RedirectableZavazekModel() { Vznik= zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni= zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom });
         }
 
         // POST: ZavazkyController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, RedirectableZavazek model)
+        public ActionResult Edit(int id, RedirectableZavazekModel model)
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (!ModelState.IsValid || model.Vznik > model.DatumSplatnosti)
                 {
-                    return View(id);
+                    return View(model);
                 }
                 ZavazekModel zavazekModel = new ZavazekModel(_db);
                 Zavazek original = zavazekModel.GetZavazekUdalost(id);
-                zavazekModel.UpdateZavazek(id, model.Zavazek);
+                zavazekModel.UpdateZavazek(id, model);
 
                 if (model.RedirectedFrom == null)
                 {
@@ -107,7 +108,7 @@ namespace Informacni_System_Pojistovny.Controllers
             catch
             {
 
-                return View(id);
+                return View(model);
             }
         }
 
@@ -120,19 +121,19 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return View(new RedirectableZavazek() { Zavazek = zavazek, RedirectedFrom = redirectedFrom });
+            return View(new RedirectableZavazekModel() { Vznik = zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni = zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom });
         }
 
         // POST: ZavazkyController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, RedirectableZavazek model)
+        public ActionResult Delete(int id, RedirectableZavazekModel model)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(id);
+                    return View(model);
                 }
                 ZavazekModel zavazekModel = new ZavazekModel(_db);
                 Zavazek original = zavazekModel.GetZavazekUdalost(id);
@@ -150,7 +151,7 @@ namespace Informacni_System_Pojistovny.Controllers
             catch
             {
 
-                return View(id);
+                return View(model);
             }
         }
     }

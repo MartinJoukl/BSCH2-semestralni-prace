@@ -1,15 +1,14 @@
-﻿@model Informacni_System_Pojistovny.Models.Model.ZavazekModels.RedirectableZavazekModel
+﻿@model Informacni_System_Pojistovny.Models.Entity.Pohledavka
 
 @{
-    ViewData["Title"] = "Smazání závazku";
+    ViewData["Title"] = "Detail pohledávky";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Smazání závazku</h1>
+<h1>Detail</h1>
 
-<h3>Opravdu chcete smazat tento závazek?</h3>
 <div>
-    <h4>Závazek</h4>
+    <h4>Pohledávka</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -38,11 +37,11 @@
                 if (Model.DatumSplaceni != null)
                 {
                 //Html.DisplayFor(modelItem => item.DatumSplaceni);
-                  <span>@(((DateTime)Model.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                                                                    <span>@(((DateTime)Model.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
                 }
                 else
                 {
-                  <span>Nesplaceno</span>
+                                          <span>Nesplaceno</span>
                 }
             }
         </dd>
@@ -52,16 +51,16 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Popis)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Pojistka)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.ActionLink("Detail pojistky", "Details","Pojistka", new { id=Model.Pojistka.ID })
+        </dd>
     </dl>
-    
-    <form asp-action="Delete">
-        <input hidden asp-for="RedirectedFrom" class="form-control" />
-        <input type="submit" value="Smazat" class="btn btn-danger" /> |
-        @if (Model.RedirectedFrom == null)
-        {
-            <a asp-action="Index">Zpět na detail</a>
-        }else{
-            <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistnaUdalostId>Zpět na pojistnou událost</a>
-        }
-    </form>
 </div>
+<div>
+    @Html.ActionLink("Upravit", "Edit", new {  id = Model.ID }) |
+    <a asp-action="Index">Zpět na přehled</a>
+
+    </div>

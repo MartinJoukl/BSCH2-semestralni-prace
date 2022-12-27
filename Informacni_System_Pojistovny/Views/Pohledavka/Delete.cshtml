@@ -1,15 +1,15 @@
-﻿@model Informacni_System_Pojistovny.Models.Model.ZavazekModels.RedirectableZavazekModel
+﻿@model Informacni_System_Pojistovny.Models.Model.PohledavkaModels.RedirectablePohledavka
 
 @{
-    ViewData["Title"] = "Smazání závazku";
+    ViewData["Title"] = "Smazání pohledávky";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Smazání závazku</h1>
+<h1>Smazání pohledávky</h1>
 
-<h3>Opravdu chcete smazat tento závazek?</h3>
+<h3>Opravdu chcete smazat tuto pohledávku?</h3>
 <div>
-    <h4>Závazek</h4>
+    <h4>Pohledávka</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -38,7 +38,7 @@
                 if (Model.DatumSplaceni != null)
                 {
                 //Html.DisplayFor(modelItem => item.DatumSplaceni);
-                  <span>@(((DateTime)Model.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                          <span>@(((DateTime)Model.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
                 }
                 else
                 {
@@ -61,7 +61,7 @@
         {
             <a asp-action="Index">Zpět na detail</a>
         }else{
-            <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistnaUdalostId>Zpět na pojistnou událost</a>
+                <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistkaId>Zpět na pojistku</a>
         }
     </form>
 </div>

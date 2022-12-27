@@ -17,5 +17,7 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public int ID { get; set; }
         public List<Podminky> Podminky { get; set; } = new List<Podminky>();
         public Klient Klient { get; set; }
+        [Display(Name = "Pohledávky")]
+        public List<Pohledavka> Pohledavky { get; set; }
     }
 }

@@ -51,12 +51,12 @@
             return list;
         }
 
-        public List<Zavazek> ListZavazek(int id)
+        public List<Zavazek> ListZavazek(int idPojistnaUdalost)
         {
             List<Zavazek> list = new List<Zavazek>();
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
-                { ":id", id }
+                { ":id", idPojistnaUdalost }
             };
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from zavazky_view JOIN pojistne_udalosti_view using (POJISTNA_UDALOST_ID) where POJISTNA_UDALOST_ID = :id",parameters);
             if (dr.HasRows)
@@ -111,7 +111,7 @@
             db.Dispose();
         }
 
-        public void UpdateZavazek(int id, Zavazek zavazek)
+        public void UpdateZavazek(int id, RedirectableZavazekModel zavazek)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {

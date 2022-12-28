@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Informacni_System_Pojistovny.Models.Entity;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace Informacni_System_Pojistovny.Models.Entity
+namespace Informacni_System_Pojistovny.Models.Model.PohledavkaModels
 {
-    public class Pohledavka
-    {        
+    public class RedirectablePohledavka
+    {
         public int ID { get; set; }
         [Display(Name = "Vznik"), Required]
         [DataType(DataType.Date)]
@@ -21,7 +22,7 @@ namespace Informacni_System_Pojistovny.Models.Entity
         [Display(Name = "Popis")]
         public string Popis { get; set; }
         [Required]
-        public Pojistka Pojistka { get; set; }
-
+        public int PojistkaId { get; set; }
+        public string? RedirectedFrom { get; set; }
     }
 }

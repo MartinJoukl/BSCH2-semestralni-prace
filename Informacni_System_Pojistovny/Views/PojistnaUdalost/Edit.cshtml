@@ -16,22 +16,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group col-md-4">
                 <label asp-for="PojistnaUdalost.Vznik" class="control-label"></label>
-                <input asp-for="PojistnaUdalost.Vznik" class="form-control" />
+                <input name="Vznik" asp-for="PojistnaUdalost.Vznik" class="form-control" />
                 <span asp-validation-for="PojistnaUdalost.Vznik" class="text-danger"></span>
             </div>
             <div class="form-group col-md-12">
                 <label asp-for="PojistnaUdalost.Popis" class="control-label"></label>
-                <textarea asp-for="PojistnaUdalost.Popis" class="form-control"></textarea>
+                <textarea name="Popis" asp-for="PojistnaUdalost.Popis" class="form-control"></textarea>
                 <span asp-validation-for="PojistnaUdalost.Popis" class="text-danger"></span>
             </div>
             <div class="form-group col-md-4">
                 <label asp-for="PojistnaUdalost.NarokovanaVysePojistky" class="control-label"></label>
-                <input asp-for="PojistnaUdalost.NarokovanaVysePojistky" class="form-control" />
+                <input asp-for="PojistnaUdalost.NarokovanaVysePojistky" name="NarokovanaVysePojistky" class="form-control" />
                 <span asp-validation-for="PojistnaUdalost.NarokovanaVysePojistky" class="text-danger"></span>
             </div>
              <div class="form-group col-md-4">
                                  <label asp-for="PojistnaUdalost.Klient" class="control-label"></label>
-             <select class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno),Model.PojistnaUdalost.Klient.KlientId))" asp-for="PojistnaUdalost.Klient.KlientId"></select>
+             <select name="klientId" class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno),Model.PojistnaUdalost.Klient.KlientId))" asp-for="PojistnaUdalost.Klient.KlientId"></select>
                             <span asp-validation-for="PojistnaUdalost.Klient" class="text-danger"></span>
              </div>
             <div class="form-group">

@@ -2,6 +2,7 @@
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
 using Informacni_System_Pojistovny.Models.Model.PodminkaModels;
+using Informacni_System_Pojistovny.Models.Model.PohledavkaModels;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,9 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Details(int id)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
             Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            pojistka.Pohledavky = pohledavkaModel.ListPohledavka(id);
             return View(pojistka);
         }
 

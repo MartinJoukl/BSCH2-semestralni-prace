@@ -71,7 +71,8 @@
             <td>
                 @Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |
                 @Html.ActionLink("Detaily", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Smazat", "Delete", new { id = item.ID })
+                @Html.ActionLink(item.Status? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=item.ID }) |
+                @Html.ActionLink("Smazat", "PermanentDelete", new { id = item.ID })
             </td>
         </tr>
 }

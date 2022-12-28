@@ -30,7 +30,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Zpět na přehled pojistek</a>
+    @Html.ActionLink("Zpět na pojistku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
 </div>
 
 @section Scripts {

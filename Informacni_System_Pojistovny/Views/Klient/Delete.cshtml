@@ -98,6 +98,6 @@ klienta</h1>
     
     <form asp-action="Delete">
         <input type="submit" value="Změnit stav" class="btn btn-danger" /> |
-        <a asp-action="Index">Zpět na přehled klientů</a>
+        @Html.ActionLink("Zpět na klienta" , "Details", new { id = ViewContext.RouteData.Values["id"]})
     </form>
 </div>

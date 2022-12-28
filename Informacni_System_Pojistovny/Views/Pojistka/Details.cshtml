@@ -41,9 +41,47 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.SjednanaVyse)
         </dd>
+        <dt class="col-sm-2">
+            Pojistný produkt
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PojistnyProdukt.Nazev)
+        </dd>
+        <dt class="col-sm-2">
+            Klient
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Klient.CeleJmeno)
+        </dd>
     </dl>
+    <h4>Podmínky pojistky</h4>
+        @Html.ActionLink("Přidat podmínku", "AddCondition", new { id = ViewContext.RouteData.Values["id"]})
+    <hr/>
 </div>
-
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Popis
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var podminka in Model.Podminky)
+        {
+            <tr>
+                <td>
+                    @podminka.Popis
+                </td>
+                <td>
+                    @Html.ActionLink("Odebrat podmínku", "RemoveCondition", new {  id = podminka.ID, redirectTo = Model.ID})
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 <div>
     @Html.ActionLink("Editovat", "Edit", new {  id = Model.ID }) |
     <a asp-action="Index">Zpět na přehled pojistek</a>

@@ -1,0 +1,51 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Pojistka
+
+@{
+    ViewData["Title"] = "Smazání pojistky";
+}
+
+<h1>Smazat pojistku</h1>
+
+<h3>Opravdu chcete smazat tuto pojistku?</h3>
+<div>
+    <h4>Pojistka</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Sjednano)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Sjednano)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Poplatek)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Poplatek)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Status == true)
+            {
+                @Html.DisplayName("Aktivní")
+            }
+            @if (Model.Status == false)
+            {
+                @Html.DisplayName("Neaktivní")
+            }
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SjednanaVyse)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SjednanaVyse)
+        </dd>
+    </dl>
+    
+    <form asp-action="PermanentDelete">
+        <input type="submit" value="Trvale smazat" class="btn btn-danger" /> |
+        @Html.ActionLink("Zpět na pojistku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
+    </form>
+</div>

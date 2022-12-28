@@ -1,5 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Informacni_System_Pojistovny.Models.Model.Pojistka;
+using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Oracle.ManagedDataAccess.Client;
 
@@ -18,10 +20,12 @@ namespace Informacni_System_Pojistovny.Models.Model
             Dictionary<string, object> clientIdBinding = new Dictionary<string, object>();
             clientIdBinding.Add(":klient_id", klientId);
 
-            Db db = new Db();
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_vsechny_osoby o where o.klient_id = :klient_id", clientIdBinding);
             if (dr.HasRows)
             {
+                PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(db);
+                PojistkaModel pojistkaModel = new PojistkaModel(db);
+
                 while (dr.Read())
                 {
                     string typKlienta = dr["typ_klienta"].ToString();
@@ -43,6 +47,8 @@ namespace Informacni_System_Pojistovny.Models.Model
                         fyzickaOsoba.Email = dr["EMAIL"].ToString();
                         fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
                         fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
+                        fyzickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(fyzickaOsoba.KlientId);
+                        fyzickaOsoba.Pojistky = pojistkaModel.ReadInsurances(fyzickaOsoba.KlientId);
                         return fyzickaOsoba;
                     }
                     else
@@ -60,6 +66,8 @@ namespace Informacni_System_Pojistovny.Models.Model
                             pravnickaOsoba.Stav = false;
                         }
                         pravnickaOsoba.Ico = dr["ICO"].ToString();
+                        pravnickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(pravnickaOsoba.KlientId);
+                        pravnickaOsoba.Pojistky = pojistkaModel.ReadInsurances(pravnickaOsoba.KlientId);
                         return pravnickaOsoba;
                     }
                 }

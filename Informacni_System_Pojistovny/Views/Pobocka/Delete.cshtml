@@ -21,6 +21,6 @@
     
     <form asp-action="Delete">
         <input type="submit" value="Smazat" class="btn btn-danger" /> |
-        <a asp-action="Index">Zpět na přehled poboček</a>
+        @Html.ActionLink("Zpět na pobočku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
     </form>
 </div>

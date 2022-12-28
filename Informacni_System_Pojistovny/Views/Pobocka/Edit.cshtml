@@ -25,7 +25,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Zpět na přehled poboček</a>
+    @Html.ActionLink("Zpět na pobočku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
 </div>
 
 @section Scripts {

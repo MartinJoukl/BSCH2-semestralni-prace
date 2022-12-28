@@ -86,7 +86,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 PobockaModel pobockaEditModel = new PobockaModel(_db);
                 pobockaEditModel.AddAddressesToBranch(id, adresa);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else return View(id);
         }
@@ -104,9 +104,8 @@ namespace Informacni_System_Pojistovny.Controllers
                 try
                 {
                     pobockaModel.RealizePobockaEdit(pobockaEditModel, id);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
+                    return RedirectToAction(nameof(Details), new { id });
+                } catch (Exception ex)
                 {
                     return View();
                 }
@@ -172,7 +171,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 AdresaModel adresaModel = new AdresaModel(_db);
                 adresaModel.EditAddress(id, adresa);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
         }
@@ -199,7 +198,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 AdresaModel adresaModel = new AdresaModel(_db);
                 adresaModel.DeleteAddress(id);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
         }

@@ -1,0 +1,32 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Psc
+
+@{
+    ViewData["Title"] = "Smazat PSČ";
+}
+
+<h1>Smazat</h1>
+
+<h3>Chcete smazat tuto PSČ?</h3>
+<div>
+    <h4>PSČ</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PscCislo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PscCislo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Mesto)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Mesto)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Smazat" class="btn btn-danger" /> |
+        <a asp-action="Index">Zpět na přehled PSČ</a>
+    </form>
+</div>

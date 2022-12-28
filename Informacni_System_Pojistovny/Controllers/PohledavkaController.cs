@@ -37,7 +37,7 @@ namespace Informacni_System_Pojistovny.Controllers
             Pohledavka pohledavka = pohledavkaModel.GetPohledavkaPojistka(id);
             if (pohledavka == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(pohledavka);
         }

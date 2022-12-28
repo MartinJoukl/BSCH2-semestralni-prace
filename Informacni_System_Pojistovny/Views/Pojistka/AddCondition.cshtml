@@ -1,0 +1,33 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.Pojistka.PojistkaAddConditionModel
+
+@{
+    ViewData["Title"] = "Přidat podmínku";
+}
+
+<h1>Přidat podminku k pojistce</h1>
+
+<h4>Podmínka</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddCondition">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PodminkaId" class="control-label"></label>
+                <select name="PodminkaId" class="form-control" asp-items="@ViewBag.conditions"></select>
+                <span asp-validation-for="PodminkaId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Přidat podmínku" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Zpět na pojistku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

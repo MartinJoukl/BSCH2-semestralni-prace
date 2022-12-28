@@ -1,6 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
+using Informacni_System_Pojistovny.Models.Model.PodminkaModels;
 using Informacni_System_Pojistovny.Models.Model.PohledavkaModels;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
@@ -42,6 +43,27 @@ namespace Informacni_System_Pojistovny.Controllers
             return View(pojistka);
         }
 
+        public ActionResult AddCondition(int id)
+        {
+            PodminkaModel podminkaModel = new PodminkaModel(_db);
+            List<SelectListItem> conditions = podminkaModel.ReadConditionsAsSelectListItems(id);
+            ViewBag.conditions = conditions;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddCondition(int id, PojistkaAddConditionModel pojistkaAddConditionModel)
+        {
+            if (ModelState.IsValid)
+            {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.AddConditionToInsurance(id, pojistkaAddConditionModel);
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            else return View();
+        }
+
         // GET: PojistkaController/Create
         public ActionResult Create()
         {
@@ -53,6 +75,12 @@ namespace Informacni_System_Pojistovny.Controllers
             ViewBag.klienti = klienti;
             ViewBag.produkty = produkty;
             return View();
+        }
+        // GET: PojistkaController/RemoveCondition
+        public ActionResult RemoveCondition(int id, int redirectTo) { 
+            PodminkaModel podminkaModel = new PodminkaModel(_db);
+            podminkaModel.RemoveConditionFromInsurance(id, redirectTo);
+            return RedirectToAction(nameof(Details), new { id = redirectTo });
         }
 
         // POST: PojistkaController/Create
@@ -100,7 +128,9 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: PojistkaController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            return View(pojistka);
         }
 
         // POST: PojistkaController/Delete/5
@@ -110,6 +140,34 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             try
             {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.ChangeInsuranceStatus(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
+        // GET: PojistkaController/PermanentDelete/5
+        public ActionResult PermanentDelete(int id)
+        {
+            PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            return View(pojistka);
+        }
+
+        // POST: PojistkaController/PermanentDelete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PermanentDelete(int id, IFormCollection collection)
+        {
+            try
+            {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.DeleteInsurance(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

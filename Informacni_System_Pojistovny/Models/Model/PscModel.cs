@@ -78,6 +78,12 @@ namespace Informacni_System_Pojistovny.Models.Model
             return count;
         }
 
+        public bool DeletePSC(string pscCislo) {
+            Dictionary<string, object> pscParametry = new Dictionary<string, object>();
+            pscParametry.Add("v_psc", pscCislo);
+            db.ExecuteNonQuery("smazat_psc", pscParametry, false, true);
+            return true;
+        }
         public Psc ReadPsc(string pscString)
         {
             Dictionary<string, object> pscParametry = new Dictionary<string, object>();

@@ -6,7 +6,7 @@ namespace Informacni_System_Pojistovny.Models.Entity
     public class PojistnaUdalost
     {
         [Display(Name = "Id")]
-        public int PojistnaUdalostId { get; set; }
+        public long PojistnaUdalostId { get; set; }
         [Required]
         public Klient Klient { get; set; }
         [Display(Name = "Vznik pojistky"), DataType(DataType.Date)]

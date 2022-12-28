@@ -1,6 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
+using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,16 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistnaUdalostController
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
-            List<PojistnaUdalost> pojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost();
+            List<PojistnaUdalost> pojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(pageInfo);
+
+            long count = pojistnaUdalostModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
             return View(pojistneUdalosti);
         }
 

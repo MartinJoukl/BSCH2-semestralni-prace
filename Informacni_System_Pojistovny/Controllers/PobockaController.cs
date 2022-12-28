@@ -19,10 +19,15 @@ namespace Informacni_System_Pojistovny.Controllers
         }
         // GET: PobockaController
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
-            List<Pobocka> pobockas = pobockaModel.ReadBranches();
+            List<Pobocka> pobockas = pobockaModel.ReadBranches(pageInfo);
+            long count = pobockaModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
             return View(pobockas);
         }
 
@@ -52,11 +57,13 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Create(PobockaCreateModel pobockaEditModel)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 PobockaModel pobockaModel = new PobockaModel(_db);
                 pobockaModel.CreateBranch(pobockaEditModel);
                 return RedirectToAction(nameof(Index));
-            } else { return View(); }
+            }
+            else { return View(); }
         }
 
         // GET: KlientController/AddAddress
@@ -91,17 +98,20 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = nameof(UzivateleRole.User))]
         public ActionResult Edit(int id, PobockaEditModel pobockaEditModel)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 PobockaModel pobockaModel = new PobockaModel(_db);
                 try
                 {
                     pobockaModel.RealizePobockaEdit(pobockaEditModel, id);
                     return RedirectToAction(nameof(Index));
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     return View();
                 }
-            } else return View();
+            }
+            else return View();
         }
 
         // GET: PobockaController/Edit/5

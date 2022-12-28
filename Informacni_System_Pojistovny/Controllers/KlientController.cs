@@ -22,7 +22,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: KlientController
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             KlientModel klientModel = new KlientModel(_db);
             return View(klientModel.ReadClients());

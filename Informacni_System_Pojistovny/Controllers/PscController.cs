@@ -1,6 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
+using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +20,17 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: PscController
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             PscModel pscModel = new PscModel(_db);
-            return View(pscModel.ReadPscs());
+
+            long count = pscModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
+
+            return View(pscModel.ReadPscs(pageInfo));
         }
 
         // GET: PscController/Details/5

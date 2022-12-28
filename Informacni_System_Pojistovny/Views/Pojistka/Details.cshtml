@@ -79,46 +79,46 @@
     <tbody>
             @foreach (var item in Model.Pohledavky)
             {
-                                <tr>
-                                    <td>
+                                        <tr>
+                                            <td>
                         @Html.DisplayFor(modelItem => item.Vznik)
-                                    </td>
-                                    <td>
+                                            </td>
+                                            <td>
                         @Html.DisplayFor(modelItem => item.DatumSplatnosti)
-                                    </td>
-                                    <td>
+                                            </td>
+                                            <td>
                         @Html.DisplayFor(modelItem => item.Vyse)
-                                    </td>
-                                    <td>
+                                            </td>
+                                            <td>
                         @{
                             if (item.DatumSplaceni != null)
                             {
                     //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
-                                                                                                                <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                                                                                                                                        <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
                             }
                             else
                             {
-                                                                                                  <span>Nesplaceno</span>
+                                                                                                                          <span>Nesplaceno</span>
                             }
                         }
-                                    </td>
-                                    <td>
+                                            </td>
+                                            <td>
                         @Html.DisplayFor(modelItem => item.Popis)
-                                    </td>
-                                    <td>
+                                            </td>
+                                            <td>
                         @Html.ActionLink("Detail", "Details", "Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" }) |
 
                         @Html.ActionLink("Upravit", "Edit","Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" }) |
                         @Html.ActionLink("Smazat", "Delete","Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" })
-                                    </td>
-                                </tr>
+                                            </td>
+                                        </tr>
             }
     </tbody>
 </table>
     @{
         if (Model.Pohledavky == null || Model.Pohledavky.Count == 0)
         {
-                                                                    <span>K této pojistné události nejsou evidovány žádné závazky.</span>
+                          <span>K této pojistné události nejsou evidovány žádné pohledávky.</span>
         }
     }
 </div>

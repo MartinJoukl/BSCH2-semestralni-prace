@@ -21,10 +21,11 @@ namespace Informacni_System_Pojistovny.Models.Model
             pobockaParametry.Add("v_psc", pobockaCreateModel.Psc);
 
             db.ExecuteNonQuery("vytvorit_pobocku", pobockaParametry, false, true);
-            return true;  
+            return true;
         }
 
-        public bool DeleteBranch(int id) {
+        public bool DeleteBranch(int id)
+        {
             Db db = new Db();
             Dictionary<string, object> pobockaParametry = new Dictionary<string, object>();
             pobockaParametry.Add(":v_id", id);
@@ -36,7 +37,7 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             List<Pobocka> pobockas = new List<Pobocka>();
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from VIEW_POBOCKY");
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from VIEW_POBOCKY order by pobocka_id");
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -50,6 +51,49 @@ namespace Informacni_System_Pojistovny.Models.Model
             dr.Close();
             db.Dispose();
             return pobockas;
+        }
+
+        public List<Pobocka> ReadBranches(PageInfo pageInfo)
+        {
+            List<Pobocka> pobockas = new List<Pobocka>();
+            Db db = new Db();
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from VIEW_POBOCKY order by pobocka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    Pobocka pobocka = new Pobocka();
+                    pobocka.Nazev = dr["nazev"].ToString();
+                    pobocka.PobockaId = int.Parse(dr["pobocka_id"].ToString());
+                    pobockas.Add(pobocka);
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return pobockas;
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from VIEW_POBOCKY ");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
         }
 
         public Pobocka ReadBranch(int id)
@@ -79,12 +123,13 @@ namespace Informacni_System_Pojistovny.Models.Model
         public PobockaEditModel ReadBranchAsPobockaEdit(int id)
         {
             Pobocka pobocka = ReadBranch(id);
-            if(pobocka== null)
-            return null;
-            else return new PobockaEditModel { Nazev= pobocka.Nazev };
+            if (pobocka == null)
+                return null;
+            else return new PobockaEditModel { Nazev = pobocka.Nazev };
         }
 
-        public bool RealizePobockaEdit(PobockaEditModel pobockaEditModel, int id) {
+        public bool RealizePobockaEdit(PobockaEditModel pobockaEditModel, int id)
+        {
             Dictionary<string, object> pobockaParametry = new Dictionary<string, object>();
             pobockaParametry.Add(":v_nazev", pobockaEditModel.Nazev);
             pobockaParametry.Add(":v_id", id);
@@ -154,7 +199,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             {
                 throw new Exception("Příliš mnoho adres pobočky, očekávána 1");
             }
-            if(adresas.Count > 0)
+            if (adresas.Count > 0)
             {
                 return adresas[0];
             }

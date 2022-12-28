@@ -1,6 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
+using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,16 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistnyProduktController
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
-            List<PojistnyProdukt> pojistnyProdukts = pojistnyProduktModel.ReadInsuranceProducts(); 
+            List<PojistnyProdukt> pojistnyProdukts = pojistnyProduktModel.ReadInsuranceProducts(pageInfo);
+
+            long count = pojistnyProduktModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
             return View(pojistnyProdukts);
         }
 

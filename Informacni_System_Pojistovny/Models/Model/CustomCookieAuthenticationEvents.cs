@@ -2,6 +2,7 @@
 {
     using Informacni_System_Pojistovny.Models.Dao;
     using Informacni_System_Pojistovny.Models.Entity;
+    using Informacni_System_Pojistovny.Models.Model.Uzivatele;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Oracle.ManagedDataAccess.Client;

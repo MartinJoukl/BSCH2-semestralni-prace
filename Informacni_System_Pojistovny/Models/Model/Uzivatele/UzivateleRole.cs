@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 
-namespace Informacni_System_Pojistovny.Models.Model
+namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
 {
     public class UzivateleRoleRetriever
     {
-       public static UzivateleRole GetByName(string name)
+        public static UzivateleRole GetByName(string name)
         {
             UzivateleRole uzivateleRole;
 

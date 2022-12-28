@@ -33,6 +33,51 @@ namespace Informacni_System_Pojistovny.Models.Model
             return pscs;
         }
 
+        public List<Psc> ReadPscs(PageInfo pageInfo)
+        {
+            List<Psc> pscs = new List<Psc>();
+            Db db = new Db();
+
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_psc order by PSC OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    Psc psc = new Psc();
+                    psc.PscCislo = dr["PSC"].ToString();
+                    psc.Mesto = dr["mesto"].ToString();
+                    pscs.Add(psc);
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return pscs;
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from view_psc");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
+        }
+
         public Psc ReadPsc(string pscString)
         {
             Dictionary<string, object> pscParametry = new Dictionary<string, object>();

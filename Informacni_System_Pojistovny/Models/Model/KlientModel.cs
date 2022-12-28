@@ -79,7 +79,7 @@ namespace Informacni_System_Pojistovny.Models.Model
         {
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_fyzicke_osoby");
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_fyzicke_osoby order by KLIENT_ID_0");
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -105,7 +105,63 @@ namespace Informacni_System_Pojistovny.Models.Model
             }
             dr.Close();
             //SELECT pravnickych osob
-            OracleDataReader dr2 = db.ExecuteRetrievingCommand("select * from view_pravnicke_osoby");
+            OracleDataReader dr2 = db.ExecuteRetrievingCommand("select * from view_pravnicke_osoby order by KLIENT_ID");
+            if (dr2.HasRows)
+            {
+                while (dr2.Read())
+                {
+                    PravnickaOsoba pravnickaOsoba = new PravnickaOsoba();
+                    pravnickaOsoba.KlientId = int.Parse(dr2["KLIENT_ID"].ToString());
+                    pravnickaOsoba.Nazev = dr2["NAZEV"].ToString();
+                    string stav = dr2["STAV"].ToString();
+                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                    {
+                        pravnickaOsoba.Stav = true;
+                    }
+                    else
+                    {
+                        pravnickaOsoba.Stav = false;
+                    }
+                    pravnickaOsoba.Ico = dr2["ICO"].ToString();
+                    klients.Add(pravnickaOsoba);
+                }
+            }
+            dr2.Close();
+
+            return klients;
+        }
+
+        public List<Klient> ReadClients(PageInfo pageInfo)
+        {
+            List<Klient> klients = new List<Klient>();
+            //SELECT fyzickych osob
+            OracleDataReader dr = db.ExecuteRetrievingCommand("SELECT * from(select * from View_fyzicke_osoby order by KLIENT_ID_0) WHERE ROWNUM > :pageIndex AND ROWNUM <= pageEnd;");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
+                    fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID_0"].ToString());
+                    fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
+                    fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
+                    string stav = dr["STAV"].ToString();
+                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                    {
+                        fyzickaOsoba.Stav = true;
+                    }
+                    else
+                    {
+                        fyzickaOsoba.Stav = false;
+                    }
+                    fyzickaOsoba.Email = dr["EMAIL"].ToString();
+                    fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
+                    fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
+                    klients.Add(fyzickaOsoba);
+                }
+            }
+            dr.Close();
+            //SELECT pravnickych osob
+            OracleDataReader dr2 = db.ExecuteRetrievingCommand("SELECT * from(select * from view_pravnicke_osoby order by KLIENT_ID)");
             if (dr2.HasRows)
             {
                 while (dr2.Read())

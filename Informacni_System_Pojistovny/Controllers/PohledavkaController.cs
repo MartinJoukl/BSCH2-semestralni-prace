@@ -1,6 +1,8 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Informacni_System_Pojistovny.Models.Model;
 using Informacni_System_Pojistovny.Models.Model.PohledavkaModels;
+using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Informacni_System_Pojistovny.Models.Model.ZavazekModels;
 using Microsoft.AspNetCore.Http;
@@ -16,10 +18,15 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: ZavazkyController
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
-            List<Pohledavka> pohledavky = pohledavkaModel.ListPohledavka();
+            List<Pohledavka> pohledavky = pohledavkaModel.ListPohledavka(pageInfo);
+            long count = pohledavkaModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
             return View(pohledavky);
         }
 
@@ -54,9 +61,9 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             try
             {
-                PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
-                PojistnaUdalost pojistnaUdalost = pojistnaUdalostModel.GetPojistnaUdalost((int)pohledavkaCreateModel.PojistkaId);
-                if (pojistnaUdalost != null)
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                Pojistka pojistka = pojistkaModel.ReadInsurance((int)pohledavkaCreateModel.PojistkaId);
+                if (pojistka != null)
                 {
                     PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
                     pohledavkaModel.CreatePohledavka(pohledavkaCreateModel);

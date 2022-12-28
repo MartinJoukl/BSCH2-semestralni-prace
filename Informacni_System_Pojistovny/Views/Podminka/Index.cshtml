@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Podminka>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Přehled podmínek</h1>
+
+<p>
+    <a asp-action="Create">Vytvořit novou podmínku</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Popis)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Popis)
+            </td>
+            <td>
+                @Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Detaily", "Details", new {  id = item.ID }) |
+                @Html.ActionLink("Smazat", "Delete", new {  id = item.ID })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,11 +1,33 @@
 ﻿@model Informacni_System_Pojistovny.Models.Entity.Pojistka
 
 @{
-    ViewData["Title"] = "Detaily pojistky";
+    ViewData["Title"] = "Správa stavů pojistky";
 }
 
-<h1>Detaily pojistky</h1>
+<h1>
+    @if (Model.Status == true)
+    {
+        @Html.DisplayName("Zneaktivnění ")
+    }
+    @if (Model.Status == false)
+    {
+        @Html.DisplayName("Zaktivnění ")
+    }
+    pojistky
+</h1>
 
+<h3>
+    Chcete opravdu
+    @if (Model.Status == true)
+    {
+        @Html.DisplayName("zneaktivnit ")
+    }
+    @if (Model.Status == false)
+    {
+        @Html.DisplayName("zaktivnit ")
+    }
+    tuto pojistku?
+</h3>
 <div>
     <h4>Pojistka</h4>
     <hr />
@@ -41,43 +63,10 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.SjednanaVyse)
         </dd>
-        <dt class="col-sm-2">
-            Pojistný produkt
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PojistnyProdukt.Nazev)
-        </dd>
-        <dt class="col-sm-2">
-            Klient
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Klient.CeleJmeno)
-        </dd>
     </dl>
-    <h4>Podmínky pojistky</h4>
-    @Html.ActionLink("Přidat podmínku", "AddCondition", new { id = ViewContext.RouteData.Values["id"] })
-    <hr/>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Popis
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var podminka in Model.Podminky)
-        {
-            <tr>
-                <td>
-                    @podminka.Popis
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<div>
-    @Html.ActionLink("Editovat", "Edit", new {  id = Model.ID }) |
-    <a asp-action="Index">Zpět na přehled pojistek</a>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Změnit stav" class="btn btn-danger" /> |
+        <a asp-action="Index">Zpět na přehled pojistek</a>
+    </form>
 </div>

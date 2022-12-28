@@ -57,7 +57,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
         {
             List<PojistnyProdukt> pojistneProdukty = ReadInsuranceProducts(activePassive);
             List<SelectListItem> pojistneProduktySelectList = new List<SelectListItem>();
-            pojistneProdukty.ForEach(p => { pojistneProduktySelectList.Add(new SelectListItem { Value = p.ID.ToString(), Text = p.Nazev }); });
+            pojistneProdukty.ForEach(p => { pojistneProduktySelectList.Add(new SelectListItem { Value = p.ID.ToString(), Text = p.Nazev + ", max. plnění " + p.MaximalniVysePlneni }); });
             return pojistneProduktySelectList;
         }
 

@@ -1,0 +1,33 @@
+﻿@model Informacni_System_Pojistovny.Models.Model.PodminkaModels.PodminkaCreateModel
+
+@{
+    ViewData["Title"] = "Editace podmínky";
+}
+
+<h1>Editace podmínky</h1>
+
+<h4>Podmínka</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Popis" class="control-label"></label>
+                <input asp-for="Popis" class="form-control" />
+                <span asp-validation-for="Popis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Upravit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Zpět na přehled podmínek</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

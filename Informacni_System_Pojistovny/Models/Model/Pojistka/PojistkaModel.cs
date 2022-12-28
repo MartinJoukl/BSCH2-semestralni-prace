@@ -1,5 +1,6 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Informacni_System_Pojistovny.Models.Model.PodminkaModels;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
 using Oracle.ManagedDataAccess.Client;
 
@@ -22,6 +23,15 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
             pojistkaParametry.Add(":v_poplatek", pojistkaCreateModel.Poplatek);
 
             db.ExecuteNonQuery("VYTVOR_POJISTKU", pojistkaParametry, false, true);
+            return true;
+        }
+
+        public bool AddConditionToInsurance(int id, PodminkaCreateModel podminkaCreateModel) {
+            Dictionary<string, object> podminkaParametry = new Dictionary<string, object>();
+            podminkaParametry.Add(":v_pojistka_id", id);
+            podminkaParametry.Add(":v_popis", podminkaCreateModel.Popis);
+
+            db.ExecuteNonQuery("vytvor_podminku", podminkaParametry, false, true);
             return true;
         }
 
@@ -130,7 +140,21 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
                 return pojistkaEditModel;
             }
         }
+        public bool ChangeInsuranceStatus(int id) {
+            Dictionary<string, object> pojistkaParametry = new Dictionary<string, object>();
+            pojistkaParametry.Add(":v_pojistka_id", id);
 
+            db.ExecuteNonQuery("zmenit_stav_pojistky", pojistkaParametry, false, true);
+            return true;
+        }
+        public bool DeleteInsurance(int id)
+        {
+            Dictionary<string, object> pojistkaParametry = new Dictionary<string, object>();
+            pojistkaParametry.Add(":v_pojistka_id", id);
+
+            db.ExecuteNonQuery("smazat_pojistku", pojistkaParametry, false, true);
+            return true;
+        }
         public Entity.Pojistka ReadInsurance(int id) {
             Dictionary<string, object> pojistkaParametry = new Dictionary<string, object>();
             pojistkaParametry.Add(":id", id);

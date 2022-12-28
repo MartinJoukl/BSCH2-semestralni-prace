@@ -1,6 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
+using Informacni_System_Pojistovny.Models.Model.PodminkaModels;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,25 @@ namespace Informacni_System_Pojistovny.Controllers
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
             Pojistka pojistka = pojistkaModel.ReadInsurance(id);
             return View(pojistka);
+        }
+
+        public ActionResult AddCondition(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddCondition(int id, PodminkaCreateModel podminkaCreateModel)
+        {
+            if (ModelState.IsValid)
+            {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.AddConditionToInsurance(id, podminkaCreateModel);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else return View();
         }
 
         // GET: PojistkaController/Create
@@ -91,7 +111,9 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: PojistkaController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            return View(pojistka);
         }
 
         // POST: PojistkaController/Delete/5
@@ -101,6 +123,34 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             try
             {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.ChangeInsuranceStatus(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
+        // GET: PojistkaController/PermanentDelete/5
+        public ActionResult PermanentDelete(int id)
+        {
+            PojistkaModel pojistkaModel = new PojistkaModel(_db);
+            Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            return View(pojistka);
+        }
+
+        // POST: PojistkaController/PermanentDelete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PermanentDelete(int id, IFormCollection collection)
+        {
+            try
+            {
+                PojistkaModel pojistkaModel = new PojistkaModel(_db);
+                pojistkaModel.DeleteInsurance(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

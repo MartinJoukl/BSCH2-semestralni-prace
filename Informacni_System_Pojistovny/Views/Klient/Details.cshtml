@@ -126,6 +126,94 @@
     }
     </tbody>
 </table>
+
+<h4>Pojistky klienta</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Stav
+            </th>
+            <th>
+                Pojistný produkt
+            </th>
+            <th>
+                Poplatek
+            </th>
+            <th>
+                Sjednaná výše
+            </th>
+            <th>
+                Sjednáno
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pojistka in Model.Pojistky)
+        {
+            <tr>
+                <td>
+                    @if (pojistka.Status == true)
+                    {
+                        @Html.DisplayName("Aktivní")
+                    }
+                    @if (pojistka.Status == false)
+                    {
+                        @Html.DisplayName("Neaktivní")
+                    }
+                </td>
+                <td>
+                    @pojistka.PojistnyProdukt.Popis
+                </td>
+                <td>
+                    @pojistka.Poplatek
+                </td>
+                <td>
+                    @pojistka.SjednanaVyse
+                </td>
+                <td>
+                    @pojistka.Sjednano
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Pojistné události klienta</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Popis
+            </th>
+            <th>
+                Nárokovaná výše pojistky
+            </th>
+            <th>
+                Vznik
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pojistnaUdalost in Model.PojistneUdalosti)
+        {
+            <tr>
+                <td>
+                    @pojistnaUdalost.Popis
+                </td>
+                <td>
+                    @pojistnaUdalost.NarokovanaVysePojistky
+                </td>
+                <td>
+                    @pojistnaUdalost.Vznik
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 <div>
     @Html.ActionLink("Upravit klienta", "Edit", new { id = ViewContext.RouteData.Values["id"] }) |
     <a asp-action="Index">Zpět na přehled klientů</a>

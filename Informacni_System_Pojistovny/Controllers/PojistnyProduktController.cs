@@ -70,7 +70,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
                 pojistnyProduktModel.EditInsuranceProduct(pojistnyProduktInputModel, id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else
             {
@@ -95,7 +95,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
                 pojistnyProduktModel.ChangeInsuranceProductStatus(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             catch
             {

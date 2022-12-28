@@ -55,7 +55,7 @@
         </dd>
     </dl>
     <h4>Podmínky pojistky</h4>
-    @Html.ActionLink("Přidat podmínku", "AddCondition", new { id = ViewContext.RouteData.Values["id"] })
+        @Html.ActionLink("Přidat podmínku", "AddCondition", new { id = ViewContext.RouteData.Values["id"]})
     <hr/>
 </div>
 <table class="table">
@@ -63,6 +63,8 @@
         <tr>
             <th>
                 Popis
+            </th>
+            <th>
             </th>
         </tr>
     </thead>
@@ -72,6 +74,9 @@
             <tr>
                 <td>
                     @podminka.Popis
+                </td>
+                <td>
+                    @Html.ActionLink("Odebrat podmínku", "RemoveCondition", new {  id = podminka.ID, redirectTo = Model.ID})
                 </td>
             </tr>
         }

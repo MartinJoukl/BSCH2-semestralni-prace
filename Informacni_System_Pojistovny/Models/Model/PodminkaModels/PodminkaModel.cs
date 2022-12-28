@@ -1,6 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Oracle.ManagedDataAccess.Client;
 
 namespace Informacni_System_Pojistovny.Models.Model.PodminkaModels
@@ -18,6 +19,15 @@ namespace Informacni_System_Pojistovny.Models.Model.PodminkaModels
             podminkaParametry.Add(":v_popis", podminkaCreateModel.Popis);
 
             db.ExecuteNonQuery("vytvor_podminku", podminkaParametry, false, true);
+            return true;
+        }
+
+        public bool RemoveConditionFromInsurance(int conditionId, int insuranceId) {
+            Dictionary<string, object> podminkaParametry = new Dictionary<string, object>();
+            podminkaParametry.Add(":v_podminka_id", conditionId);
+            podminkaParametry.Add(":v_pojistka_id", insuranceId);
+
+            db.ExecuteNonQuery("odeber_podminku", podminkaParametry, false, true);
             return true;
         }
 
@@ -54,9 +64,28 @@ namespace Informacni_System_Pojistovny.Models.Model.PodminkaModels
             return null;
         }
 
-        public List<Podminka> ReadConditions()
+        public List<SelectListItem> ReadConditionsAsSelectListItems(int insuranceId = 0) {
+            List<Podminka> podminky = ReadConditions(insuranceId);
+            List<SelectListItem> podminkySelectListItems = new List<SelectListItem>();
+            podminky.ForEach(p => { podminkySelectListItems.Add(new SelectListItem { Value = p.ID.ToString(), Text = p.Popis }); });
+            return podminkySelectListItems;
+        } 
+
+        public List<Podminka> ReadConditions(int insuranceId = 0)
         {
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_podminky");
+            string sql;
+            OracleDataReader dr;
+            if (insuranceId == 0)
+            {
+                sql = "select * from view_podminky";
+                dr = db.ExecuteRetrievingCommand(sql);
+            }
+            else {
+                Dictionary<string, object> podminkaParametry = new Dictionary<string, object>();
+                podminkaParametry.Add(":id", insuranceId);
+                sql = "select * from view_podminky where podminka_id not in (SELECT podminka_podminka_id from pojistne_podminky where pojistka_produkt_id = :id)";
+                dr = db.ExecuteRetrievingCommand(sql, podminkaParametry);
+            }
             List<Podminka> podminky = new List<Podminka>();
 
             if (dr.HasRows)

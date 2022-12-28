@@ -39,19 +39,21 @@ namespace Informacni_System_Pojistovny.Controllers
 
         public ActionResult AddCondition(int id)
         {
+            PodminkaModel podminkaModel = new PodminkaModel(_db);
+            List<SelectListItem> conditions = podminkaModel.ReadConditionsAsSelectListItems(id);
+            ViewBag.conditions = conditions;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCondition(int id, PodminkaCreateModel podminkaCreateModel)
+        public ActionResult AddCondition(int id, PojistkaAddConditionModel pojistkaAddConditionModel)
         {
             if (ModelState.IsValid)
             {
                 PojistkaModel pojistkaModel = new PojistkaModel(_db);
-                pojistkaModel.AddConditionToInsurance(id, podminkaCreateModel);
-
-                return RedirectToAction(nameof(Index));
+                pojistkaModel.AddConditionToInsurance(id, pojistkaAddConditionModel);
+                return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
         }
@@ -67,6 +69,12 @@ namespace Informacni_System_Pojistovny.Controllers
             ViewBag.klienti = klienti;
             ViewBag.produkty = produkty;
             return View();
+        }
+        // GET: PojistkaController/RemoveCondition
+        public ActionResult RemoveCondition(int id, int redirectTo) { 
+            PodminkaModel podminkaModel = new PodminkaModel(_db);
+            podminkaModel.RemoveConditionFromInsurance(id, redirectTo);
+            return RedirectToAction(nameof(Details), new { id = redirectTo });
         }
 
         // POST: PojistkaController/Create

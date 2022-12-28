@@ -46,6 +46,6 @@
     
     <form asp-action="PermanentDelete">
         <input type="submit" value="Trvale smazat" class="btn btn-danger" /> |
-        <a asp-action="Index">Zpět na přehled pojistek</a>
+        @Html.ActionLink("Zpět na pojistku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
     </form>
 </div>

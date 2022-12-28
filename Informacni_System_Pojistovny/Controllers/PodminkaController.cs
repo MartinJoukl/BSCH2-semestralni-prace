@@ -46,7 +46,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 PodminkaModel podminkaModel = new PodminkaModel(_db);
                 podminkaModel.CreateCondition(podminkaCreateModel);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
         }
@@ -68,7 +68,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PodminkaModel podminkaModel = new PodminkaModel(_db);
                 podminkaModel.ChangeCondition(id, podminkaCreateModel);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             catch
             {

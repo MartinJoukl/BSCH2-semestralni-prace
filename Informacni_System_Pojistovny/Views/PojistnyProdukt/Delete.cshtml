@@ -64,6 +64,6 @@ pojistného produktu</h1>
     
     <form asp-action="Delete">
         <input type="submit" value="Změnit stav" class="btn btn-danger" /> |
-        <a asp-action="Index">Zpět na přehled pojistných produktů</a>
+        @Html.ActionLink("Zpět na pojistku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
     </form>
 </div>

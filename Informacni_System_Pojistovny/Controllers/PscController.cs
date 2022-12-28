@@ -87,10 +87,12 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PscController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(string pscCislo, PscModel pscModel)
+        public ActionResult Delete(string pscCislo)
         {
             try
             {
+                PscModel pscModel = new PscModel(_db);
+                pscModel.DeletePSC(pscCislo);
                 return RedirectToAction(nameof(Index));
             }
             catch

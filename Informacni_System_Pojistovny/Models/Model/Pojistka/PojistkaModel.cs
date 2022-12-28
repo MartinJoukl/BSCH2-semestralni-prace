@@ -26,12 +26,12 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
             return true;
         }
 
-        public bool AddConditionToInsurance(int id, PodminkaCreateModel podminkaCreateModel) {
+        public bool AddConditionToInsurance(int id, PojistkaAddConditionModel pojistkaAddModel) {
             Dictionary<string, object> podminkaParametry = new Dictionary<string, object>();
             podminkaParametry.Add(":v_pojistka_id", id);
-            podminkaParametry.Add(":v_popis", podminkaCreateModel.Popis);
+            podminkaParametry.Add(":v_podminka_id", pojistkaAddModel.PodminkaId);
 
-            db.ExecuteNonQuery("vytvor_podminku", podminkaParametry, false, true);
+            db.ExecuteNonQuery("pridej_podminku", podminkaParametry, false, true);
             return true;
         }
 
@@ -45,9 +45,23 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
             return true;
         }
 
-        public List<Entity.Pojistka> ReadInsurances() {
+        public List<Entity.Pojistka> ReadInsurances(int id = 0) {
             List<Entity.Pojistka> pojistky = new List<Entity.Pojistka>();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_pojistky");
+
+            string sql;
+            OracleDataReader dr;
+
+            if (id == 0)
+            {
+                dr = db.ExecuteRetrievingCommand("select * from view_pojistky");
+            }
+            else
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
+                parameters.Add(":id", id);
+                dr = db.ExecuteRetrievingCommand("select * from view_pojistky where klient_id = :id" , parameters);
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -82,6 +96,7 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
                         pojistnyProdukt.Status = false;
                     }
                     pojistka.PojistnyProdukt = pojistnyProdukt;
+                    pojistka.Podminky = ReadInsuranceConditions(pojistka.ID);
 
                     string typKlienta = dr["typ_klienta"].ToString();
                     if (typKlienta.Equals("F"))
@@ -128,6 +143,24 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
             dr.Close();
             db.Dispose();
             return pojistky;
+        }
+
+        public List<Podminka> ReadInsuranceConditions(int id) { 
+            List<Podminka> podminky = new List<Podminka>();
+            Dictionary<string, object> pojistkaParametry = new Dictionary<string, object>();
+            pojistkaParametry.Add(":id", id);
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_pojistky_podminky where pojistka_id = :id", pojistkaParametry);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    Podminka podminka = new Podminka();
+                    podminka.ID = int.Parse(dr["podminka_id"].ToString());
+                    podminka.Popis = dr["popis"].ToString();
+                    podminky.Add(podminka);
+                }
+            }
+            return podminky;
         }
 
         public PojistkaEditModel ReadInsuranceAsEditModel(int id) {
@@ -193,6 +226,7 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
                         pojistnyProdukt.Status = false;
                     }
                     pojistka.PojistnyProdukt = pojistnyProdukt;
+                    pojistka.Podminky = ReadInsuranceConditions(pojistka.ID);
 
                     string typKlienta = dr["typ_klienta"].ToString();
                     if (typKlienta.Equals("F"))

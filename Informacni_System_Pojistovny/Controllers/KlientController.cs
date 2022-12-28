@@ -58,7 +58,7 @@ namespace Informacni_System_Pojistovny.Controllers
             return View();
         }
 
-        // GET: KlientController/AddAddress
+        // POST: KlientController/AddAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
         public ActionResult AddAddress(AdresaInputModel adresa, int id)
@@ -67,7 +67,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 KlientModel klientModel = new KlientModel(_db);
                 klientModel.AddAddressToClient(id, adresa);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             } else return View();
         }
 
@@ -93,7 +93,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 AdresaModel adresaModel = new AdresaModel(_db);
                 adresaModel.EditAddress(id, adresa);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
         }
@@ -160,7 +160,7 @@ namespace Informacni_System_Pojistovny.Controllers
             KlientEditModel klient = klientDb.GetEditClient(id);
             if (klient == null)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else
             {
@@ -191,7 +191,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 KlientModel klientDb = new KlientModel(_db);
                 klientDb.RealizeEditClient(model, id, collection["zvolenyTypOsoby"]);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             else
             {
@@ -223,7 +223,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 KlientModel klientDb = new KlientModel(_db);
                 klientDb.ChangeClientStatus(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             catch
             {

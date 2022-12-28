@@ -116,7 +116,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 {
                     PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
                     pojistnaUdalostModel.UpdatePojistnaUdalost(id, model);
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Details), new { id });
                 }
             }
             catch
@@ -151,7 +151,7 @@ namespace Informacni_System_Pojistovny.Controllers
             try
             {
                 pojistnaUdalostModel.DeletePojistnaUdalost(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             catch
             {

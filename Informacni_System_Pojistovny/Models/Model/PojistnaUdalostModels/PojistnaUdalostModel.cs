@@ -12,11 +12,20 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
         {
             this.db = db;
         }
-        public List<PojistnaUdalost> ListPojistnaUdalost()
+        public List<PojistnaUdalost> ListPojistnaUdalost(int id = 0)
         {
             List<PojistnaUdalost> list = new List<PojistnaUdalost>();
+            OracleDataReader dr;
 
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id");
+            if (id == 0) { 
+                dr = db.ExecuteRetrievingCommand("select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id");
+            } else
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
+                parameters.Add(":id", id);
+                dr = db.ExecuteRetrievingCommand("select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id where klient_klient_id = :id", parameters);
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())

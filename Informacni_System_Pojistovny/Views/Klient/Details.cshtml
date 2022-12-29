@@ -115,11 +115,11 @@
                     @adresa.CisloPopisne
                 </td>
                 <td>
-                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId })
+                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId, redirectTo = Model.KlientId })
                     @if (Model.Adresy.Count > 1)
                     {
                         <span>|</span>
-                        @Html.ActionLink("Smazat adresu", "DeleteAddress", new { id = adresa.AdresaId })
+                        @Html.ActionLink("Smazat adresu", "DeleteAddress", new { id = adresa.AdresaId, redirectTo = Model.KlientId })
                     }
                 </td>
             </tr>
@@ -128,6 +128,9 @@
 </table>
 
 <h4>Pojistky klienta</h4>
+<p>
+    @Html.ActionLink("Vytvoření nové pojistky", "Create","Pojistka", new { id = Model.KlientId })
+</p>
 <hr />
 <table class="table">
     <thead>
@@ -136,7 +139,10 @@
                 Stav
             </th>
             <th>
-                Pojistný produkt
+                Název
+            </th>
+            <th>
+                Popis
             </th>
             <th>
                 Poplatek
@@ -164,6 +170,9 @@
                     }
                 </td>
                 <td>
+                    @pojistka.PojistnyProdukt.Nazev
+                </td>
+                <td>
                     @pojistka.PojistnyProdukt.Popis
                 </td>
                 <td>
@@ -173,7 +182,7 @@
                     @pojistka.SjednanaVyse
                 </td>
                 <td>
-                    @pojistka.Sjednano
+                    @pojistka.Sjednano.ToString("dd.MM.yyyy")
                 </td>
             </tr>
         }
@@ -181,6 +190,9 @@
 </table>
 
 <h4>Pojistné události klienta</h4>
+<p>
+    @Html.ActionLink("Vytvoření nové pojistné události", "Create","PojistnaUdalost", new { id = Model.KlientId })
+</p>
 <hr />
 <table class="table">
     <thead>
@@ -210,6 +222,92 @@
                     @pojistnaUdalost.Vznik
                 </td>
             </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Historie členství klienta</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Od
+            </th>
+            <th>
+                Do
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var historieClenstvi in Model.HistorieClenstvi)
+        {
+            <tr>
+                <td>
+                    @historieClenstvi.Od.ToString("dd.MM.yyyy")
+                </td>
+                <td>
+                @if (historieClenstvi.Do != null)
+                {
+                     <span>@(((DateTime)historieClenstvi.Do).ToString("dd.MM.yyyy"))</span>
+                }
+                </td>
+             </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Dokumenty klienta</h4>
+<p>
+    @Html.ActionLink("Nahrát nový dokument", "AddDocument", new { id = Model.KlientId })
+</p>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Název
+            </th>
+            <th>
+                Typ
+            </th>
+            <th>
+                Přípona
+            </th>
+            <th>
+                Datum nahrání
+            </th>
+            <th>
+                Data
+            </th>
+            <th>
+                
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dokument in Model.Dokumenty)
+        {
+            <tr>
+                <td>
+                    @dokument.Nazev
+                </td>
+                <td>
+                    @dokument.Typ
+                </td>
+                <td>
+                    @dokument.Pripona
+                </td>
+                <td>
+                    @dokument.DatumNahrani.ToString("dd.MM.yyyy")
+                </td>
+                <td>
+                    @Html.ActionLink("Stáhnout dokument", "DownloadDocument", new { documentId = dokument.DokumentId, redirectTo = Model.KlientId })
+                </td>
+                <td>
+                    @Html.ActionLink("Smazat dokument", "DeleteDocument", new { id = dokument.DokumentId, redirectTo = Model.KlientId })
+                </td>
+             </tr>
         }
     </tbody>
 </table>

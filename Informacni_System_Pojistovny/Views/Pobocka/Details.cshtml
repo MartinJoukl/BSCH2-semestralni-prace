@@ -61,7 +61,7 @@
                 @adresa.CisloPopisne
                 </td>
                 <td>
-                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId })
+                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId, redirectTo = Model.PobockaId })
                 </td>
             </tr>
         }

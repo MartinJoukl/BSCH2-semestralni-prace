@@ -1,0 +1,51 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Dokument
+
+@{
+    ViewData["Title"] = "Smazání dokumentu";
+}
+
+<h1>Smazání dokumentu</h1>
+
+<h3>Opravdu chcete smazat tento dokument?</h3>
+<div>
+    <h4>Dokument</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nazev)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nazev)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Typ)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Typ)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Pripona)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Pripona)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DatumNahrani)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DatumNahrani)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Data)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.ActionLink("Stáhnout dokument", "DownloadDocument", new { documentId = Model.DokumentId })
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteDocument">
+        <input type="hidden" name="redirectTo" value="@ViewBag.redirectTo" />
+        <input type="submit" value="Smazat" class="btn btn-danger" /> |
+        @Html.ActionLink("Zpět na klienta" , "Details", new { id = ViewBag.redirectTo})
+    </form>
+</div>

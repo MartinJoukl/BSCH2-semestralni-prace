@@ -80,14 +80,14 @@ namespace Informacni_System_Pojistovny.Models.Model
 
         public bool DeletePSC(string pscCislo) {
             Dictionary<string, object> pscParametry = new Dictionary<string, object>();
-            pscParametry.Add("v_psc", pscCislo);
+            pscParametry.Add(":v_psc", pscCislo);
             db.ExecuteNonQuery("smazat_psc", pscParametry, false, true);
             return true;
         }
         public Psc ReadPsc(string pscString)
         {
             Dictionary<string, object> pscParametry = new Dictionary<string, object>();
-            pscParametry.Add("psc", pscString);
+            pscParametry.Add(":psc", pscString);
 
             Db db = new Db();
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_psc where psc = :psc", pscParametry);
@@ -108,6 +108,17 @@ namespace Informacni_System_Pojistovny.Models.Model
             return null;
         }
 
+        public PscEditModel ReadPscAsEditModel(string pscString)
+        {
+            Psc psc = ReadPsc(pscString);
+            if (psc != null) {
+                PscEditModel pscEditModel = new PscEditModel();
+                pscEditModel.Mesto = psc.Mesto;
+                return pscEditModel;
+            }
+            return null;
+        }
+
         public List<SelectListItem> ReadPscsAsSelectListItems()
         {
             List<Psc> pscs = ReadPscs();
@@ -118,8 +129,8 @@ namespace Informacni_System_Pojistovny.Models.Model
 
         public bool CreatePsc(Psc psc) {
             Dictionary<string, object> pscParametry = new Dictionary<string, object>();
-            pscParametry.Add("v_psc", psc.PscCislo);
-            pscParametry.Add("v_mesto", psc.Mesto);
+            pscParametry.Add(":v_psc", psc.PscCislo);
+            pscParametry.Add(":v_mesto", psc.Mesto);
 
             try
             {
@@ -134,8 +145,8 @@ namespace Informacni_System_Pojistovny.Models.Model
         public bool EditPsc(string pscCislo, PscEditModel pscEditModel)
         {
             Dictionary<string, object> pscParametry = new Dictionary<string, object>();
-            pscParametry.Add("v_psc", pscCislo);
-            pscParametry.Add("v_mesto", pscEditModel.Mesto);
+            pscParametry.Add(":v_psc", pscCislo);
+            pscParametry.Add(":v_mesto", pscEditModel.Mesto);
 
             try
             {

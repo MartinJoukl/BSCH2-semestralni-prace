@@ -151,39 +151,41 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: PobockaController/EditAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult EditAddress(int id)
+        public ActionResult EditAddress(int id, int redirectTo)
         {
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             AdresaModel adresaModel = new AdresaModel(_db);
             AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
             ViewBag.pscs = pscs;
+            ViewBag.redirectTo = redirectTo;
             return View(adresaInputModel);
         }
 
         // ´POST: PobockaController/AddAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
-        public ActionResult EditAddress(AdresaInputModel adresa, int id)
+        public ActionResult EditAddress(AdresaInputModel adresa, int id, int redirectTo, IFormCollection collection)
         {
             if (ModelState.IsValid)
             {
                 AdresaModel adresaModel = new AdresaModel(_db);
                 adresaModel.EditAddress(id, adresa);
 
-                return RedirectToAction(nameof(Details), new { id });
+                return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
             }
             else return View();
         }
 
         // GET: PobockaController/DeleteAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult DeleteAddress(int id)
+        public ActionResult DeleteAddress(int id, int redirectTo)
         {
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             AdresaModel adresaModel = new AdresaModel(_db);
             AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
+            ViewBag.redirectTo = redirectTo;
             ViewBag.pscs = pscs;
             return View(adresaInputModel);
         }
@@ -191,16 +193,12 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PobockaController/AddAddress
         [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
-        public ActionResult DeleteAddress(AdresaInputModel adresa, int id)
+        public ActionResult DeleteAddress(AdresaInputModel adresa, int id, IFormCollection collection)
         {
-            if (ModelState.IsValid)
-            {
-                AdresaModel adresaModel = new AdresaModel(_db);
-                adresaModel.DeleteAddress(id);
+            AdresaModel adresaModel = new AdresaModel(_db);
+            adresaModel.DeleteAddress(id);
 
-                return RedirectToAction(nameof(Details), new { id });
-            }
-            else return View();
+            return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
         }
     }
 }

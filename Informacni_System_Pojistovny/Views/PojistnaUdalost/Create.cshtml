@@ -31,11 +31,11 @@
             </div>
              <div class="form-group">
              <label asp-for="PojistnaUdalost.Klient" class="control-label"></label>
-             <select class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno)))" asp-for="PojistnaUdalost.Klient.KlientId"></select>
+                <select class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno)))" asp-for="@ViewContext.RouteData.Values["id"]"></select>
              <span asp-validation-for="PojistnaUdalost.Klient" class="text-danger"></span>
              </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Vytvořit" class="btn btn-primary" />
             </div>
         </form>
     </div>

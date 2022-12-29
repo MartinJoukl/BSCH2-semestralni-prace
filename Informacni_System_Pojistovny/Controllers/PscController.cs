@@ -66,41 +66,45 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: PscController/Edit/5
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
-            return View();
+            PscModel pscModel = new PscModel(_db);
+            PscEditModel psc = pscModel.ReadPscAsEditModel(id);
+            return View(psc);
         }
 
         // POST: PscController/Edit/5
         [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string pscCislo, PscEditModel pscEditModel)
+        public ActionResult Edit(string id, PscEditModel pscEditModel)
         {
             if (ModelState.IsValid)
             {
                 PscModel pscModel = new PscModel(_db);
-                if (pscModel.EditPsc(pscCislo, pscEditModel)) {
+                if (pscModel.EditPsc(id, pscEditModel)) {
                     return RedirectToAction(nameof(Index));
                 } else return View();
             } else return View();
         }
 
         // GET: PscController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            return View();
+            PscModel pscModel = new PscModel(_db);
+            Psc psc = pscModel.ReadPsc(id);
+            return View(psc);
         }
 
         // POST: PscController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(string pscCislo)
+        public ActionResult Delete(string id, Psc psc)
         {
             try
             {
                 PscModel pscModel = new PscModel(_db);
-                pscModel.DeletePSC(pscCislo);
+                pscModel.DeletePSC(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

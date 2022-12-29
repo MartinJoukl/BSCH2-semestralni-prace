@@ -12,6 +12,7 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public List<Adresa> Adresy { get; set; } = new List<Adresa>();
         public List<PojistnaUdalost> PojistneUdalosti { get; set; } = new List<PojistnaUdalost>();
         public List<Pojistka> Pojistky { get; set; }
+        public List<Dokument> Dokumenty { get; set; }
 
         public override bool Equals(object? obj)
         {

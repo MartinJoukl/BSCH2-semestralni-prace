@@ -26,6 +26,7 @@
     
     <form asp-action="DeleteAddress">
         <input type="submit" value="Smazat adresu" class="btn btn-danger" /> |
-        @Html.ActionLink("Zpět na pobočku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
+        <input type="hidden" name="redirectTo" value="@ViewBag.redirectTo" />
+        @Html.ActionLink("Zpět na pobočku" , "Details", new { id = ViewBag.redirectTo})
     </form>
 </div>

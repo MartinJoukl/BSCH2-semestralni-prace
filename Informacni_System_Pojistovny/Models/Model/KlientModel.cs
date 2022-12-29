@@ -1,9 +1,12 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Informacni_System_Pojistovny.Models.Model.DokumentModels;
+using Informacni_System_Pojistovny.Models.Model.HistorieClenstviModels;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 
 namespace Informacni_System_Pojistovny.Models.Model
 {
@@ -25,6 +28,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             {
                 PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(db);
                 PojistkaModel pojistkaModel = new PojistkaModel(db);
+                HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
 
                 while (dr.Read())
                 {
@@ -49,6 +53,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                         fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
                         fyzickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(fyzickaOsoba.KlientId);
                         fyzickaOsoba.Pojistky = pojistkaModel.ReadInsurances(fyzickaOsoba.KlientId);
+                        fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
                         return fyzickaOsoba;
                     }
                     else
@@ -68,6 +73,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                         pravnickaOsoba.Ico = dr["ICO"].ToString();
                         pravnickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(pravnickaOsoba.KlientId);
                         pravnickaOsoba.Pojistky = pojistkaModel.ReadInsurances(pravnickaOsoba.KlientId);
+                        pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
                         return pravnickaOsoba;
                     }
                 }
@@ -82,59 +88,59 @@ namespace Informacni_System_Pojistovny.Models.Model
             klienti.ForEach(p => { klientiAsSelectList.Add(new SelectListItem { Value = p.KlientId.ToString(), Text = p.CeleJmeno }); });
             return klientiAsSelectList;
         }
+        //KlientModel klientModel = new KlientModel(db);
 
         public List<Klient> ReadClients()
         {
+            HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_fyzicke_osoby order by KLIENT_ID_0");
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_vsechny_osoby order by KLIENT_ID");
             if (dr.HasRows)
             {
                 while (dr.Read())
                 {
-                    FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
-                    fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID_0"].ToString());
-                    fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
-                    fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
-                    string stav = dr["STAV"].ToString();
-                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                    if (dr["typ_klienta"].Equals("F"))
                     {
-                        fyzickaOsoba.Stav = true;
+                        FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
+                        fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
+                        fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
+                        fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
+                        string stav = dr["STAV"].ToString();
+                        if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                        {
+                            fyzickaOsoba.Stav = true;
+                        }
+                        else
+                        {
+                            fyzickaOsoba.Stav = false;
+                        }
+                        fyzickaOsoba.Email = dr["EMAIL"].ToString();
+                        fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
+                        fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
+                        fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
+                        klients.Add(fyzickaOsoba);
                     }
-                    else
-                    {
-                        fyzickaOsoba.Stav = false;
+                    else {
+                        PravnickaOsoba pravnickaOsoba = new PravnickaOsoba();
+                        pravnickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
+                        pravnickaOsoba.Nazev = dr["NAZEV"].ToString();
+                        string stav = dr["STAV"].ToString();
+                        if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                        {
+                            pravnickaOsoba.Stav = true;
+                        }
+                        else
+                        {
+                            pravnickaOsoba.Stav = false;
+                        }
+                        pravnickaOsoba.Ico = dr["ICO"].ToString();
+                        pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
+                        klients.Add(pravnickaOsoba);
                     }
-                    fyzickaOsoba.Email = dr["EMAIL"].ToString();
-                    fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
-                    fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
-                    klients.Add(fyzickaOsoba);
                 }
             }
             dr.Close();
-            //SELECT pravnickych osob
-            OracleDataReader dr2 = db.ExecuteRetrievingCommand("select * from view_pravnicke_osoby order by KLIENT_ID");
-            if (dr2.HasRows)
-            {
-                while (dr2.Read())
-                {
-                    PravnickaOsoba pravnickaOsoba = new PravnickaOsoba();
-                    pravnickaOsoba.KlientId = int.Parse(dr2["KLIENT_ID"].ToString());
-                    pravnickaOsoba.Nazev = dr2["NAZEV"].ToString();
-                    string stav = dr2["STAV"].ToString();
-                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
-                    {
-                        pravnickaOsoba.Stav = true;
-                    }
-                    else
-                    {
-                        pravnickaOsoba.Stav = false;
-                    }
-                    pravnickaOsoba.Ico = dr2["ICO"].ToString();
-                    klients.Add(pravnickaOsoba);
-                }
-            }
-            dr2.Close();
 
             return klients;
         }
@@ -142,56 +148,56 @@ namespace Informacni_System_Pojistovny.Models.Model
         public List<Klient> ReadClients(PageInfo pageInfo)
         {
             List<Klient> klients = new List<Klient>();
+
+            HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
+
             //SELECT fyzickych osob
-            OracleDataReader dr = db.ExecuteRetrievingCommand("SELECT * from(select * from View_fyzicke_osoby order by KLIENT_ID_0) WHERE ROWNUM > :pageIndex AND ROWNUM <= pageEnd;");
+            OracleDataReader dr = db.ExecuteRetrievingCommand("SELECT * from(select * from View_vsechny_osoby order by KLIENT_ID) WHERE ROWNUM > :pageIndex AND ROWNUM <= pageEnd;");
             if (dr.HasRows)
             {
                 while (dr.Read())
                 {
-                    FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
-                    fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID_0"].ToString());
-                    fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
-                    fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
-                    string stav = dr["STAV"].ToString();
-                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                    if (dr["typ_klienta"].Equals("F"))
                     {
-                        fyzickaOsoba.Stav = true;
+                        FyzickaOsoba fyzickaOsoba = new FyzickaOsoba();
+                        fyzickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
+                        fyzickaOsoba.Jmeno = dr["JMENO"].ToString();
+                        fyzickaOsoba.Prijmeni = dr["PRIJMENI"].ToString();
+                        string stav = dr["STAV"].ToString();
+                        if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                        {
+                            fyzickaOsoba.Stav = true;
+                        }
+                        else
+                        {
+                            fyzickaOsoba.Stav = false;
+                        }
+                        fyzickaOsoba.Email = dr["EMAIL"].ToString();
+                        fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
+                        fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
+                        fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
+                        klients.Add(fyzickaOsoba);
                     }
                     else
                     {
-                        fyzickaOsoba.Stav = false;
+                        PravnickaOsoba pravnickaOsoba = new PravnickaOsoba();
+                        pravnickaOsoba.KlientId = int.Parse(dr["KLIENT_ID"].ToString());
+                        pravnickaOsoba.Nazev = dr["NAZEV"].ToString();
+                        string stav = dr["STAV"].ToString();
+                        if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
+                        {
+                            pravnickaOsoba.Stav = true;
+                        }
+                        else
+                        {
+                            pravnickaOsoba.Stav = false;
+                        }
+                        pravnickaOsoba.Ico = dr["ICO"].ToString();
+                        pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
+                        klients.Add(pravnickaOsoba);
                     }
-                    fyzickaOsoba.Email = dr["EMAIL"].ToString();
-                    fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
-                    fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
-                    klients.Add(fyzickaOsoba);
                 }
             }
-            dr.Close();
-            //SELECT pravnickych osob
-            OracleDataReader dr2 = db.ExecuteRetrievingCommand("SELECT * from(select * from view_pravnicke_osoby order by KLIENT_ID)");
-            if (dr2.HasRows)
-            {
-                while (dr2.Read())
-                {
-                    PravnickaOsoba pravnickaOsoba = new PravnickaOsoba();
-                    pravnickaOsoba.KlientId = int.Parse(dr2["KLIENT_ID"].ToString());
-                    pravnickaOsoba.Nazev = dr2["NAZEV"].ToString();
-                    string stav = dr2["STAV"].ToString();
-                    if (stav != null && stav.ToUpper().Equals("a".ToUpper()))
-                    {
-                        pravnickaOsoba.Stav = true;
-                    }
-                    else
-                    {
-                        pravnickaOsoba.Stav = false;
-                    }
-                    pravnickaOsoba.Ico = dr2["ICO"].ToString();
-                    klients.Add(pravnickaOsoba);
-                }
-            }
-            dr2.Close();
-
             return klients;
         }
 
@@ -333,6 +339,91 @@ namespace Informacni_System_Pojistovny.Models.Model
             db.Dispose();
 
             return adresas;
+        }
+
+        public bool AddDocumentToClient(int id, DokumentUploadModel dokumentUploadModel) {
+            Dictionary<string, object> dokumentParametry = new Dictionary<string, object>();
+            string koncovka = Path.GetExtension(dokumentUploadModel.Data.FileName);
+            string typ = dokumentUploadModel.Data.ContentType;
+            Stream dataStream = dokumentUploadModel.Data.OpenReadStream();
+            BinaryReader binaryReader = new BinaryReader(dataStream);
+            byte[] binaryData = binaryReader.ReadBytes((Int32)dataStream.Length);
+
+            dokumentParametry.Add(":v_nazev", dokumentUploadModel.Nazev);
+            dokumentParametry.Add(":v_typ", typ);
+            dokumentParametry.Add(":v_pripona", koncovka);
+
+            //dokumentParametry.Add(":v_data", binaryData); presunuto do parametru
+            dokumentParametry.Add(":v_klient_id", id);
+
+            db.ExecuteNonQuery("nahraj_dokument_klienta", dokumentParametry, false, true, binaryData);
+            return true;
+        }
+
+        public List<Dokument> ReadClientDocuments(int klientId)
+        {
+            List<Dokument> dokumenty = new List<Dokument>();
+            Dictionary<string, object> dokumentParametry = new Dictionary<string, object>();
+            dokumentParametry.Add(":klient_id", klientId);
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_dokumenty where klient_id = :klient_id", dokumentParametry);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    OracleBinary binaryData = dr.GetOracleBinary(5);
+                    byte[] imgBytes = binaryData.IsNull ? null : binaryData.Value;
+                    Dokument dokument = new Dokument();
+                    dokument.DokumentId = int.Parse(dr["dokument_id"].ToString());
+                    dokument.DatumNahrani = DateTime.Parse(dr["datum_nahrani"].ToString());
+                    dokument.Typ = dr["typ"].ToString();
+                    dokument.Pripona = dr["pripona"].ToString();
+                    dokument.Data = imgBytes;
+                    dokument.Nazev = dr["nazev"].ToString();
+                    dokumenty.Add(dokument);
+                }
+            }
+
+            dr.Close();
+            db.Dispose();
+            return dokumenty;
+        }
+        public Dokument ReadDocument(int document)
+        {
+            Dictionary<string, object> dokumentParametry = new Dictionary<string, object>();
+            dokumentParametry.Add(":dokument_id", document);
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_dokumenty where dokument_id = :dokument_id", dokumentParametry);
+            if (dr.HasRows)
+            {
+                if (dr.Read())
+                {
+                    OracleBinary binaryData = dr.GetOracleBinary(5);
+                    byte[] imgBytes = binaryData.IsNull ? null : binaryData.Value;
+                    Dokument dokument = new Dokument();
+                    dokument.DokumentId = int.Parse(dr["dokument_id"].ToString());
+                    dokument.DatumNahrani = DateTime.Parse(dr["datum_nahrani"].ToString());
+                    dokument.Typ = dr["typ"].ToString();
+                    dokument.Pripona = dr["pripona"].ToString();
+                    dokument.Data = imgBytes;
+                    dokument.Nazev = dr["nazev"].ToString();
+                    dr.Close();
+                    db.Dispose();
+                    return dokument;
+                }
+            }
+
+            dr.Close();
+            db.Dispose();
+            return null;
+        }
+        public bool DeleteDocument(int id)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add(":v_dokument_id", id);
+            db.ExecuteNonQuery("smazat_dokument", parameters, false, true);
+            db.Dispose();
+            return true;
         }
     }
 }

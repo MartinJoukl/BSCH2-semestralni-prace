@@ -2,6 +2,8 @@
 {
     using Microsoft.AspNetCore.Http;
     using Oracle.ManagedDataAccess.Client;
+    using System.Reflection.Metadata;
+    using static System.Reflection.Metadata.BlobBuilder;
 
 
     public class Db : IDisposable
@@ -41,7 +43,7 @@
             return oracleCommand.ExecuteReader();
         }
 
-        public int ExecuteNonQuery(string command, Dictionary<string, object> parameters = null, bool returnsId = true, bool isProcedure = false)
+        public int ExecuteNonQuery(string command, Dictionary<string, object> parameters = null, bool returnsId = true, bool isProcedure = false, byte[]? blobBytes = null)
         {
             parameters = parameters ?? new Dictionary<string, object>();
             OracleCommand oracleCommand = new OracleCommand(command, Connection);
@@ -52,6 +54,13 @@
             foreach (var paramKey in parameters.Keys)
             {
                 oracleCommand.Parameters.Add(paramKey, parameters[paramKey]?.ToString());
+            }
+            if (blobBytes != null) {
+                OracleParameter blobParameter = new OracleParameter();
+                blobParameter.OracleDbType = OracleDbType.Blob;
+                blobParameter.ParameterName = ":v_data";
+                blobParameter.Value = blobBytes;
+                oracleCommand.Parameters.Add(blobParameter);
             }
             if (parameters.Count > 0)
             {

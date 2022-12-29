@@ -42,7 +42,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnaUdalostController/Create
-        public ActionResult Create()
+        public ActionResult Create(int id = 0)
         {
             PojistnaUdalost pojistneUdalosti = new PojistnaUdalost();
             KlientModel klientModel = new KlientModel(_db);

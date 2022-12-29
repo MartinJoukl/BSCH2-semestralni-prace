@@ -30,12 +30,13 @@
             <div class="form-group">
                 <input type="submit" value="Uložit změny" class="btn btn-primary" />
             </div>
+            <input type="hidden" name="redirectTo" value="@ViewBag.redirectTo" />
         </form>
     </div>
 </div>
 
 <div>
-    @Html.ActionLink("Zpět na klienta" , "Details", new { id = ViewContext.RouteData.Values["id"]})
+    @Html.ActionLink("Zpět na klienta" , "Details", new { id = ViewBag.redirectTo})
 </div>
 
 @section Scripts {

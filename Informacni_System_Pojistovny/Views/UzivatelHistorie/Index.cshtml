@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.HistorieUzivatele>
+
+@{
+    ViewData["Title"] = "Historie uživatelů";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Historie uživatelů</h1>
+
+@Html.Partial("_paging")
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OldEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewRole)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.CasHistorie)
+            </th>
+            <th>
+                Typ DML
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            string ddlClass = @item.DDLTyp.ToString()+"DML";
+                <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OldEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NewEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NewRole)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CasHistorie)
+            </td>
+            <th  class="@ddlClass">
+                @Html.DisplayFor(model => item.DDLTyp)
+            </th>
+            <td>
+                @Html.ActionLink("Detaily", "Details", new {  id=item.Id }) 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

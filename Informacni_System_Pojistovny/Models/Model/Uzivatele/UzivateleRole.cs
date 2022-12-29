@@ -19,7 +19,9 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                 case "priviledgeduser":
                     uzivateleRole = UzivateleRole.PriviledgedUser;
                     break;
-                default: throw new Exception("Role doesn't exist");
+                case null:
+                    uzivateleRole = UzivateleRole.No_Role; break;
+                default: uzivateleRole = UzivateleRole.Unknown; break;
             }
             return uzivateleRole;
         }
@@ -32,5 +34,9 @@ public enum UzivateleRole
     [Description("user")]
     User,
     [Description("priviledgedUser")]
-    PriviledgedUser
+    PriviledgedUser,
+    [Description("Bez role")]
+    No_Role,
+    [Description("Neznámá role")]
+    Unknown
 }

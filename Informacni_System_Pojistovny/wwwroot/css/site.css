@@ -84,6 +84,7 @@ nav.navbar {
 .navbar-light .navbar-brand {
     color: white;
 }
+
 .navbar-nav {
     display: flex;
     height: 100%;
@@ -129,13 +130,16 @@ footer a {
     padding-top: 0px;
     padding-bottom: 0px;
 }
+
 .navbar-collapse {
     display: flex;
     /**align-items: stretch; */
 }
+
 .right {
     justify-content: flex-end;
 }
+
 .navbar > .container {
     align-items: stretch;
 }
@@ -149,7 +153,8 @@ footer a {
     vertical-align: middle;
     display: flex;
 }
-.container-fluid .text-light{
+
+.container-fluid .text-light {
     align-items: stretch;
 }
 
@@ -158,9 +163,9 @@ nav {
     align-items: stretch;
 }
 
-nav .nav-link:hover {
-    background-color: #0D19A3;
-}
+    nav .nav-link:hover {
+        background-color: #0D19A3;
+    }
 
 @media screen and (max-width: 576px) {
     .navbar {
@@ -175,20 +180,46 @@ nav .nav-link:hover {
         text-align: left;
     }
 }
+
 div.noWrap {
     display: flex;
     flex-direction: row;
 }
 
-div.noWrap > a {
-    margin: 0px 4px;
-}
-div.noWrap > a:last-child {
-        margin-right: 0px;
+    div.noWrap > a {
+        margin: 0px 4px;
     }
-th{
+
+        div.noWrap > a:last-child {
+            margin-right: 0px;
+        }
+
+th {
     white-space: nowrap;
 }
+
+.paging {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: #080F5B;
+    color: white;
+    text-decoration: none;
+    margin-right: 3px;
+}
+
+    .paging:hover {
+        background-color: #0D19A3;
+        color: white;
+    }
+
+    .current {
+        background-color: #2F3BC5;
+        color: white;
+        text-decoration: underline;
+    }
 
 .navbar-light .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");

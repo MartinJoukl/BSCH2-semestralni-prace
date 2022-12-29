@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection.Metadata;
 using System.Security.Cryptography;
 
-namespace Informacni_System_Pojistovny.Models.Model
+namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
 {
     public class UzivatelModel
     {
@@ -44,6 +44,61 @@ namespace Informacni_System_Pojistovny.Models.Model
             }
             db.Dispose();
             return list;
+        }
+
+        public List<Uzivatel> ListUzivatel(PageInfo pageInfo)
+        {
+            List<Uzivatel> list = new List<Uzivatel>();
+
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from uzivatele_view order by id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    string mail = dr["mail"]?.ToString();
+                    string jmeno = dr["jmeno"]?.ToString();
+                    string prijmeni = dr["prijmeni"]?.ToString();
+                    string role = dr["uzivatel_role"]?.ToString();
+                    string idString = dr["id"]?.ToString();
+                    DateTime.TryParse(dr["cas_zmeny"]?.ToString(), out DateTime casZmeny);
+                    int.TryParse(idString, out var id);
+                    list.Add(new Uzivatel
+                    {
+                        Email = mail,
+                        Jmeno = jmeno,
+                        Prijmeni = prijmeni,
+                        Role = UzivateleRoleRetriever.GetByName(role),
+                        Id = id,
+                        casZmeny = casZmeny
+                    });
+                }
+            }
+            db.Dispose();
+            return list;
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from uzivatele_view");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
         }
 
         public Uzivatel? EditUzivatel(EditUserModel model, int id)

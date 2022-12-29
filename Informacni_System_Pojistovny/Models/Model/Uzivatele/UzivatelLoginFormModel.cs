@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Informacni_System_Pojistovny.Models.Model
+namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
 {
     public class UzivatelLoginFormModel
     {

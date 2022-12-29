@@ -35,16 +35,64 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
                     PojistnaUdalost pojistnaUdalost = new PojistnaUdalost()
                     {
                         Klient = klient,
-                        NarokovanaVysePojistky = int.Parse(dr["NAROKOVANA_VYSE_POJISTKY"].ToString()),
+                        NarokovanaVysePojistky = long.Parse(dr["NAROKOVANA_VYSE_POJISTKY"].ToString()),
                         Vznik = DateTime.Parse(dr["vznik"].ToString()),
                         Popis = dr["popis"].ToString(),
-                        PojistnaUdalostId = int.Parse(dr["pojistna_Udalost_Id"].ToString()),
+                        PojistnaUdalostId = long.Parse(dr["pojistna_Udalost_Id"].ToString()),
                     };
                     list.Add(pojistnaUdalost);
                 }
             }
             db.Dispose();
             return list;
+        }
+        public List<PojistnaUdalost> ListPojistnaUdalost(PageInfo pageInfo)
+        {
+            List<PojistnaUdalost> list = new List<PojistnaUdalost>();
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id  OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    Klient klient = ReadKlient(dr);
+                    //map data
+                    PojistnaUdalost pojistnaUdalost = new PojistnaUdalost()
+                    {
+                        Klient = klient,
+                        NarokovanaVysePojistky = long.Parse(dr["NAROKOVANA_VYSE_POJISTKY"].ToString()),
+                        Vznik = DateTime.Parse(dr["vznik"].ToString()),
+                        Popis = dr["popis"].ToString(),
+                        PojistnaUdalostId = long.Parse(dr["pojistna_Udalost_Id"].ToString()),
+                    };
+                    list.Add(pojistnaUdalost);
+                }
+            }
+            db.Dispose();
+            return list;
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from pojistne_udalosti_view");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
         }
 
         public void CreatePojistnaUdalost(PojistnaUdalost pojistnaUdalost)

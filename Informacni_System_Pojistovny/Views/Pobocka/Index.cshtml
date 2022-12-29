@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Přidat novou pobočku</a>
 </p>
+@Html.Partial("_paging")
 <table class="table">
     <thead>
         <tr>
@@ -19,17 +20,18 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nazev)
-            </td>
-            <td>
-                @Html.ActionLink("Editace", "Edit", new { id=item.PobockaId }) |
-                @Html.ActionLink("Detaily", "Details", new { id=item.PobockaId }) |
-                @Html.ActionLink("Smazat", "Delete", new { id=item.PobockaId })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+                                                    <tr>
+                                                        <td>
+                    @Html.DisplayFor(modelItem => item.Nazev)
+                                                        </td>
+                                                        <td>
+                    @Html.ActionLink("Editace", "Edit", new { id=item.PobockaId }) |
+                    @Html.ActionLink("Detaily", "Details", new { id=item.PobockaId }) |
+                    @Html.ActionLink("Smazat", "Delete", new { id=item.PobockaId })
+                                                        </td>
+                                                    </tr>
+        }
     </tbody>
 </table>

@@ -53,6 +53,81 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
             db.Dispose();
             return pojistnyProdukts;
         }
+
+        public List<PojistnyProdukt> ReadInsuranceProducts(PageInfo pageInfo,bool activeInactive = true)
+        {
+            List<PojistnyProdukt> pojistnyProdukts = new List<PojistnyProdukt>();
+
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+
+            string sql;
+            if (activeInactive)
+            {
+                sql = "select * from view_pojistne_produkty OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+            else
+            {
+                sql = "select * from view_pojistne_produkty where status = 'a'  OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql,parameters);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    PojistnyProdukt pojistnyProdukt = new PojistnyProdukt();
+                    pojistnyProdukt.ID = int.Parse(dr["Produkt_id"].ToString());
+                    pojistnyProdukt.Status = true;
+                    pojistnyProdukt.MaximalniVysePlneni = int.Parse(dr["MAX_VYSE_PLNENI"].ToString());
+                    pojistnyProdukt.Popis = dr["popis"].ToString();
+                    pojistnyProdukt.Nazev = dr["nazev"].ToString();
+                    string status = dr["status"].ToString();
+                    if (status != null && status.Equals("a"))
+                    {
+                        pojistnyProdukt.Status = true;
+                    }
+                    else
+                    {
+                        pojistnyProdukt.Status = false;
+                    }
+                    pojistnyProdukts.Add(pojistnyProdukt);
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return pojistnyProdukts;
+        }
+
+        public long GetCount(bool activeInactive = true)
+        {
+            long count = 0;
+            Db db = new Db();
+            string sql;
+            if (activeInactive)
+            {
+                sql = "select count(*) as count from view_pojistne_produkty";
+            }
+            else
+            {
+                sql = "select count(*) as count from view_pojistne_produkty where status = 'a'";
+            }
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
+        }
         public List<SelectListItem> ReadInsuranceProductsAsSelectListItems(bool activePassive)
         {
             List<PojistnyProdukt> pojistneProdukty = ReadInsuranceProducts(activePassive);

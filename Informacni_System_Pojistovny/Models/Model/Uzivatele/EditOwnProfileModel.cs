@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Informacni_System_Pojistovny.Models.Model
+namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
 {
     public class EditOwnProfileModel : EditUserModel
     {

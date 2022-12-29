@@ -20,10 +20,16 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistkaController
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
-            List<Pojistka> pojistky = pojistkaModel.ReadInsurances();
+            List<Pojistka> pojistky = pojistkaModel.ReadInsurances(pageInfo);
+
+            long count = pojistkaModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
             return View(pojistky);
         }
 

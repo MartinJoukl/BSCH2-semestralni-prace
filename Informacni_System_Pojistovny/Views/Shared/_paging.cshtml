@@ -1,0 +1,30 @@
+﻿    <div>
+    @{
+        //show 10 pages
+        long pageSize = ViewBag.PageSize;
+        long pageIndex = ViewBag.PageIndex;
+        long countMin1 = ViewBag.count - 1;
+        long currentSelectedIndex = pageSize * pageIndex;
+        //get min and max selectable item
+        long startIndex = currentSelectedIndex - (5 * pageSize);
+        if (currentSelectedIndex > countMin1)
+        {
+            startIndex = countMin1 - (9 * pageSize);
+        }
+        startIndex = startIndex < 0 ? 0 : startIndex;
+        long endIndex = startIndex + 9 * pageSize;
+        endIndex = endIndex > countMin1 ? countMin1 : endIndex;
+        for (long i = startIndex / pageSize; i <= endIndex / pageSize; i++)
+        {
+            long pageNum = i + 1;
+            if (i != pageIndex)
+            {
+                             <a class="paging" asp-action="index" asp-route-pageInfo.pageSize=@pageSize asp-route-pageInfo.pageIndex =@i>@pageNum</a>
+            }
+            else
+            {
+                             <a class="current paging" asp-action="index" asp-route-pageInfo.pageSize=@pageSize asp-route-pageInfo.pageIndex =@i>@pageNum</a>
+            }
+        }    
+    }
+    </div>

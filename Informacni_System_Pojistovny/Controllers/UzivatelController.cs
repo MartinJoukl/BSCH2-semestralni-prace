@@ -1,11 +1,13 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
-using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Informacni_System_Pojistovny.Models.Model.Uzivatele;
+using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
+using Informacni_System_Pojistovny.Models.Model;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -18,10 +20,16 @@ namespace Informacni_System_Pojistovny.Controllers
         }
         // GET: UzivatelController
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
-            return View("Index", uzivatelModel.ListUzivatel());
+            long count = uzivatelModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
+
+            return View("Index", uzivatelModel.ListUzivatel(pageInfo));
         }
 
         // GET: UzivatelController/Details/5
@@ -36,7 +44,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             else
             {
-                return Index();
+                return Index(new PageInfo());
             }
         }
 
@@ -249,7 +257,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             else
             {
-                return Index();
+                return Index(new PageInfo());
             }
         }
 
@@ -282,7 +290,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 UzivatelModel uzivatelModel = new UzivatelModel(_db);
                 Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, model.Id);
-                return Index();
+                return Index(new PageInfo());
             }
             else
             {

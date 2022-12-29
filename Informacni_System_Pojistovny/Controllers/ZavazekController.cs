@@ -1,6 +1,8 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Informacni_System_Pojistovny.Models.Model;
 using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
+using Informacni_System_Pojistovny.Models.Model.Uzivatele;
 using Informacni_System_Pojistovny.Models.Model.ZavazekModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +17,17 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: ZavazkyController
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             ZavazekModel zavazekModel = new ZavazekModel(_db);
-            List<Zavazek> zavazky = zavazekModel.ListZavazek();
+
+            long count = zavazekModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
+
+            List<Zavazek> zavazky = zavazekModel.ListZavazek(pageInfo);
             return View(zavazky);
         }
 

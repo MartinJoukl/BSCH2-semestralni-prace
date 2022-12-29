@@ -51,6 +51,71 @@
             return list;
         }
 
+        public List<Zavazek> ListZavazek(PageInfo pageInfo)
+        {
+            List<Zavazek> list = new List<Zavazek>();
+
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from zavazky_view JOIN pojistne_udalosti_view using (POJISTNA_UDALOST_ID) OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+
+                    DateTime.TryParse(dr["Datum_splaceni"].ToString(), out DateTime DatumSplaceni);
+                    DateTime? nullableDatumSplaceni = DatumSplaceni;
+                    if (nullableDatumSplaceni.Equals(DateTime.MinValue))
+                    {
+                        nullableDatumSplaceni = null;
+                    }
+                    //map data
+                    Zavazek zavazek = new Zavazek()
+                    {
+                        ZavazekId = int.Parse(dr["Zavazek_id"].ToString()),
+                        Vyse = int.Parse(dr["Vyse"].ToString()),
+                        Vznik = DateTime.Parse(dr["vznik"].ToString()),
+                        DatumSplatnosti = DateTime.Parse(dr["Datum_splatnosti"].ToString()),
+                        DatumSplaceni = nullableDatumSplaceni,
+                        Popis = dr["popis"].ToString(),
+                        PojistnaUdalost = new()
+                        {
+                            Klient = null, //TODO klient
+                            NarokovanaVysePojistky = int.Parse(dr["NAROKOVANA_VYSE_POJISTKY"].ToString()),
+                            Vznik = DateTime.Parse(dr["vznik"].ToString()),
+                            Popis = dr["popis"].ToString(),
+                            PojistnaUdalostId = int.Parse(dr["pojistna_Udalost_Id"].ToString()),
+                        }
+                    };
+                    list.Add(zavazek);
+                }
+            }
+            db.Dispose();
+            return list;
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from zavazky_view");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
+        }
+
         public List<Zavazek> ListZavazek(int idPojistnaUdalost)
         {
             List<Zavazek> list = new List<Zavazek>();

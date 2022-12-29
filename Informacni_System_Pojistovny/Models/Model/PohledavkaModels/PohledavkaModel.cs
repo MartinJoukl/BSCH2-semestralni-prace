@@ -54,6 +54,73 @@
             return list;
         }
 
+        public List<Pohledavka> ListPohledavka(PageInfo pageInfo)
+        {
+            List<Pohledavka> list = new List<Pohledavka>();
+
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from pohledavky_view JOIN VIEW_POJISTKY using (pojistka_id) order by pohledavka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+
+                    DateTime.TryParse(dr["Datum_splaceni"].ToString(), out DateTime DatumSplaceni);
+                    DateTime? nullableDatumSplaceni = DatumSplaceni;
+                    if (nullableDatumSplaceni.Equals(DateTime.MinValue))
+                    {
+                        nullableDatumSplaceni = null;
+                    }
+                    //map data
+                    Pohledavka pohledavka = new Pohledavka()
+                    {
+                        ID = int.Parse(dr["Pohledavka_id"].ToString()),
+                        Vyse = int.Parse(dr["Vyse"].ToString()),
+                        Vznik = DateTime.Parse(dr["vznik"].ToString()),
+                        DatumSplatnosti = DateTime.Parse(dr["Datum_splatnosti"].ToString()),
+                        DatumSplaceni = nullableDatumSplaceni,
+                        Popis = dr["popis"].ToString(),
+                        Pojistka = new()
+                        {
+                            Klient = null, //TODO klient
+                            ID = int.Parse(dr["pojistka_id"].ToString()),
+                            Podminky = null, //TODO podminky
+                            PojistnyProdukt = null,
+                            Poplatek = int.Parse(dr["poplatek"].ToString()),
+                            SjednanaVyse = int.Parse(dr["sjednana_vyse"].ToString()),
+                            Status = dr["pojistka_id"].ToString().Equals("a"),
+                            Sjednano = DateTime.Parse(dr["sjednano"].ToString()),
+                        }
+                    };
+                    list.Add(pohledavka);
+                }
+            }
+            db.Dispose();
+            return list;
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from pohledavky_view");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
+        }
+
         public List<Pohledavka> ListPohledavka(int idPojistky)
         {
             List<Pohledavka> list = new List<Pohledavka>();

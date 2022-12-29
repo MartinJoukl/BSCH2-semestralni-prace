@@ -1,0 +1,107 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.HistorieUzivatele
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Detail historie</h1>
+
+<div>
+    <h4>Historie uživatele</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OldEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OldEmail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OldJmeno)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OldJmeno)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OldPrijmeni)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OldPrijmeni)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OldRole)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OldRole)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OldId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OldId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OldcasZmeny)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OldcasZmeny)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NewEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NewEmail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NewJmeno)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NewJmeno)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NewPrijmeni)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NewPrijmeni)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NewRole)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NewRole)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NewId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NewId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NewCasZmeny)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NewCasZmeny)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CasHistorie)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CasHistorie)
+        </dd>          
+        <dt class = "col-sm-2">
+            Typ DML
+        </dt>
+        @{
+            string ddlClass = @Model.DDLTyp.ToString() + "DML";
+            <dd class="col-sm-10">
+                 <div class="@ddlClass DMLWidth">
+                    @Html.DisplayFor(model => model.DDLTyp)
+             </div>
+        </dd>
+        }
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Zpět na výpis</a>
+</div>

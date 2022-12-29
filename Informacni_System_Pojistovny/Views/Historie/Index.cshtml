@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Informacni_System_Pojistovny.Models.Entity.Historie>
+
+@{
+    ViewData["Title"] = "Historie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Historie</h1>
+
+@Html.Partial("_paging")
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Odkaz na předmět
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JmenoPredmetu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DML)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CasZmeny)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{
+                        if (!(item.ItemId == 0 || item.JmenoPredmetu.Equals("PSC")))
+                        {
+                            @Html.ActionLink("Měněný objekt" , "Details", item.JmenoPredmetu, new {id=item.ItemId })
+                        }else{
+                            <span>-</span>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JmenoPredmetu)
+                </td>
+                @{
+                    string dmlClass = @item.DML.ToString() + "DML";
+                                      <th class="@dmlClass">
+                                @Html.DisplayFor(modelItem => item.DML)
+                            </th>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.CasZmeny)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

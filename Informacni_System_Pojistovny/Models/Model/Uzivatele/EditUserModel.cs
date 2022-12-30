@@ -13,5 +13,7 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
         public string Prijmeni { get; set; }
         public int Id { get; set; }
         public virtual string Heslo { get; private set; }
+        [Display(Name = "Manažer")]
+        public int? ManazerId { get; set; }
     }
 }

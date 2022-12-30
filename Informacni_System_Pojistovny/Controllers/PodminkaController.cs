@@ -48,7 +48,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 PodminkaModel podminkaModel = new PodminkaModel(_db);
                 podminkaModel.CreateCondition(podminkaCreateModel);
 
-                return RedirectToAction(nameof(Details), new { id });
+                return RedirectToAction(nameof(Index));
             }
             else return View();
         }
@@ -81,7 +81,9 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: PodminkyController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            PodminkaModel podminkaModel = new PodminkaModel(_db);
+            Podminka podminka = podminkaModel.ReadCondition(id);
+            return View(podminka);
         }
 
         // POST: PodminkyController/Delete/5
@@ -91,6 +93,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             try
             {
+                PodminkaModel podminkaModel = new PodminkaModel(_db);
+                podminkaModel.DeleteCondition(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

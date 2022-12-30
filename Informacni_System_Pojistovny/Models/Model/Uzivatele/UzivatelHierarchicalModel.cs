@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Informacni_System_Pojistovny.Models.Entity;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
-namespace Informacni_System_Pojistovny.Models.Entity
+namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
 {
-    public class Uzivatel
+    public class UzivatelHierarchicalModel
     {
         [Display(Name = "Email"), DataType(DataType.EmailAddress)]
         public string Email { get; set; }
@@ -16,10 +15,8 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public UzivateleRole Role { get; set; }
         [Display(Name = "Manažer"), DataType(DataType.Text)]
         public Uzivatel? Manazer { get; set; }
-        public string HesloHash { get; set; }
-        public string Salt { get; set; }
         public int Id { get; set; }
-        [Display(Name = "Čas změny"), DataType(DataType.Date)]
-        public DateTime casZmeny { get; set; }
+        [Display(Name = "Úroveň")]
+        public int? Uroven { get; set; }
     }
 }

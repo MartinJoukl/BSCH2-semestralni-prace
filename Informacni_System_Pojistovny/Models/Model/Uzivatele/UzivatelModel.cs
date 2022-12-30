@@ -1,6 +1,7 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Reflection.Metadata;
@@ -15,8 +16,58 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
         {
             this.db = db;
         }
+
+        public List<SelectListItem> ListUzivatelSelectItemsWithoutCurrentUserWithNull(int currentUserId)
+        {
+            List<Uzivatel> uizvatele = ListUzivatel();
+            List<SelectListItem> uzivateleAsSelectListItems = new List<SelectListItem>();
+            uzivateleAsSelectListItems.Add(new SelectListItem { Value = null, Text = "" });
+            uizvatele.Where(u => u.Id != currentUserId).ToList().ForEach(u => { uzivateleAsSelectListItems.Add(new SelectListItem { Value = u.Id.ToString(), Text = u.Jmeno + " " + u.Prijmeni }); });
+            return uzivateleAsSelectListItems;
+        }
+
+        public List<UzivatelHierarchicalModel> ListUzivatelHierarchical() { 
+            Db db = new Db();
+            List<UzivatelHierarchicalModel> uzivatelHierarchicalModels = new List<UzivatelHierarchicalModel>();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from VIEW_UZIVATELE_NADRIZENI");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    string mail = dr["mail"]?.ToString();
+                    string jmeno = dr["jmeno"]?.ToString();
+                    string prijmeni = dr["prijmeni"]?.ToString();
+                    string role = dr["uzivatel_role"]?.ToString();
+                    string idString = dr["uzivatel_id"]?.ToString();
+                    DateTime.TryParse(dr["cas_zmeny"]?.ToString(), out DateTime casZmeny);
+                    int.TryParse(idString, out var id);
+
+                    string manazerString = dr["manazer"]?.ToString();
+                    int.TryParse(manazerString, out var manazer);
+
+                    UzivatelHierarchicalModel uzivatelHierarchicalModel = new UzivatelHierarchicalModel();
+                    uzivatelHierarchicalModel.Id = id;
+                    uzivatelHierarchicalModel.Email = mail;
+                    uzivatelHierarchicalModel.Jmeno = jmeno;
+                    uzivatelHierarchicalModel.Prijmeni = prijmeni;
+                    string urovenString = dr["uroven"].ToString();
+                    int.TryParse(urovenString, out int uroven);
+                    uzivatelHierarchicalModel.Uroven = uroven;
+                    if (id != null)
+                    {
+                        uzivatelHierarchicalModel.Manazer = GetUzivatel(manazer);
+                    }
+                    uzivatelHierarchicalModel.Role = UzivateleRoleRetriever.GetByName(role);
+                    uzivatelHierarchicalModels.Add(uzivatelHierarchicalModel);
+                }
+            }
+            db.Dispose();
+            return uzivatelHierarchicalModels;
+        }
+
         public List<Uzivatel> ListUzivatel()
         {
+            Db db = new Db();
             List<Uzivatel> list = new List<Uzivatel>();
 
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from uzivatele_view");
@@ -31,6 +82,10 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                     string idString = dr["id"]?.ToString();
                     DateTime.TryParse(dr["cas_zmeny"]?.ToString(), out DateTime casZmeny);
                     int.TryParse(idString, out var id);
+
+                    string manazerString = dr["manazer"]?.ToString();
+                    int.TryParse(manazerString, out var manazer);
+
                     list.Add(new Uzivatel
                     {
                         Email = mail,
@@ -38,7 +93,8 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                         Prijmeni = prijmeni,
                         Role = UzivateleRoleRetriever.GetByName(role),
                         Id = id,
-                        casZmeny = casZmeny
+                        casZmeny = casZmeny,
+                        Manazer = GetUzivatel(manazer)
                     });
                 }
             }
@@ -48,6 +104,7 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
 
         public List<Uzivatel> ListUzivatel(PageInfo pageInfo)
         {
+            Db db = new Db();
             List<Uzivatel> list = new List<Uzivatel>();
 
             int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
@@ -69,6 +126,10 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                     string idString = dr["id"]?.ToString();
                     DateTime.TryParse(dr["cas_zmeny"]?.ToString(), out DateTime casZmeny);
                     int.TryParse(idString, out var id);
+
+                    string manazerString = dr["manazer"]?.ToString();
+                    int.TryParse(manazerString, out var manazer);
+
                     list.Add(new Uzivatel
                     {
                         Email = mail,
@@ -76,7 +137,8 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                         Prijmeni = prijmeni,
                         Role = UzivateleRoleRetriever.GetByName(role),
                         Id = id,
-                        casZmeny = casZmeny
+                        casZmeny = casZmeny,
+                        Manazer = GetUzivatel(manazer)
                     });
                 }
             }
@@ -187,14 +249,19 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
             return null;
         }
 
-        public Uzivatel? GetUzivatel(int id)
+        public Uzivatel? GetUzivatel(int? id)
         {
+            if(id == null) { return null; }
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add(":id", id);
             var recievedResult = db.ExecuteRetrievingCommand("Select * from uzivatele_view where id = :id", parameters);
             if (recievedResult.Read())
             {
                 DateTime.TryParse(recievedResult["cas_zmeny"]?.ToString(), out DateTime casZmeny);
+
+                string manazerString = recievedResult["manazer"]?.ToString();
+                int.TryParse(manazerString, out var manazer);
+
                 Uzivatel user = new Uzivatel
                 {
                     Jmeno = recievedResult["jmeno"]?.ToString(),
@@ -204,7 +271,8 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                     Salt = recievedResult["salt"]?.ToString(),
                     Id = int.Parse(recievedResult["ID"]?.ToString()),
                     Role = UzivateleRoleRetriever.GetByName(recievedResult["uzivatel_role"]?.ToString()),
-                    casZmeny = casZmeny
+                    casZmeny = casZmeny,
+                    Manazer = GetUzivatel(manazer),
                 };
                 db.Dispose();
                 return user;

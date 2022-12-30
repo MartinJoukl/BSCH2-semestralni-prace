@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Informacni_System_Pojistovny.Models.Model.Uzivatele;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
 using Informacni_System_Pojistovny.Models.Model;
+using Informacni_System_Pojistovny.Models.Model.PodminkaModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -30,6 +32,15 @@ namespace Informacni_System_Pojistovny.Controllers
             ViewBag.PageIndex = pageInfo.PageIndex;
 
             return View("Index", uzivatelModel.ListUzivatel(pageInfo));
+        }
+
+        // GET: UzivatelController/Hierarchy
+        [Authorize(Roles = nameof(UzivateleRole.User))]
+        public ActionResult Hierarchy()
+        {
+            UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            List<UzivatelHierarchicalModel> uzivatele = uzivatelModel.ListUzivatelHierarchical();
+            return View(uzivatele);
         }
 
         // GET: UzivatelController/Details/5
@@ -277,7 +288,10 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
             Uzivatel editovany = uzivatelModel.GetUzivatel(id);
-            return View(new EditUserModel() { Id = id, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni });
+            List<SelectListItem> uzivateleBag = uzivatelModel.ListUzivatelSelectItemsWithoutCurrentUserWithNull(id);
+            ViewBag.uzivatele = uzivateleBag;
+            int? manazerId = editovany.Manazer == null? null : editovany.Manazer.Id;
+            return View(new EditUserModel() { Id = id, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni, ManazerId = manazerId });
         }
 
         // GET: UzivatelController/EditOwnProfile

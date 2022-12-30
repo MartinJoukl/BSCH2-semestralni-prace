@@ -277,7 +277,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
             Uzivatel editovany = uzivatelModel.GetUzivatel(id);
-            return View(new EditUserModel() { Id = id, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni });
+            return View(new EditUserModel() { Id = id, Jmeno = editovany.Jmeno, Role = editovany.Role, Mail = editovany.Email, Prijmeni = editovany.Prijmeni });
         }
 
         // GET: UzivatelController/EditOwnProfile
@@ -306,6 +306,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             int id = int.Parse(HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value);
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel uzivatelOriginal = uzivatelModel.GetUzivatel(id);
+            model.Role = uzivatelOriginal.Role;
             Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, id);
 
             return RedirectToAction(nameof(Index), "Home");

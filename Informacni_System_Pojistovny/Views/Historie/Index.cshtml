@@ -32,7 +32,7 @@
             <tr>
                 <td>
                     @{
-                        if (!(item.ItemId == 0 || item.JmenoPredmetu.Equals("PSC")))
+                        if (!(item.ItemId == 0 || item.JmenoPredmetu.Equals("PSC") || item.JmenoPredmetu.Equals("Dokument")))
                         {
                             @Html.ActionLink("Měněný objekt" , "Details", item.JmenoPredmetu, new {id=item.ItemId })
                         }else{

@@ -54,23 +54,27 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistnaUdalostController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection form)
+        public ActionResult Create(PojistnaUdalostCreateModel model)
         {
-            string klientId = form["PojistnaUdalost.Klient.KlientId"];
+            ModelState.Remove("PojistnaUdalost.Klient");
             if (!ModelState.IsValid)
             {
-                return View();
+                PojistnaUdalost pojistneUdalosti = new PojistnaUdalost();
+                KlientModel klientModel = new KlientModel(_db);
+                List<Klient> klients = klientModel.ReadClients();
+
+                return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
             try
             {
                 KlientModel klientModel = new KlientModel(_db);
-                Klient klient = klientModel.GetClient(int.Parse(klientId));
+                Klient klient = klientModel.GetClient(model.KlientId);
                 if (klient == null)
                 {
                     return View();
                 }
                 PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
-                pojistnaUdalostModel.CreatePojistnaUdalost(new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = int.Parse(form["PojistnaUdalost.NarokovanaVysePojistky"]), Popis = form["PojistnaUdalost.Popis"], Vznik = DateTime.Parse(form["PojistnaUdalost.Vznik"]) });
+                pojistnaUdalostModel.CreatePojistnaUdalost(new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = model.PojistnaUdalost.NarokovanaVysePojistky, Popis = model.PojistnaUdalost.Popis, Vznik = model.PojistnaUdalost.Vznik });
                 return RedirectToAction(nameof(Index));
             }
             catch

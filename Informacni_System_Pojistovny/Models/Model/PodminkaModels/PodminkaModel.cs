@@ -69,7 +69,57 @@ namespace Informacni_System_Pojistovny.Models.Model.PodminkaModels
             List<SelectListItem> podminkySelectListItems = new List<SelectListItem>();
             podminky.ForEach(p => { podminkySelectListItems.Add(new SelectListItem { Value = p.ID.ToString(), Text = p.Popis }); });
             return podminkySelectListItems;
-        } 
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from view_podminky");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
+        }
+
+        public List<Podminka> ReadConditions(PageInfo pageInfo)
+        {
+            string sql;
+            OracleDataReader dr;
+
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
+
+
+            sql = "select * from view_podminky order by podminka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                dr = db.ExecuteRetrievingCommand(sql,parameters);
+            
+            List<Podminka> podminky = new List<Podminka>();
+
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    Podminka podminka = new Podminka();
+                    podminka.ID = int.Parse(dr["podminka_id"].ToString());
+                    podminka.Popis = dr["popis"].ToString();
+                    podminky.Add(podminka);
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return podminky;
+        }
 
         public List<Podminka> ReadConditions(int insuranceId = 0)
         {

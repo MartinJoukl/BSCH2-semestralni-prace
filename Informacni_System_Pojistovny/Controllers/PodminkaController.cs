@@ -1,5 +1,6 @@
 ﻿using Informacni_System_Pojistovny.Models.Dao;
 using Informacni_System_Pojistovny.Models.Entity;
+using Informacni_System_Pojistovny.Models.Model;
 using Informacni_System_Pojistovny.Models.Model.PodminkaModels;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,17 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PodminkyController
-        public ActionResult Index()
+        public ActionResult Index(PageInfo pageInfo)
         {
             PodminkaModel podminkaModel = new PodminkaModel(_db);
-            List<Podminka> podminky = podminkaModel.ReadConditions();
+
+            long count = podminkaModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
+
+            List<Podminka> podminky = podminkaModel.ReadConditions(pageInfo);
             return View(podminky);
         }
 

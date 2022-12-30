@@ -1,0 +1,24 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Podminka
+
+@{
+    ViewData["Title"] = "Detaily";
+}
+
+<h1>Detaily podmínky</h1>
+
+<div>
+    <h4>Podmínka</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Popis)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Popis)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Upravit", "Edit", new { id = Model.ID }) |
+    <a asp-action="Index">Zpět na přehled podmínek</a>
+</div>

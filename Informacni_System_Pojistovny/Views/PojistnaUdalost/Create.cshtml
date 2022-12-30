@@ -30,8 +30,8 @@
                 <span asp-validation-for="PojistnaUdalost.NarokovanaVysePojistky" class="text-danger"></span>
             </div>
              <div class="form-group">
-             <label asp-for="PojistnaUdalost.Klient" class="control-label"></label>
-                <select class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno)))" asp-for="@ViewContext.RouteData.Values["id"]"></select>
+             <label asp-for="PojistnaUdalost.Klient" name="KlientId" class="control-label"></label>
+                <select name="KlientId" class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno)))" asp-for="@ViewContext.RouteData.Values["id"]"></select>
              <span asp-validation-for="PojistnaUdalost.Klient" class="text-danger"></span>
              </div>
             <div class="form-group">

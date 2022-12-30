@@ -12,6 +12,9 @@
     <thead>
         <tr>
             <th>
+                Odkaz na měněný objekt
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.OldEmail)
             </th>
             <th>
@@ -34,6 +37,18 @@
 @foreach (var item in Model) {
             string ddlClass = @item.DDLTyp.ToString()+"DML";
                 <tr>
+                    <td>
+                    @{
+                        if (!(item.NewId == 0))
+                        {
+                            @Html.ActionLink("Měněný objekt" , "Details","Uzivatel", new {id=item.NewId })
+                        }
+                        else
+                        {
+                                        <span>-</span>
+                        }
+                    }
+                    </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OldEmail)
             </td>

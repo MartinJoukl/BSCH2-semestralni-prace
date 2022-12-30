@@ -137,7 +137,7 @@ namespace Informacni_System_Pojistovny.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, RedirectablePohledavka model)
         {
-          //  try
+            try
             {
                 if (!ModelState.IsValid)
                 {
@@ -156,7 +156,7 @@ namespace Informacni_System_Pojistovny.Controllers
                     return RedirectToAction("Details", "Pojistka", new { id = original.Pojistka.ID });
                 }
             }
-          //  catch
+            catch
             {
 
                 return View(model);

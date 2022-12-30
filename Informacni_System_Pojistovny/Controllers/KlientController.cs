@@ -28,7 +28,14 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Index(PageInfo pageInfo)
         {
             KlientModel klientModel = new KlientModel(_db);
-            return View(klientModel.ReadClients());
+
+            long count = klientModel.GetCount();
+            ViewBag.count = count;
+
+            ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.PageIndex = pageInfo.PageIndex;
+
+            return View(klientModel.ReadClients(pageInfo));
         }
 
         // GET: KlientController/Details/5

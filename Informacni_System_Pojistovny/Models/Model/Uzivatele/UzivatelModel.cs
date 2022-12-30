@@ -166,21 +166,15 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
         public Uzivatel? EditUzivatel(EditUserModel model, int id)
         {
             HashSalt hashSalt;
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("p_id", id);
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "p_id", id },
+                { "p_mail", model.Mail },
+                { "p_jmeno", model.Jmeno },
+                { "p_prijmeni", model.Prijmeni },
+                { "p_uzivatel_role", model.Role.ToString().ToLower() }
+            };
 
-            if (!string.IsNullOrEmpty(model.Mail))
-            {
-                parameters.Add("p_mail", model.Mail);
-            }
-            if (!string.IsNullOrEmpty(model.Jmeno))
-            {
-                parameters.Add("p_jmeno", model.Jmeno);
-            }
-            if (!string.IsNullOrEmpty(model.Prijmeni))
-            {
-                parameters.Add("p_prijmeni", model.Prijmeni);
-            }
             if (!string.IsNullOrEmpty(model.Heslo))
             {
                 hashSalt = GenerateSaltedHash(100, model.Heslo);

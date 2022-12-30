@@ -147,12 +147,18 @@ namespace Informacni_System_Pojistovny.Models.Model
 
         public List<Klient> ReadClients(PageInfo pageInfo)
         {
+            HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
             List<Klient> klients = new List<Klient>();
 
-            HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
+            int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { ":pageStart", pageStart },
+                { ":pageSize", pageInfo.PageSize }
+            };
 
             //SELECT fyzickych osob
-            OracleDataReader dr = db.ExecuteRetrievingCommand("SELECT * from(select * from View_vsechny_osoby order by KLIENT_ID) WHERE ROWNUM > :pageIndex AND ROWNUM <= pageEnd;");
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_vsechny_osoby order by KLIENT_ID OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY",parameters);
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -198,7 +204,26 @@ namespace Informacni_System_Pojistovny.Models.Model
                     }
                 }
             }
+            dr.Close();
+
             return klients;
+        }
+
+        public long GetCount()
+        {
+            long count = 0;
+            Db db = new Db();
+            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from View_vsechny_osoby");
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    count = long.Parse(dr["count"].ToString());
+                }
+            }
+            dr.Close();
+            db.Dispose();
+            return count;
         }
 
         public int CreateClient(IFormCollection collection)

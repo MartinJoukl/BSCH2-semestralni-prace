@@ -291,7 +291,7 @@ namespace Informacni_System_Pojistovny.Controllers
             List<SelectListItem> uzivateleBag = uzivatelModel.ListUzivatelSelectItemsWithoutCurrentUserWithNull(id);
             ViewBag.uzivatele = uzivateleBag;
             int? manazerId = editovany.Manazer == null? null : editovany.Manazer.Id;
-            return View(new EditUserModel() { Id = id, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni, ManazerId = manazerId });
+            return View(new EditUserModel() { Id = id, Role = editovany.Role, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni, ManazerId = manazerId });
         }
 
         // GET: UzivatelController/EditOwnProfile
@@ -320,6 +320,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             int id = int.Parse(HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value);
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
+            Uzivatel uzivatelOriginal = uzivatelModel.GetUzivatel(id);
+            model.Role = uzivatelOriginal.Role;
             Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, id);
 
             return RedirectToAction(nameof(Index), "Home");

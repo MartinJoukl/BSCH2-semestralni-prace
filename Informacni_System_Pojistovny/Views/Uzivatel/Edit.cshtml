@@ -27,6 +27,17 @@
                 <input asp-for="Prijmeni" class="form-control" />
                 <span asp-validation-for="Prijmeni" class="text-danger"></span>
             </div>
+            <div class="form-group col-md-4">
+                                 <label asp-for=Role class="control-label"></label>
+                @{
+                    List<UzivateleRole> roleList = new List<UzivateleRole>();
+                    roleList.Add(UzivateleRole.User);
+                    roleList.Add(UzivateleRole.Admin);
+                    roleList.Add(UzivateleRole.PriviledgedUser);
+                        <select class="form-control" asp-items="@(new SelectList(roleList))" asp-for="Role"></select>
+             }
+                            <span asp-validation-for="Role" class="text-danger"></span>
+             </div>
             <div class="form-group">
                 <label asp-for="ManazerId" class="control-label"></label>
                 <select name="ManazerId" class="form-control" asp-items="@ViewBag.uzivatele" asp-for="ManazerId"></select>

@@ -27,7 +27,9 @@ namespace Informacni_System_Pojistovny.Controllers
         // GET: PodminkyController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            PodminkaModel podminkaModel = new PodminkaModel(_db);
+            Podminka podminka = podminkaModel.ReadCondition(id);
+            return View(podminka);
         }
 
         // GET: PodminkyController/Create

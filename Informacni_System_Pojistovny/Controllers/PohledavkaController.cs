@@ -42,7 +42,7 @@ namespace Informacni_System_Pojistovny.Controllers
             Pohledavka pohledavka = pohledavkaModel.GetPohledavkaPojistka(id);
             if (pohledavka == null)
             {
-                return RedirectToAction(nameof(Index));
+                ViewBag.errorMessage = "Pohledávka nebyla nalezena";
             }
             return View(pohledavka);
         }
@@ -75,10 +75,15 @@ namespace Informacni_System_Pojistovny.Controllers
                     PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
                     pohledavkaModel.CreatePohledavka(pohledavkaCreateModel);
                 }
+                else
+                {
+                    ViewBag.errorMessage = "Pojistka k pohledávce nebyla nalezena";
+                }
                 return RedirectToAction("Details", "Pojistka", new { id = pohledavkaCreateModel.PojistkaId });
             }
-            catch
+            catch(Exception ex)
             {
+                ViewBag.errorMessage = ex.Message;
                 ViewBag.pojistkaId = pohledavkaCreateModel.PojistkaId;
                 return View();
             }
@@ -92,7 +97,9 @@ namespace Informacni_System_Pojistovny.Controllers
             Pohledavka pohledavka = pohledavkaModel.GetPohledavkaPojistka(id);
             if (pohledavka == null)
             {
-                return RedirectToAction(nameof(Index));
+                ViewBag.errorMessage = "Pohledávka nebyla nalezena";
+                //return RedirectToAction(nameof(Index));
+                return View(new RedirectablePohledavka());
             }
             return View(new RedirectablePohledavka() { ID = pohledavka.ID, Vznik = pohledavka.Vznik, DatumSplaceni=pohledavka.DatumSplaceni, DatumSplatnosti= pohledavka.DatumSplatnosti, PojistkaId = pohledavka.ID, Popis = pohledavka.Popis, Vyse = pohledavka.Vyse, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
@@ -107,11 +114,18 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 if (!ModelState.IsValid || model.Vznik > model.DatumSplatnosti)
                 {
+                    ViewBag.errorMessage = "Formulář není validní";
                     return View(model);
                 }
                 PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
                 Pohledavka original = pohledavkaModel.GetPohledavkaPojistka(id);
-                pohledavkaModel.UpdatePohledavka(id, model);
+                try
+                {
+                    pohledavkaModel.UpdatePohledavka(id, model);
+                }catch(Exception ex)
+                {
+                    ViewBag.errorMessage = ex.Message;
+                }
 
                 if (model.RedirectedFrom == null)
                 {
@@ -137,7 +151,9 @@ namespace Informacni_System_Pojistovny.Controllers
             Pohledavka pohledavka = pohledavkaModel.GetPohledavkaPojistka(id);
             if (pohledavka == null)
             {
-                return RedirectToAction("Index");
+                ViewBag.errorMessage = "Pohledávka již byla smazána";
+                //return RedirectToAction("Index");
+                return View(new RedirectablePohledavka());
             }
             return View(new RedirectablePohledavka() { ID = pohledavka.ID, Vznik = pohledavka.Vznik, DatumSplaceni = pohledavka.DatumSplaceni, DatumSplatnosti = pohledavka.DatumSplatnosti, PojistkaId = pohledavka.ID, Popis = pohledavka.Popis, Vyse = pohledavka.Vyse, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }

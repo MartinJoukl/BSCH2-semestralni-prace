@@ -46,7 +46,8 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             else
             {
-                return Index(new PageInfo());
+                ViewBag.errorMessage = "Historie nebyla nalezena";
+                return View(historie);
             }
         }
     }

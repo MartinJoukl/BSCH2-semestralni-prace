@@ -14,5 +14,9 @@ namespace Informacni_System_Pojistovny.Models.Entity
         [Display(Name = "Maximální výše plnění")]
         public int MaximalniVysePlneni { get; set; }
         public bool Status { get; set; }
+        [Display(Name = "Počet pojištěných právnických osob")]
+        public long pocetPravnickychOsob { get; set; }
+        [Display(Name = "Počet pojištěných fyzických osob")]
+        public long pocetFyzickychOsob { get; set; }
     }
 }

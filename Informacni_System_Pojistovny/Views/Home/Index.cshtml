@@ -1,8 +1,40 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Informacni_System_Pojistovny.Models.Entity.Uzivatel
+@{
+    @if (!(Context.User.IsInRole(UzivateleRole.User.ToString()) || Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString())))
+    {
+        ViewData["Title"] = "Vítejte v systému";
+    }
+    else
+    {
+        ViewData["Title"] = "Má nástěnka";
+    }
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (!(Context.User.IsInRole(UzivateleRole.User.ToString()) || Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString())))
+    {
+        //is not authenticated
+    <h1 class="display-4">Vítejte v systému</h1>
+    <p></p>
+    <p>Tento systém slouží pro interní správu všech aspektů pojištovny</p>
+    <p>Pro pokračování do systému se prosím <a asp-action="login" asp-controller="uzivatel">přihlaste</a> nebo <a asp-action="login" asp-controller="uzivatel">zaregistrujte</a>.</p>
+    }else{
+        //is authenticated
+        <h1 class="display-4">Dashboard</h1>
+        <p></p>
+        <p>Vítej uživateli @Model.Jmeno <span>@Model.Prijmeni</span>.</p>
+            <p>Vaše aktuální role je <b>@Model.Role</b>.</p>
+        if (Model.Manazer == null)
+        {
+            <p>Pokud je vaše role nedostatečná, kontaktujte prosím administrátora systému.</p>
+        }
+        else if (Context.User.IsInRole(UzivateleRole.User.ToString()) || Context.User.IsInRole(UzivateleRole.Admin.ToString()))
+        {
+            <p>Pokud je vaše role nedostatečná, kontaktujte prosím vašeho manažera - aktuální manažer: <b> @Model.Manazer.Jmeno @Model.Manazer.Prijmeni</b>.</p>
+        }
+        else
+        {
+         <p>Pokud je vaše role nedostatečná, kontaktujte prosím vašeho manažera - aktuální manažer: <a asp-action="Details" asp-controller="Uzivatel" asp-route-id=@Model.Manazer.Id> @Model.Manazer.Jmeno @Model.Manazer.Prijmeni</a>.</p>
+        }
+    }
 </div>

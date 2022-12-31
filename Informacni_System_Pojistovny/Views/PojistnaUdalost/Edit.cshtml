@@ -31,8 +31,13 @@
             </div>
              <div class="form-group col-md-4">
                                  <label asp-for="PojistnaUdalost.Klient" class="control-label"></label>
+              @if(Model?.PojistnaUdalost != null){
              <select name="klientId" class="form-control" asp-items="@(new SelectList(Model.Klients,nameof(Klient.KlientId), nameof(Klient.CeleJmeno),Model.PojistnaUdalost.Klient.KlientId))" asp-for="PojistnaUdalost.Klient.KlientId"></select>
                             <span asp-validation-for="PojistnaUdalost.Klient" class="text-danger"></span>
+              }else{
+                                   <select name="klientId" class="form-control" asp-items="@(new SelectList(new List<Klient>()))" asp-for="PojistnaUdalost.Klient.KlientId"></select>
+                                <span asp-validation-for="PojistnaUdalost.Klient" class="text-danger"></span>
+              }
              </div>
             <div class="form-group">
                 <input type="submit" value="Uložit" class="btn btn-primary" />
@@ -42,7 +47,7 @@
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.PojistnaUdalost.PojistnaUdalostId">Zpět na detail</a>
+    <a asp-action="Details" asp-route-id="@Model?.PojistnaUdalost?.PojistnaUdalostId">Zpět na detail</a>
 </div>
 
 @section Scripts {

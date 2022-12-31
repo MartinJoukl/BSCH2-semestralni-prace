@@ -101,6 +101,8 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
                     pojistnyProdukt.MaximalniVysePlneni = int.Parse(dr["MAX_VYSE_PLNENI"].ToString());
                     pojistnyProdukt.Popis = dr["popis"].ToString();
                     pojistnyProdukt.Nazev = dr["nazev"].ToString();
+                    pojistnyProdukt.pocetPravnickychOsob = long.Parse(dr["pocet_Pravnickych_Osob"].ToString());
+                    pojistnyProdukt.pocetFyzickychOsob = long.Parse(dr["pocet_fyzickych_osob"].ToString());
                     string status = dr["status"].ToString();
                     if (status != null && status.Equals("a"))
                     {
@@ -250,6 +252,8 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
                     pojistnyProdukt.MaximalniVysePlneni = int.Parse(dr["MAX_VYSE_PLNENI"].ToString());
                     pojistnyProdukt.Popis = dr["popis"].ToString();
                     pojistnyProdukt.Nazev = dr["nazev"].ToString();
+                    pojistnyProdukt.pocetPravnickychOsob = long.Parse(dr["pocet_Pravnickych_Osob"].ToString());
+                    pojistnyProdukt.pocetFyzickychOsob = long.Parse(dr["pocet_fyzickych_osob"].ToString());
                 }
             }
             dr.Close();

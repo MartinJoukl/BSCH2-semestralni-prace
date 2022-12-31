@@ -11,8 +11,8 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public List<HistorieClenstvi> HistorieClenstvi { get; set; } = new List<HistorieClenstvi>();
         public List<Adresa> Adresy { get; set; } = new List<Adresa>();
         public List<PojistnaUdalost> PojistneUdalosti { get; set; } = new List<PojistnaUdalost>();
-        public List<Pojistka> Pojistky { get; set; }
-        public List<Dokument> Dokumenty { get; set; }
+        public List<Pojistka> Pojistky { get; set; } = new List<Pojistka>();
+        public List<Dokument> Dokumenty { get; set; } = new List<Dokument>();
         [Display(Name = "Suma nesplacených pohledávek klienta k pojišťovně po termínu")]
         public int NesplacenePohledavkyPoTerminu { get; set; }
         [Display(Name = "Suma nesplacených závazků pojišťovny ke klientovi po termínu")]

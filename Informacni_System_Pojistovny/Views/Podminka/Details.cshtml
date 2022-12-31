@@ -21,7 +21,7 @@
 <div>
     @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
     {
-    <span>@Html.ActionLink("Upravit", "Edit", new { id = Model.ID }) | </span>
+    <span>@Html.ActionLink("Upravit", "Edit", new { id = Model?.ID }) | </span>
     }
     <a asp-action="Index">Zpět na přehled podmínek</a>
 </div>

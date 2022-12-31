@@ -33,12 +33,12 @@
             @Html.DisplayNameFor(model => model.Klient)
         </dt>
         <dd class = "col-sm-10">
-            @Model.Klient
+            @Model?.Klient
         </dd>
     </dl>
     @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
     {
-        <span>@Html.ActionLink("Upravit", "Edit",new { id= Model.PojistnaUdalostId}) |</span>
+        <span>@Html.ActionLink("Upravit", "Edit",new { id= Model?.PojistnaUdalostId}) |</span>
     }
     <a asp-action="Index">Zpět na přehled</a>
             <p>
@@ -48,7 +48,7 @@
         <p>
         @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
         {
-            @Html.ActionLink("Vytvoření nového závazku", "Create","Zavazek", new { pojistnaUdalostId=Model.PojistnaUdalostId })
+            @Html.ActionLink("Vytvoření nového závazku", "Create","Zavazek", new { pojistnaUdalostId=Model?.PojistnaUdalostId })
         }
 </p>
 
@@ -74,7 +74,8 @@
         </tr>
     </thead>
     <tbody>
-            @foreach (var item in Model.Zavazky)
+        @if(Model != null){
+            foreach (var item in Model.Zavazky)
             {
                             <tr>
                                 <td>
@@ -112,10 +113,11 @@
                     </td>
                             </tr>
             }
+            }
     </tbody>
 </table>
     @{
-        if (Model.Zavazky == null || Model.Zavazky.Count == 0)
+        if (Model?.Zavazky == null || Model?.Zavazky?.Count == 0)
         {
             <span>K této pojistné události nejsou evidovány žádné závazky.</span>
         }

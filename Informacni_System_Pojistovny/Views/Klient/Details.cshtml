@@ -66,28 +66,28 @@
                 Název
             </dt>
             <dd class="col-sm-10">
-                @pravnickaOsoba.Nazev
+                @pravnickaOsoba?.Nazev
             </dd>
             <dt class="col-sm-2">
                 Ičo
             </dt>
             <dd class="col-sm-10">
-                @pravnickaOsoba.Ico
+                @pravnickaOsoba?.Ico
             </dd>
         }
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 marginBottom">
             @Html.DisplayNameFor(model => model.NesplaceneZavazkyPoTerminu)
         </dt>
         <dd class="col-sm-10">
             @Model.NesplaceneZavazkyPoTerminu
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 marginBottom">
             @Html.DisplayNameFor(model => model.NesplacenePohledavkyPoTerminu)
         </dt>
         <dd class="col-sm-10">
             @Model.NesplacenePohledavkyPoTerminu
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 marginBottom">
             @Html.DisplayNameFor(model => model.PohledavkyNad20k)
         </dt>
         <dd class="col-sm-10">

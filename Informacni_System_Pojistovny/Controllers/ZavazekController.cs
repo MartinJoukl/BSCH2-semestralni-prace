@@ -43,7 +43,8 @@ namespace Informacni_System_Pojistovny.Controllers
             Zavazek zavazek = zavazekModel.GetZavazekUdalost(id);
             if (zavazek == null)
             {
-                return RedirectToAction("Index");
+                ViewBag.errorMessage = "Závazek nebyl nalezen";
+                return View(zavazek);
             }
             return View(zavazek);
         }
@@ -81,6 +82,7 @@ namespace Informacni_System_Pojistovny.Controllers
             catch
             {
                 ViewBag.pojistnaUdalostId = zavazekCreateModel.PojistnaUdalostId;
+                ViewBag.errorMessage = "Založení závazku se nezdařilo";
                 return View();
             }
         }
@@ -93,7 +95,8 @@ namespace Informacni_System_Pojistovny.Controllers
             Zavazek zavazek = zavazekModel.GetZavazekUdalost(id);
             if (zavazek == null)
             {
-                return RedirectToAction(nameof(Index));
+                ViewBag.errorMessage = "Závazek nebyl nalezen";
+                return View(new RedirectableZavazekModel());
             }
             return View(new RedirectableZavazekModel() { Vznik= zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni= zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
@@ -108,6 +111,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 if (!ModelState.IsValid || model.Vznik > model.DatumSplatnosti)
                 {
+                    ViewBag.errorMessage = "Formulář není validní";
                     return View(model);
                 }
                 ZavazekModel zavazekModel = new ZavazekModel(_db);
@@ -138,7 +142,8 @@ namespace Informacni_System_Pojistovny.Controllers
             Zavazek zavazek = zavazekModel.GetZavazekUdalost(id);
             if (zavazek == null)
             {
-                return RedirectToAction("Index");
+                ViewBag.errorMessage = "Závazek nebyl nalezen";
+                return View(new RedirectableZavazekModel());
             }
             return View(new RedirectableZavazekModel() { Vznik = zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni = zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
@@ -168,9 +173,9 @@ namespace Informacni_System_Pojistovny.Controllers
                     return RedirectToAction("Details", "PojistnaUdalost", new { id = original.PojistnaUdalost.PojistnaUdalostId });
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                ViewBag.errorMessage = ex.Message;
                 return View(model);
             }
         }

@@ -36,9 +36,17 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
+            Pobocka pobocka = new Pobocka();
             PobockaModel pobockaModel = new PobockaModel(_db);
-            Pobocka pobocka = pobockaModel.ReadBranch(id);
-            pobocka.Adresa = pobockaModel.GetBranchAddress(id);
+            try
+            {
+                pobocka = pobockaModel.ReadBranch(id);
+                pobocka.Adresa = pobockaModel.GetBranchAddress(id);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.errorMessage = ex.Message;
+            }
             return View(pobocka);
         }
 
@@ -85,7 +93,14 @@ namespace Informacni_System_Pojistovny.Controllers
             if (ModelState.IsValid)
             {
                 PobockaModel pobockaEditModel = new PobockaModel(_db);
-                pobockaEditModel.AddAddressesToBranch(id, adresa);
+                try
+                {
+                    pobockaEditModel.AddAddressesToBranch(id, adresa);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.errorMessage = ex.Message;
+                }
 
                 return RedirectToAction(nameof(Details), new { id });
             }
@@ -106,8 +121,10 @@ namespace Informacni_System_Pojistovny.Controllers
                 {
                     pobockaModel.RealizePobockaEdit(pobockaEditModel, id);
                     return RedirectToAction(nameof(Details), new { id });
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
+                    ViewBag.errorMessage = ex.Message;
                     return View();
                 }
             }
@@ -171,7 +188,14 @@ namespace Informacni_System_Pojistovny.Controllers
             if (ModelState.IsValid)
             {
                 AdresaModel adresaModel = new AdresaModel(_db);
-                adresaModel.EditAddress(id, adresa);
+                try
+                {
+                    adresaModel.EditAddress(id, adresa);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.errorMessage = ex.Message;
+                }
 
                 return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
             }

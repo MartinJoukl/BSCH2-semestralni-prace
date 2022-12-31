@@ -44,7 +44,14 @@ namespace Informacni_System_Pojistovny.Controllers
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
             Pojistka pojistka = pojistkaModel.ReadInsurance(id);
-            pojistka.Pohledavky = pohledavkaModel.ListPohledavka(id);
+            if (pojistka == null)
+            {
+                ViewBag.errorMessage = "Pojistka nebyla nalezena";
+            }
+            else
+            {
+                pojistka.Pohledavky = pohledavkaModel.ListPohledavka(id);
+            }
             return View(pojistka);
         }
 
@@ -88,7 +95,13 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult RemoveCondition(int id, int redirectTo) { 
             PodminkaModel podminkaModel = new PodminkaModel(_db);
-            podminkaModel.RemoveConditionFromInsurance(id, redirectTo);
+            try
+            {
+                podminkaModel.RemoveConditionFromInsurance(id, redirectTo);
+            }catch(Exception ex)
+            {
+                ViewBag.errorMessage = ex.Message;
+            }
             return RedirectToAction(nameof(Details), new { id = redirectTo });
         }
 
@@ -143,6 +156,10 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
             Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            if(pojistka == null)
+            {
+                ViewBag.errorMessage = "Pojistka nebyla nalezena";
+            }
             return View(pojistka);
         }
 
@@ -171,6 +188,10 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
             Pojistka pojistka = pojistkaModel.ReadInsurance(id);
+            if(pojistka == null)
+            {
+                ViewBag.errorMessage = "Pojistka nebyla nalezena";
+            }
             return View(pojistka);
         }
 
@@ -186,9 +207,10 @@ namespace Informacni_System_Pojistovny.Controllers
                 pojistkaModel.DeleteInsurance(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+            ViewBag.errorMessage = ex.Message;
+            return View();
             }
         }
     }

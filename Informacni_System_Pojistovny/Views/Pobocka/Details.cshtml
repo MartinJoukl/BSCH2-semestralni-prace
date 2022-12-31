@@ -19,7 +19,7 @@
         </dd>
     </dl>
     <h4>Adresa pobočky</h4>
-    @if (Model.Adresa == null)
+    @if (Model !=null && Model.Adresa == null)
     {
         @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
         {
@@ -47,7 +47,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Adresa != null)
+        @if (Model != null && Model.Adresa != null)
         {
             Adresa adresa = Model.Adresa;
             <tr>
@@ -76,7 +76,7 @@
 <div>
     @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
                     {
-   <span>@Html.ActionLink("Upravit pobočku", "Edit", new { id=Model.PobockaId }) |</span>
+   <span>@Html.ActionLink("Upravit pobočku", "Edit", new { id=Model?.PobockaId }) |</span>
                     }
     <a asp-action="Index">Zpět na přehled poboček</a>
 </div>

@@ -46,19 +46,27 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
-            KlientModel klientDb = new KlientModel(_db);
-            PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
-            ZavazekModel zavazekModel = new ZavazekModel(_db);
-            Klient klient = klientDb.GetClient(id);
-            klient.Adresy = klientDb.GetClientAddresses(id);
-            klient.Dokumenty = klientDb.ReadClientDocuments(id);
-            //pro pohledavky
-            klient.Pojistky?.ForEach(pojistka =>
-                pojistka.Pohledavky = pohledavkaModel.ListPohledavka(pojistka.ID)
-            );
-            klient.PojistneUdalosti?.ForEach(pojistnaUdalost =>
-                pojistnaUdalost.Zavazky = zavazekModel.ListZavazek(pojistnaUdalost.PojistnaUdalostId)
-            );
+            Klient klient = new();
+            try
+            {
+                KlientModel klientDb = new KlientModel(_db);
+                PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
+                ZavazekModel zavazekModel = new ZavazekModel(_db);
+                klient = klientDb.GetClient(id);
+                klient.Adresy = klientDb.GetClientAddresses(id);
+                klient.Dokumenty = klientDb.ReadClientDocuments(id);
+                //pro pohledavky
+                klient.Pojistky?.ForEach(pojistka =>
+                    pojistka.Pohledavky = pohledavkaModel.ListPohledavka(pojistka.ID)
+                );
+                klient.PojistneUdalosti?.ForEach(pojistnaUdalost =>
+                    pojistnaUdalost.Zavazky = zavazekModel.ListZavazek(pojistnaUdalost.PojistnaUdalostId)
+                );
+            }
+            catch (Exception ex)
+            {
+                ViewBag.errorMessage = ex.Message;
+            }
             return View(klient);
         }
 
@@ -87,24 +95,42 @@ namespace Informacni_System_Pojistovny.Controllers
         [HttpPost]
         public ActionResult AddAddress(AdresaInputModel adresa, int id)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 KlientModel klientModel = new KlientModel(_db);
-                klientModel.AddAddressToClient(id, adresa);
+                try
+                {
+                    klientModel.AddAddressToClient(id, adresa);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.errorMessage = ex.Message;
+                }
+
 
                 return RedirectToAction(nameof(Details), new { id });
-            } else return View();
+            }
+            else return View();
         }
 
         // GET: KlientController/EditAddress
         [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult EditAddress(int id, int redirectTo)
         {
-            PscModel pscModel = new PscModel(_db);
-            List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
-            AdresaModel adresaModel = new AdresaModel(_db);
-            AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
-            ViewBag.redirectTo = redirectTo;
-            ViewBag.pscs = pscs;
+            AdresaInputModel adresaInputModel = new();
+            try
+            {
+                PscModel pscModel = new PscModel(_db);
+                List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
+                AdresaModel adresaModel = new AdresaModel(_db);
+                adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
+                ViewBag.redirectTo = redirectTo;
+                ViewBag.pscs = pscs;
+            }
+            catch (Exception ex)
+            {
+                ViewBag.errorMessage = ex.Message;
+            }
             return View(adresaInputModel);
         }
 
@@ -157,19 +183,23 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 ModelState.Remove("Ico");
                 ModelState.Remove("Nazev");
-            } else {
+            }
+            else
+            {
                 ModelState.Remove("Jmeno");
                 ModelState.Remove("Prijmeni");
                 ModelState.Remove("Telefon");
                 ModelState.Remove("RodneCislo");
                 ModelState.Remove("Email");
             }
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 KlientModel klientDb = new KlientModel(_db);
                 klientDb.CreateClient(collection);
                 return RedirectToAction(nameof(Index));
             }
-            else {
+            else
+            {
                 return View();
             }
         }
@@ -182,6 +212,7 @@ namespace Informacni_System_Pojistovny.Controllers
             KlientEditModel klient = klientDb.GetEditClient(id);
             if (klient == null)
             {
+                ViewBag.errorMessage = "Klient nebyl nalezen";
                 return RedirectToAction(nameof(Details), new { id });
             }
             else
@@ -211,8 +242,15 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             if (ModelState.IsValid)
             {
-                KlientModel klientDb = new KlientModel(_db);
-                klientDb.RealizeEditClient(model, id, collection["zvolenyTypOsoby"]);
+                try
+                {
+                    KlientModel klientDb = new KlientModel(_db);
+                    klientDb.RealizeEditClient(model, id, collection["zvolenyTypOsoby"]);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.errorMessage = ex.Message;
+                }
                 return RedirectToAction(nameof(Details), new { id });
             }
             else
@@ -225,10 +263,13 @@ namespace Informacni_System_Pojistovny.Controllers
         [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id)
         {
+
             KlientModel klientDb = new KlientModel(_db);
             Klient klient = klientDb.GetClient(id);
 
-            if(klient == null) {
+            if (klient == null)
+            {
+                ViewBag.errorMessage = "Klient nebyl nalezen";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -247,8 +288,9 @@ namespace Informacni_System_Pojistovny.Controllers
                 klientDb.ChangeClientStatus(id);
                 return RedirectToAction(nameof(Details), new { id });
             }
-            catch
+            catch(Exception ex)
             {
+                ViewBag.errorMessage = ex.Message;
                 return View();
             }
         }
@@ -269,6 +311,11 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             KlientModel klientModel = new KlientModel(_db);
             Dokument dokument = klientModel.ReadDocument(documentId);
+            if(dokument == null)
+            {
+                ViewBag.errorMessage = "Soubor nebyl nalezen"; //nefunguje, nemělo by ale normálně nastat
+                return NoContent();
+            }
             byte[] bytes = dokument.Data;
             return File(bytes, dokument.Typ, dokument.Nazev + dokument.Pripona);
         }
@@ -282,7 +329,14 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 IFormFile nahranySoubor = dokumentUploadModel.Data;
                 KlientModel klientModel = new KlientModel(_db);
-                klientModel.AddDocumentToClient(id, dokumentUploadModel);
+                try
+                {
+                    klientModel.AddDocumentToClient(id, dokumentUploadModel);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.errorMessage = ex.Message;
+                }
                 return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
@@ -293,8 +347,15 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult DeleteDocument(int id, int redirectTo)
         {
             KlientModel klientModel = new KlientModel(_db);
-            Dokument dokument = klientModel.ReadDocument(id);
-            dokument.Klient = klientModel.GetClient(redirectTo);
+            Dokument dokument = new();
+            try
+            {
+                dokument = klientModel.ReadDocument(id);
+                dokument.Klient = klientModel.GetClient(redirectTo);
+            }catch(Exception ex)
+            {
+                ViewBag.errorMessage = ex.Message;
+            }
             ViewBag.redirectTo = redirectTo;
             return View(dokument);
         }

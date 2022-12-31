@@ -141,7 +141,7 @@
             return count;
         }
 
-        public List<Zavazek> ListZavazek(int idPojistnaUdalost)
+        public List<Zavazek> ListZavazek(long idPojistnaUdalost)
         {
             List<Zavazek> list = new List<Zavazek>();
             Dictionary<string, object> parameters = new Dictionary<string, object>

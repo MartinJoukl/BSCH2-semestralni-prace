@@ -52,8 +52,13 @@
 
         @if (Model.RedirectedFrom != null)
         {
-                   <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistkaId>Zpět na pojistnou událost</a> <span>|</span>
-               <a asp-action="Details" asp-route-id=@Model.ID>Přejdi k detailu pohledávky</a>
+            if (Model.RedirectedFrom.Equals("Klient")) {
+            <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.KlientId>Zpět na klienta</a> <span>|</span>
+            }else
+            {
+                <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistkaId>Zpět na pojistku</a> <span>|</span>
+            }
+            <a asp-action="Details" asp-route-id=@Model.ID>Přejdi k detailu pohledávky</a>
         }else{
                <a asp-action="Details" asp-route-id=@Model.ID>Zpět na detail</a>
         }

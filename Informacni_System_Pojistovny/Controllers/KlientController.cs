@@ -2,7 +2,10 @@
 using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
 using Informacni_System_Pojistovny.Models.Model.DokumentModels;
+using Informacni_System_Pojistovny.Models.Model.PohledavkaModels;
+using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
+using Informacni_System_Pojistovny.Models.Model.ZavazekModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,9 +47,18 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Details(int id)
         {
             KlientModel klientDb = new KlientModel(_db);
+            PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
+            ZavazekModel zavazekModel = new ZavazekModel(_db);
             Klient klient = klientDb.GetClient(id);
             klient.Adresy = klientDb.GetClientAddresses(id);
             klient.Dokumenty = klientDb.ReadClientDocuments(id);
+            //pro pohledavky
+            klient.Pojistky?.ForEach(pojistka =>
+                pojistka.Pohledavky = pohledavkaModel.ListPohledavka(pojistka.ID)
+            );
+            klient.PojistneUdalosti?.ForEach(pojistnaUdalost =>
+                pojistnaUdalost.Zavazky = zavazekModel.ListZavazek(pojistnaUdalost.PojistnaUdalostId)
+            );
             return View(klient);
         }
 

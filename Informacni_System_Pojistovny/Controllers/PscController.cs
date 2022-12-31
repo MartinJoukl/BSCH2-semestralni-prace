@@ -106,9 +106,12 @@ namespace Informacni_System_Pojistovny.Controllers
                 pscModel.DeletePSC(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                ViewBag.errorMessage = ex.Message;
+                PscModel pscModel = new PscModel(_db);
+                psc = pscModel.ReadPsc(id);
+                return View(psc);
             }
         }
     }

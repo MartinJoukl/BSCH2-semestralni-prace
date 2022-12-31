@@ -355,8 +355,9 @@ namespace Informacni_System_Pojistovny.Controllers
                 uzivatelModel.DeleteUzivatel(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex) 
             {
+                ViewBag.errorMessage = ex.Message;
                 return View();
             }
         }

@@ -14,6 +14,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
         }
         public List<PojistnaUdalost> ListPojistnaUdalost(int id = 0)
         {
+            Db db = new Db();
             List<PojistnaUdalost> list = new List<PojistnaUdalost>();
             OracleDataReader dr;
 

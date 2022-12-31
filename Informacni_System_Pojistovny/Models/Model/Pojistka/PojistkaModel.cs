@@ -46,6 +46,7 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
         }
 
         public List<Entity.Pojistka> ReadInsurances(int id = 0) {
+            Db db = new Db();
             List<Entity.Pojistka> pojistky = new List<Entity.Pojistka>();
 
             string sql;

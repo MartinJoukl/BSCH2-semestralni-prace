@@ -45,7 +45,7 @@ namespace Informacni_System_Pojistovny.Models.Model.HistorieClenstviModels
                     historieClenstvis.Add(historieClenstvi);
                 }
             }
-            
+            db.Dispose();
             return historieClenstvis;
         }
     }

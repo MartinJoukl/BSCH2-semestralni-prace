@@ -176,10 +176,12 @@ namespace Informacni_System_Pojistovny.Models.Model
             try
             {
                 db.ExecuteNonQuery("zmenit_psc", pscParametry, false, true);
+                db.Dispose();
                 return true;
             }
             catch (Exception e)
             {
+                db.Dispose();
                 return false;
             }
         }

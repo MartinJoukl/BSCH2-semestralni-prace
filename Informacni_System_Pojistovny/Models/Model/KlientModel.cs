@@ -20,6 +20,7 @@ namespace Informacni_System_Pojistovny.Models.Model
 
         //TODO cist adresy klienta
         public Klient GetClient(int klientId) {
+            Db db = new Db();
             Dictionary<string, object> clientIdBinding = new Dictionary<string, object>();
             clientIdBinding.Add(":klient_id", klientId);
 
@@ -57,6 +58,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                         fyzickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(fyzickaOsoba.KlientId);
                         fyzickaOsoba.Pojistky = pojistkaModel.ReadInsurances(fyzickaOsoba.KlientId);
                         fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
+                        db.Dispose();
                         return fyzickaOsoba;
                     }
                     else
@@ -80,6 +82,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                         pravnickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(pravnickaOsoba.KlientId);
                         pravnickaOsoba.Pojistky = pojistkaModel.ReadInsurances(pravnickaOsoba.KlientId);
                         pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
+                        db.Dispose();
                         return pravnickaOsoba;
                     }
                 }
@@ -98,7 +101,8 @@ namespace Informacni_System_Pojistovny.Models.Model
 
         public List<Klient> ReadClients()
         {
-            HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
+            //HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
+            Db db = new Db();
             List<Klient> klients = new List<Klient>();
             //SELECT fyzickych osob
             OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_vsechny_osoby order by KLIENT_ID");
@@ -124,7 +128,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                         fyzickaOsoba.Email = dr["EMAIL"].ToString();
                         fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
                         fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
-                        fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
+                        //fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
                         klients.Add(fyzickaOsoba);
                     }
                     else {
@@ -141,11 +145,12 @@ namespace Informacni_System_Pojistovny.Models.Model
                             pravnickaOsoba.Stav = false;
                         }
                         pravnickaOsoba.Ico = dr["ICO"].ToString();
-                        pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
+                        //pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
                         klients.Add(pravnickaOsoba);
                     }
                 }
             }
+            db.Dispose();
             dr.Close();
 
             return klients;
@@ -153,7 +158,8 @@ namespace Informacni_System_Pojistovny.Models.Model
 
         public List<Klient> ReadClients(PageInfo pageInfo, string currentFilter = null)
         {
-            HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
+            Db db = new Db();
+            //HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
             List<Klient> klients = new List<Klient>();
 
             int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
@@ -198,7 +204,7 @@ namespace Informacni_System_Pojistovny.Models.Model
                         fyzickaOsoba.Email = dr["EMAIL"].ToString();
                         fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
                         fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
-                        fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
+                        //fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
                         klients.Add(fyzickaOsoba);
                     }
                     else
@@ -216,13 +222,13 @@ namespace Informacni_System_Pojistovny.Models.Model
                             pravnickaOsoba.Stav = false;
                         }
                         pravnickaOsoba.Ico = dr["ICO"].ToString();
-                        pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
+                        //pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
                         klients.Add(pravnickaOsoba);
                     }
                 }
             }
             dr.Close();
-
+            db.Dispose();
             return klients;
         }
 
@@ -355,6 +361,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             adresaParametry.Add(":v_psc", adresa.Psc);
             adresaParametry.Add(":v_klient_id", klientId);
             db.ExecuteNonQuery("PRIDEJ_ADRESU_KLIENTA", adresaParametry, false, true);
+            db.Dispose();
             return true;
         }
 
@@ -365,6 +372,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             adresaParametry.Add(":v_psc", adresa.Psc);
             adresaParametry.Add(":v_adresa_id", addressId);
             db.ExecuteNonQuery("zmen_adresu", adresaParametry, false, true);
+            db.Dispose();
             return true;
         }
 
@@ -411,6 +419,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             dokumentParametry.Add(":v_klient_id", id);
 
             db.ExecuteNonQuery("nahraj_dokument_klienta", dokumentParametry, false, true, binaryData);
+            db.Dispose();
             return true;
         }
 

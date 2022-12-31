@@ -34,6 +34,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            _db.Dispose();
             return View(pojistky);
         }
 
@@ -52,6 +53,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 pojistka.Pohledavky = pohledavkaModel.ListPohledavka(id);
             }
+            _db.Dispose();
             return View(pojistka);
         }
 
@@ -61,6 +63,7 @@ namespace Informacni_System_Pojistovny.Controllers
             PodminkaModel podminkaModel = new PodminkaModel(_db);
             List<SelectListItem> conditions = podminkaModel.ReadConditionsAsSelectListItems(id);
             ViewBag.conditions = conditions;
+            _db.Dispose();
             return View();
         }
 
@@ -73,6 +76,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistkaModel pojistkaModel = new PojistkaModel(_db);
                 pojistkaModel.AddConditionToInsurance(id, pojistkaAddConditionModel);
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
@@ -89,6 +93,7 @@ namespace Informacni_System_Pojistovny.Controllers
             List<SelectListItem> klienti = klientModel.ReadClientsAsSelectList();
             ViewBag.klienti = klienti;
             ViewBag.produkty = produkty;
+            _db.Dispose();
             return View();
         }
         // GET: PojistkaController/RemoveCondition
@@ -100,8 +105,10 @@ namespace Informacni_System_Pojistovny.Controllers
                 podminkaModel.RemoveConditionFromInsurance(id, redirectTo);
             }catch(Exception ex)
             {
+                _db.Dispose();
                 ViewBag.errorMessage = ex.Message;
             }
+            _db.Dispose();
             return RedirectToAction(nameof(Details), new { id = redirectTo });
         }
 
@@ -115,10 +122,12 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistkaModel pojistkaModel = new PojistkaModel(_db);
                 pojistkaModel.CreateInsurance(pojistkaCreateModel);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             else
             {
+                _db.Dispose();
                 return View();
             }
         }
@@ -129,6 +138,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
             PojistkaEditModel pojistkaEditModel = pojistkaModel.ReadInsuranceAsEditModel(id);
+            _db.Dispose();
             return View(pojistkaEditModel);
         }
 
@@ -142,10 +152,12 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistkaModel pojistkaModel = new PojistkaModel(_db);
                 pojistkaModel.ChangeInsurance(id, pojistkaEditModel);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             else
             {
+                _db.Dispose();
                 return View(pojistkaEditModel);
             }
         }
@@ -156,7 +168,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
             Pojistka pojistka = pojistkaModel.ReadInsurance(id);
-            if(pojistka == null)
+            _db.Dispose();
+            if (pojistka == null)
             {
                 ViewBag.errorMessage = "Pojistka nebyla nalezena";
             }
@@ -173,6 +186,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistkaModel pojistkaModel = new PojistkaModel(_db);
                 pojistkaModel.ChangeInsuranceStatus(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -188,7 +202,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
             Pojistka pojistka = pojistkaModel.ReadInsurance(id);
-            if(pojistka == null)
+            _db.Dispose();
+            if (pojistka == null)
             {
                 ViewBag.errorMessage = "Pojistka nebyla nalezena";
             }
@@ -205,6 +220,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistkaModel pojistkaModel = new PojistkaModel(_db);
                 pojistkaModel.DeleteInsurance(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

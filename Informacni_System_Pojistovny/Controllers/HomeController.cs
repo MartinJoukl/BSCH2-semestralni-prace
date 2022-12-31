@@ -28,6 +28,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 UzivatelModel uzivatelModel = new UzivatelModel(_db);
                 uzivatel = uzivatelModel.GetUzivatel(id);
             }
+            _db.Dispose();
             return View(uzivatel);
         }
 

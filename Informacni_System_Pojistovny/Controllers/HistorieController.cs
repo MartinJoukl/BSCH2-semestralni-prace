@@ -23,13 +23,12 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             HistorieModel historieModel = new HistorieModel(_db);
             List<Historie> historie = historieModel.ListHistorie(pageInfo);
-
             long count = historieModel.GetCount();
             ViewBag.count = count;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
-
+            _db.Dispose();
             return View(historie);
         }
     }

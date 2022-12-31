@@ -38,8 +38,9 @@ namespace Informacni_System_Pojistovny.Controllers
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
-
-            return View(klientModel.ReadClients(pageInfo, CurrentFilter));
+            List<Klient> klients = klientModel.ReadClients(pageInfo, CurrentFilter);
+            _db.Dispose();
+            return View(klients);
         }
 
         // GET: KlientController/Details/5
@@ -67,6 +68,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 ViewBag.errorMessage = ex.Message;
             }
+            _db.Dispose();
             return View(klient);
         }
 
@@ -77,6 +79,7 @@ namespace Informacni_System_Pojistovny.Controllers
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             ViewBag.pscs = pscs;
+            _db.Dispose();
             return View();
         }
 
@@ -87,6 +90,7 @@ namespace Informacni_System_Pojistovny.Controllers
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             ViewBag.pscs = pscs;
+            _db.Dispose();
             return View();
         }
 
@@ -107,7 +111,7 @@ namespace Informacni_System_Pojistovny.Controllers
                     ViewBag.errorMessage = ex.Message;
                 }
 
-
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
@@ -129,8 +133,10 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             catch (Exception ex)
             {
+                _db.Dispose();
                 ViewBag.errorMessage = ex.Message;
             }
+            _db.Dispose();
             return View(adresaInputModel);
         }
 
@@ -144,6 +150,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 var x = RouteData.Values["redirectTo"];
                 AdresaModel adresaModel = new AdresaModel(_db);
                 adresaModel.EditAddress(id, adresa);
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
             }
             else return View();
@@ -159,6 +166,7 @@ namespace Informacni_System_Pojistovny.Controllers
             AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
             ViewBag.pscs = pscs;
             ViewBag.redirectTo = redirectTo;
+            _db.Dispose();
             return View(adresaInputModel);
         }
 
@@ -169,7 +177,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             AdresaModel adresaModel = new AdresaModel(_db);
             adresaModel.DeleteAddress(id);
-
+            _db.Dispose();
             return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
         }
 
@@ -196,6 +204,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 KlientModel klientDb = new KlientModel(_db);
                 klientDb.CreateClient(collection);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -213,10 +222,12 @@ namespace Informacni_System_Pojistovny.Controllers
             if (klient == null)
             {
                 ViewBag.errorMessage = "Klient nebyl nalezen";
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             else
             {
+                _db.Dispose();
                 return View(klient);
             }
         }
@@ -251,10 +262,12 @@ namespace Informacni_System_Pojistovny.Controllers
                 {
                     ViewBag.errorMessage = ex.Message;
                 }
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             else
             {
+                _db.Dispose();
                 return View();
             }
         }
@@ -270,9 +283,10 @@ namespace Informacni_System_Pojistovny.Controllers
             if (klient == null)
             {
                 ViewBag.errorMessage = "Klient nebyl nalezen";
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
-
+            _db.Dispose();
             return View(klient);
         }
 
@@ -286,11 +300,13 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 KlientModel klientDb = new KlientModel(_db);
                 klientDb.ChangeClientStatus(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             catch(Exception ex)
             {
                 ViewBag.errorMessage = ex.Message;
+                _db.Dispose();
                 return View();
             }
         }
@@ -302,6 +318,7 @@ namespace Informacni_System_Pojistovny.Controllers
             KlientModel klientModel = new KlientModel(_db);
             List<SelectListItem> klienti = klientModel.ReadClientsAsSelectList();
             ViewBag.klienti = klienti;
+            _db.Dispose();
             return View();
         }
 
@@ -317,6 +334,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 return NoContent();
             }
             byte[] bytes = dokument.Data;
+            _db.Dispose();
             return File(bytes, dokument.Typ, dokument.Nazev + dokument.Pripona);
         }
 
@@ -337,6 +355,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 {
                     ViewBag.errorMessage = ex.Message;
                 }
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             else return View();
@@ -354,9 +373,11 @@ namespace Informacni_System_Pojistovny.Controllers
                 dokument.Klient = klientModel.GetClient(redirectTo);
             }catch(Exception ex)
             {
+                _db.Dispose();
                 ViewBag.errorMessage = ex.Message;
             }
             ViewBag.redirectTo = redirectTo;
+            _db.Dispose();
             return View(dokument);
         }
 
@@ -369,7 +390,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 KlientModel klientModel = new KlientModel(_db);
                 klientModel.DeleteDocument(id);
-
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
             }
             else return View();

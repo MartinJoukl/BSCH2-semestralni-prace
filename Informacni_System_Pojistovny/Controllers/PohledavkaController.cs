@@ -126,7 +126,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 {
                     ViewBag.errorMessage = ex.Message;
                 }
-
+                _db.Dispose();
                 if (model.RedirectedFrom == null)
                 {
                     return RedirectToAction(nameof(Index));
@@ -138,7 +138,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             catch
             {
-
+                _db.Dispose();
                 return View(model);
             }
         }
@@ -149,6 +149,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
             Pohledavka pohledavka = pohledavkaModel.GetPohledavkaPojistka(id);
+            _db.Dispose();
             if (pohledavka == null)
             {
                 ViewBag.errorMessage = "Pohledávka již byla smazána";
@@ -173,7 +174,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
                 Pohledavka original = pohledavkaModel.GetPohledavkaPojistka(id);
                 pohledavkaModel.DeletePohledavka(id);
-
+                _db.Dispose();
                 if (model.RedirectedFrom == null)
                 {
                     return RedirectToAction(nameof(Index));
@@ -185,7 +186,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             catch
             {
-
+                _db.Dispose();
                 return View(model);
             }
         }

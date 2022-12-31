@@ -46,7 +46,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
             db.Dispose();
             return list;
         }
-        public List<PojistnaUdalost> ListPojistnaUdalost(PageInfo pageInfo)
+        public List<PojistnaUdalost> ListPojistnaUdalost(PageInfo pageInfo, string currentFilter)
         {
             List<PojistnaUdalost> list = new List<PojistnaUdalost>();
             int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
@@ -56,7 +56,19 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
                 { ":pageSize", pageInfo.PageSize }
             };
 
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id  OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            string sql;
+
+            if (currentFilter != null)
+            {
+                sql = "select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id where popis like '%' || :currentFilter || '%' OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                parameters.Add(":currentFilter", currentFilter);
+            }
+            else
+            {
+                sql = "select * from pojistne_udalosti_view JOIN VIEW_VSECHNY_OSOBY ON klient_id = klient_klient_id  OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql, parameters, true);
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -78,11 +90,24 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
             return list;
         }
 
-        public long GetCount()
+        public long GetCount(string currentFilter)
         {
             long count = 0;
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from pojistne_udalosti_view");
+
+            OracleDataReader dr;
+            if (currentFilter != null)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object> {
+                    { ":currentFilter", currentFilter }
+                };
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from pojistne_udalosti_view where popis like '%' || :currentFilter || '%'", parameters, true);
+            }
+            else
+            {
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from pojistne_udalosti_view");
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())

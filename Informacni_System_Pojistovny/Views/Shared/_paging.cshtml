@@ -1,6 +1,7 @@
 ﻿    <div>
     @{
         //show 10 pages
+        string textFilter = ViewBag.CurrentFilter;
         long pageSize = ViewBag.PageSize;
         long pageIndex = ViewBag.PageIndex;
         long countMin1 = ViewBag.count - 1;
@@ -19,11 +20,11 @@
             long pageNum = i + 1;
             if (i != pageIndex)
             {
-                             <a class="paging" asp-action="index" asp-route-pageInfo.pageSize=@pageSize asp-route-pageInfo.pageIndex =@i>@pageNum</a>
+                <a class="paging" asp-action="index" asp-route-pageInfo.pageSize=@pageSize asp-route-pageInfo.pageIndex =@i asp-route-CurrentFilter=@textFilter>@pageNum</a>
             }
             else
             {
-                             <a class="current paging" asp-action="index" asp-route-pageInfo.pageSize=@pageSize asp-route-pageInfo.pageIndex =@i>@pageNum</a>
+                <a class="current paging" asp-action="index" asp-route-pageInfo.pageSize=@pageSize asp-route-pageInfo.pageIndex=@i asp-route-CurrentFilter=@textFilter>@pageNum</a>
             }
         }    
     }

@@ -22,16 +22,17 @@ namespace Informacni_System_Pojistovny.Controllers
         }
         // GET: UzivatelController
         [Authorize(Roles = nameof(UzivateleRole.Admin))]
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
-            long count = uzivatelModel.GetCount();
+            long count = uzivatelModel.GetCount(CurrentFilter);
             ViewBag.count = count;
 
             ViewBag.PageSize = pageInfo.PageSize;
+            ViewBag.CurrentFilter = CurrentFilter;
             ViewBag.PageIndex = pageInfo.PageIndex;
 
-            return View("Index", uzivatelModel.ListUzivatel(pageInfo));
+            return View("Index", uzivatelModel.ListUzivatel(pageInfo, CurrentFilter));
         }
 
         // GET: UzivatelController/Hierarchy
@@ -56,7 +57,7 @@ namespace Informacni_System_Pojistovny.Controllers
             else
             {
                 ViewBag.errorMessage = "Uživatel nebyl nalezen";
-                return Index(new PageInfo());
+                return Index(new PageInfo(), null);
             }
         }
 
@@ -274,7 +275,7 @@ namespace Informacni_System_Pojistovny.Controllers
             else
             {
                 ViewBag.errorMessage = "Uživatel nebyl nalezen";
-                return Index(new PageInfo());
+                return Index(new PageInfo(), null););
             }
         }
 
@@ -308,7 +309,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
         }
 
-        // GET: UzivatelController/Edit
+        // POST: UzivatelController/Edit
         [Authorize(Roles = nameof(UzivateleRole.Admin))]
         [HttpPost]
         [ActionName("Edit")]
@@ -318,7 +319,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 UzivatelModel uzivatelModel = new UzivatelModel(_db);
                 Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, model.Id);
-                return Index(new PageInfo());
+                return Index(new PageInfo(), null);
             }
             else
             {
@@ -336,6 +337,7 @@ namespace Informacni_System_Pojistovny.Controllers
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
             Uzivatel uzivatelOriginal = uzivatelModel.GetUzivatel(id);
             model.Role = uzivatelOriginal.Role;
+            model.ManazerId = uzivatelOriginal.Manazer?.Id;
             Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, id);
 
             return RedirectToAction(nameof(Index), "Home");

@@ -23,13 +23,14 @@ namespace Informacni_System_Pojistovny.Controllers
         }
         // GET: PojistkaController
         [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
-            List<Pojistka> pojistky = pojistkaModel.ReadInsurances(pageInfo);
+            List<Pojistka> pojistky = pojistkaModel.ReadInsurances(pageInfo, CurrentFilter);
 
-            long count = pojistkaModel.GetCount();
+            long count = pojistkaModel.GetCount(CurrentFilter);
             ViewBag.count = count;
+            ViewBag.CurrentFilter = CurrentFilter;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;

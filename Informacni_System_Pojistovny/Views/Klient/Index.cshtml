@@ -13,14 +13,20 @@
         <a asp-action="Create">Vytvořit nového klienta</a>
     }
 </p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Filtrovat dle řetězce: <input type="text" name="CurrentFilter" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Filtruj" class="btn btn-default" /> |
+            <a asp-action="Index">Zrušit filtr</a>
+        </p>
+    </div>
+</form>
 @Html.Partial("_paging")
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.KlientId)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Stav)
             </th>
@@ -46,22 +52,18 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var klient in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => klient.KlientId)
-                </td>
-                <td>
-                    @if (klient.Stav)
-                    {
-                        @Html.DisplayName("Aktivní")
-                    }
-                    else
-                    {
-                        @Html.DisplayName("Neaktivní")
-                    }
-                </td>
+    @foreach (var klient in Model) {
+        <tr>
+            <td>
+                @if (klient.Stav)
+                {
+                    @Html.DisplayName("Aktivní")
+                }
+                else
+                {
+                    @Html.DisplayName("Neaktivní")
+                }
+            </td>
 
                 @if (klient.GetType() == typeof(FyzickaOsoba))
                 {

@@ -19,12 +19,13 @@ namespace Informacni_System_Pojistovny.Controllers
         }
         // GET: PobockaController
         [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
-            List<Pobocka> pobockas = pobockaModel.ReadBranches(pageInfo);
-            long count = pobockaModel.GetCount();
+            List<Pobocka> pobockas = pobockaModel.ReadBranches(pageInfo, CurrentFilter);
+            long count = pobockaModel.GetCount(CurrentFilter);
             ViewBag.count = count;
+            ViewBag.CurrentFilter = CurrentFilter;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;

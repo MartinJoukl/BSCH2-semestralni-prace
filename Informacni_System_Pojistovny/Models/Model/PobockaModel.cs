@@ -53,7 +53,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             return pobockas;
         }
 
-        public List<Pobocka> ReadBranches(PageInfo pageInfo)
+        public List<Pobocka> ReadBranches(PageInfo pageInfo, string currentFilter = null)
         {
             List<Pobocka> pobockas = new List<Pobocka>();
             Db db = new Db();
@@ -63,7 +63,19 @@ namespace Informacni_System_Pojistovny.Models.Model
                 { ":pageStart", pageStart },
                 { ":pageSize", pageInfo.PageSize }
             };
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from VIEW_POBOCKY order by pobocka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+
+            string sql;
+            if (currentFilter != null)
+            {
+                sql = "select * from VIEW_POBOCKY where nazev like '%' || :currentFilter || '%' order by pobocka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                parameters.Add(":currentFilter", currentFilter);
+            }
+            else
+            {
+                sql = "select * from VIEW_POBOCKY order by pobocka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql, parameters, true);
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -79,11 +91,24 @@ namespace Informacni_System_Pojistovny.Models.Model
             return pobockas;
         }
 
-        public long GetCount()
+        public long GetCount(string currentFilter = null)
         {
             long count = 0;
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from VIEW_POBOCKY ");
+
+            OracleDataReader dr;
+            if (currentFilter != null)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object> {
+                    { ":currentFilter", currentFilter }
+                };
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from VIEW_POBOCKY where nazev like '%' || :currentFilter || '%'", parameters, true);
+            }
+            else
+            {
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from VIEW_POBOCKY");
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())

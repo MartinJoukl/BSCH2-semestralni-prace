@@ -51,6 +51,9 @@ namespace Informacni_System_Pojistovny.Models.Model
                         fyzickaOsoba.Email = dr["EMAIL"].ToString();
                         fyzickaOsoba.Telefon = dr["TELEFON"].ToString();
                         fyzickaOsoba.RodneCislo = dr["RODNE_CISLO"].ToString();
+                        fyzickaOsoba.PohledavkyNad20k = int.Parse(dr["pohledavky_nad_20k"].ToString());
+                        fyzickaOsoba.NesplacenePohledavkyPoTerminu = int.Parse(dr["nesplacene_pohledavky"].ToString());
+                        fyzickaOsoba.NesplaceneZavazkyPoTerminu = int.Parse(dr["nesplacene_zavazky"].ToString());
                         fyzickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(fyzickaOsoba.KlientId);
                         fyzickaOsoba.Pojistky = pojistkaModel.ReadInsurances(fyzickaOsoba.KlientId);
                         fyzickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(fyzickaOsoba.KlientId);
@@ -71,6 +74,9 @@ namespace Informacni_System_Pojistovny.Models.Model
                             pravnickaOsoba.Stav = false;
                         }
                         pravnickaOsoba.Ico = dr["ICO"].ToString();
+                        pravnickaOsoba.PohledavkyNad20k = int.Parse(dr["pohledavky_nad_20k"].ToString());
+                        pravnickaOsoba.NesplacenePohledavkyPoTerminu = int.Parse(dr["nesplacene_pohledavky"].ToString());
+                        pravnickaOsoba.NesplaceneZavazkyPoTerminu = int.Parse(dr["nesplacene_zavazky"].ToString());
                         pravnickaOsoba.PojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(pravnickaOsoba.KlientId);
                         pravnickaOsoba.Pojistky = pojistkaModel.ReadInsurances(pravnickaOsoba.KlientId);
                         pravnickaOsoba.HistorieClenstvi = historieClenstviModel.ReadMembershipHistories(pravnickaOsoba.KlientId);
@@ -145,7 +151,7 @@ namespace Informacni_System_Pojistovny.Models.Model
             return klients;
         }
 
-        public List<Klient> ReadClients(PageInfo pageInfo)
+        public List<Klient> ReadClients(PageInfo pageInfo, string currentFilter = null)
         {
             HistorieClenstviModel historieClenstviModel = new HistorieClenstviModel(db);
             List<Klient> klients = new List<Klient>();
@@ -157,8 +163,19 @@ namespace Informacni_System_Pojistovny.Models.Model
                 { ":pageSize", pageInfo.PageSize }
             };
 
-            //SELECT fyzickych osob
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from View_vsechny_osoby order by KLIENT_ID OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY",parameters);
+            string sql;
+            if (currentFilter != null)
+            {
+                sql = "select * from View_vsechny_osoby where nazev like '%' || :currentFilter || '%' or jmeno like '%' || :currentFilter || '%' or prijmeni like '%' || :currentFilter || '%' order by KLIENT_ID OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                parameters.Add(":currentFilter", currentFilter);
+                //sql = "select * from View_vsechny_osoby order by KLIENT_ID OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+            else
+            {
+                sql = "select * from View_vsechny_osoby order by KLIENT_ID OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql, parameters, true);
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -209,11 +226,23 @@ namespace Informacni_System_Pojistovny.Models.Model
             return klients;
         }
 
-        public long GetCount()
+        public long GetCount(string currentFilter = null)
         {
             long count = 0;
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from View_vsechny_osoby");
+            OracleDataReader dr;
+            if (currentFilter != null)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object> {
+                    { ":currentFilter", currentFilter } 
+                };
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from View_vsechny_osoby where nazev like '%' || :currentFilter || '%' or jmeno like '%' || :currentFilter || '%' or prijmeni like '%' || :currentFilter || '%' ", parameters, true);
+            }
+            else
+            {
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from View_vsechny_osoby");
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())

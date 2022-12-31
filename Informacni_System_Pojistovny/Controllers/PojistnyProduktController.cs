@@ -19,13 +19,14 @@ namespace Informacni_System_Pojistovny.Controllers
         }
         // GET: PojistnyProduktController
         [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
-            List<PojistnyProdukt> pojistnyProdukts = pojistnyProduktModel.ReadInsuranceProducts(pageInfo);
+            List<PojistnyProdukt> pojistnyProdukts = pojistnyProduktModel.ReadInsuranceProducts(pageInfo, true, CurrentFilter);
 
-            long count = pojistnyProduktModel.GetCount();
+            long count = pojistnyProduktModel.GetCount(true, CurrentFilter);
             ViewBag.count = count;
+            ViewBag.CurrentFilter = CurrentFilter;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;

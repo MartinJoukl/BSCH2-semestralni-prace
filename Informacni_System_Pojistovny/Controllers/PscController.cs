@@ -20,17 +20,18 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: PscController
         [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PscModel pscModel = new PscModel(_db);
 
-            long count = pscModel.GetCount();
+            long count = pscModel.GetCount(CurrentFilter);
             ViewBag.count = count;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            ViewBag.CurrentFilter = CurrentFilter;
 
-            return View(pscModel.ReadPscs(pageInfo));
+            return View(pscModel.ReadPscs(pageInfo, CurrentFilter));
         }
 
         // GET: PscController/Create

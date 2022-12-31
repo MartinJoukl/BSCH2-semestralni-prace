@@ -68,7 +68,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Zpět na klienta</a>
+    @Html.ActionLink("Zpět na klienta" , "Details", new { id = ViewContext.RouteData.Values["id"]})
 </div>
 
 <script src="~/js/createNewClient.js" asp-append-version="true"></script>

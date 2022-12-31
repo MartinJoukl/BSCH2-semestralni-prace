@@ -17,7 +17,7 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public int Vyse { get; set; }
         [Display(Name = "Datum splacení")]
         [DataType(DataType.Date)]
-        public DateTime? DatumSplaceni { get; set; } = DateTime.Now;
+        public DateTime? DatumSplaceni { get; set; }
         [Display(Name = "Popis")]
         public string Popis { get; set; }
         [Required]

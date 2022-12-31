@@ -54,9 +54,10 @@
             return list;
         }
 
-        public List<Pohledavka> ListPohledavka(PageInfo pageInfo)
+        public List<Pohledavka> ListPohledavka(PageInfo pageInfo, string currentFilter)
         {
             List<Pohledavka> list = new List<Pohledavka>();
+            string sql;
 
             int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
             Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -64,7 +65,18 @@
                 { ":pageStart", pageStart },
                 { ":pageSize", pageInfo.PageSize }
             };
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from pohledavky_view JOIN VIEW_POJISTKY using (pojistka_id) order by pohledavka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+
+            if (currentFilter != null)
+            {
+                sql = "select * from pohledavky_view JOIN VIEW_POJISTKY using (pojistka_id) where pohledavky_view.popis like '%' || :currentFilter || '%' order by pohledavka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                parameters.Add(":currentFilter", currentFilter);
+            }
+            else
+            {
+                sql = "select * from pohledavky_view JOIN VIEW_POJISTKY using (pojistka_id) order by pohledavka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql, parameters, true);
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -104,11 +116,24 @@
             return list;
         }
 
-        public long GetCount()
+        public long GetCount(string currentFilter = null)
         {
             long count = 0;
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from pohledavky_view");
+
+            OracleDataReader dr;
+            if (currentFilter != null)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object> {
+                    { ":currentFilter", currentFilter }
+                };
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from pohledavky_view where popis like '%' || :currentFilter || '%'", parameters, true);
+            }
+            else
+            {
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from pohledavky_view");
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -175,7 +200,7 @@
                 { "p_vznik", pohledavka.Vznik.ToString("dd-MM-yyyy") },
                 { "p_datum_splatnosti", pohledavka.DatumSplatnosti.ToString("dd-MM-yyyy")},
                 { "p_vyse", pohledavka.Vyse },
-                { "p_datum_splaceni", pohledavka.DatumSplatnosti.ToString("dd-MM-yyyy") },
+                { "p_datum_splaceni", pohledavka.DatumSplaceni?.ToString("dd-MM-yyyy") },
                 { "p_popis", pohledavka.Popis },
                 { "p_pojistka_id", pohledavka.PojistkaId }
             };

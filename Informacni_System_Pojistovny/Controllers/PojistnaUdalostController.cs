@@ -31,6 +31,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            _db.Dispose();
             return View(pojistneUdalosti);
         }
 
@@ -50,6 +51,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 ViewBag.errorMessage = exceptionMessage;
             }
+            _db.Dispose();
             return View(pojistnaUdalost);
         }
 
@@ -61,6 +63,7 @@ namespace Informacni_System_Pojistovny.Controllers
             KlientModel klientModel = new KlientModel(_db);
             List<Klient> klients = klientModel.ReadClients();
 
+            _db.Dispose();
             return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
         }
 
@@ -76,7 +79,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 PojistnaUdalost pojistneUdalosti = new PojistnaUdalost();
                 KlientModel klientModel = new KlientModel(_db);
                 List<Klient> klients = klientModel.ReadClients();
-
+                _db.Dispose();
                 return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
             try
@@ -90,6 +93,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 }
                 PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
                 pojistnaUdalostModel.CreatePojistnaUdalost(new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = model.PojistnaUdalost.NarokovanaVysePojistky, Popis = model.PojistnaUdalost.Popis, Vznik = model.PojistnaUdalost.Vznik });
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -98,6 +102,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 KlientModel klientModel = new KlientModel(_db);
                 List<Klient> klients = klientModel.ReadClients();
                 ViewBag.errorMessage = ex.Message;
+                _db.Dispose();
                 return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
         }
@@ -114,7 +119,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             KlientModel klientModel = new KlientModel(_db);
             List<Klient> klients = klientModel.ReadClients();
-
+            _db.Dispose();
             return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistnaUdalost });
         }
 
@@ -131,23 +136,27 @@ namespace Informacni_System_Pojistovny.Controllers
                 PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
                 KlientModel klientModel = new KlientModel(_db);
                 List<Klient> klients = klientModel.ReadClients();
+                _db.Dispose();
                 return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
             try
             {
                 KlientModel klientModel = new KlientModel(_db);
                 Klient klient = klientModel.GetClient(int.Parse(klientId));
+                _db.Dispose();
                 if (klient == null)
                 {
                     PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
                     PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
                     List<Klient> klients = klientModel.ReadClients();
+                    _db.Dispose();
                     return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
                 }
                 else
                 {
                     PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
                     pojistnaUdalostModel.UpdatePojistnaUdalost(id, model);
+                    _db.Dispose();
                     return RedirectToAction(nameof(Details), new { id });
                 }
             }
@@ -157,7 +166,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
                 KlientModel klientModel = new KlientModel(_db);
                 List<Klient> klients = klientModel.ReadClients();
-
+                _db.Dispose();
                 return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
         }
@@ -173,6 +182,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 ViewBag.errorMessage = "Pojistná událost nebyla nalezena";
                 // return RedirectToAction(nameof(Index));
             }
+            _db.Dispose();
             return View(pojistnaUdalost);
         }
 
@@ -186,10 +196,12 @@ namespace Informacni_System_Pojistovny.Controllers
             try
             {
                 pojistnaUdalostModel.DeletePojistnaUdalost(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index), new { id });
             }
             catch (Exception ex)
             {
+                _db.Dispose();
                 ViewBag.errorMessage = ex.Message;
                 return RedirectToAction(nameof(Details), new { id, exceptionMessage = ex.Message });
             }

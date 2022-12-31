@@ -29,6 +29,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            _db.Dispose();
             return View(pobockas);
         }
 
@@ -42,9 +43,11 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 pobocka = pobockaModel.ReadBranch(id);
                 pobocka.Adresa = pobockaModel.GetBranchAddress(id);
+                _db.Dispose();
             }
             catch (Exception ex)
             {
+                _db.Dispose();
                 ViewBag.errorMessage = ex.Message;
             }
             return View(pobocka);
@@ -57,6 +60,7 @@ namespace Informacni_System_Pojistovny.Controllers
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             ViewBag.pscs = pscs;
+            _db.Dispose();
             return View();
         }
 
@@ -70,6 +74,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PobockaModel pobockaModel = new PobockaModel(_db);
                 pobockaModel.CreateBranch(pobockaEditModel);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             else { return View(); }
@@ -82,6 +87,7 @@ namespace Informacni_System_Pojistovny.Controllers
             PscModel pscModel = new PscModel(_db);
             List<SelectListItem> pscs = pscModel.ReadPscsAsSelectListItems();
             ViewBag.pscs = pscs;
+            _db.Dispose();
             return View();
         }
 
@@ -96,12 +102,13 @@ namespace Informacni_System_Pojistovny.Controllers
                 try
                 {
                     pobockaEditModel.AddAddressesToBranch(id, adresa);
+                    _db.Dispose();
                 }
                 catch (Exception ex)
                 {
                     ViewBag.errorMessage = ex.Message;
                 }
-
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             else return View(id);
@@ -120,11 +127,13 @@ namespace Informacni_System_Pojistovny.Controllers
                 try
                 {
                     pobockaModel.RealizePobockaEdit(pobockaEditModel, id);
+                    _db.Dispose();
                     return RedirectToAction(nameof(Details), new { id });
                 }
                 catch (Exception ex)
                 {
                     ViewBag.errorMessage = ex.Message;
+                    _db.Dispose();
                     return View();
                 }
             }
@@ -139,10 +148,12 @@ namespace Informacni_System_Pojistovny.Controllers
             PobockaEditModel pobockaEdit = pobockaModel.ReadBranchAsPobockaEdit(id);
             if (pobockaEdit == null)
             {
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             else
             {
+                _db.Dispose();
                 return View(pobockaEdit);
             }
         }
@@ -153,6 +164,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
             PobockaEditModel pobocka = pobockaModel.ReadBranchAsPobockaEdit(id);
+            _db.Dispose();
             return View(pobocka);
         }
 
@@ -164,6 +176,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
             pobockaModel.DeleteBranch(id);
+            _db.Dispose();
             return RedirectToAction(nameof(Index));
         }
 
@@ -177,6 +190,7 @@ namespace Informacni_System_Pojistovny.Controllers
             AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
             ViewBag.pscs = pscs;
             ViewBag.redirectTo = redirectTo;
+            _db.Dispose();
             return View(adresaInputModel);
         }
 
@@ -196,7 +210,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 {
                     ViewBag.errorMessage = ex.Message;
                 }
-
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
             }
             else return View();
@@ -212,6 +226,7 @@ namespace Informacni_System_Pojistovny.Controllers
             AdresaInputModel adresaInputModel = adresaModel.ReadAddressAsEditModel(id);
             ViewBag.redirectTo = redirectTo;
             ViewBag.pscs = pscs;
+            _db.Dispose();
             return View(adresaInputModel);
         }
 
@@ -222,6 +237,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             AdresaModel adresaModel = new AdresaModel(_db);
             adresaModel.DeleteAddress(id);
+            _db.Dispose();
 
             return RedirectToAction(nameof(Details), new { id = collection["redirectTo"] });
         }

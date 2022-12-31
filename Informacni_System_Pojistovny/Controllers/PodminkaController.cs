@@ -122,10 +122,12 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PodminkaModel podminkaModel = new PodminkaModel(_db);
                 podminkaModel.DeleteCondition(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+                _db.Dispose();
                 return View();
             }
         }

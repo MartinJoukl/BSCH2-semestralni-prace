@@ -30,6 +30,7 @@ namespace Informacni_System_Pojistovny.Controllers
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
             ViewBag.CurrentFilter = CurrentFilter;
+            _db.Dispose();
 
             return View(pscModel.ReadPscs(pageInfo, CurrentFilter));
         }
@@ -44,6 +45,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PscModel pscModel = new PscModel(_db);
                 pscModel.CreatePsc(psc);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             else { 
@@ -64,6 +66,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PscModel pscModel = new PscModel(_db);
             PscEditModel psc = pscModel.ReadPscAsEditModel(id);
+            _db.Dispose();
             return View(psc);
         }
 
@@ -77,6 +80,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PscModel pscModel = new PscModel(_db);
                 if (pscModel.EditPsc(id, pscEditModel)) {
+                    _db.Dispose();
                     return RedirectToAction(nameof(Index));
                 } else return View();
             } else return View();
@@ -88,7 +92,8 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PscModel pscModel = new PscModel(_db);
             Psc psc = pscModel.ReadPsc(id);
-            if(psc == null) {
+            _db.Dispose();
+            if (psc == null) {
                 ViewBag.errorMessage = "Psč nebylo nalezeno";
             }
             return View(psc);
@@ -104,6 +109,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PscModel pscModel = new PscModel(_db);
                 pscModel.DeletePSC(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -111,6 +117,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 ViewBag.errorMessage = ex.Message;
                 PscModel pscModel = new PscModel(_db);
                 psc = pscModel.ReadPsc(id);
+                _db.Dispose();
                 return View(psc);
             }
         }

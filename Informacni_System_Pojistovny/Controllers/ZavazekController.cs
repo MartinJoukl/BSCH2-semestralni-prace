@@ -32,6 +32,7 @@ namespace Informacni_System_Pojistovny.Controllers
             ViewBag.CurrentFilter = CurrentFilter;
 
             List<Zavazek> zavazky = zavazekModel.ListZavazek(pageInfo, CurrentFilter);
+            _db.Dispose();
             return View(zavazky);
         }
 
@@ -44,6 +45,7 @@ namespace Informacni_System_Pojistovny.Controllers
             if (zavazek == null)
             {
                 ViewBag.errorMessage = "Závazek nebyl nalezen";
+                _db.Dispose();
                 return View(zavazek);
             }
             return View(zavazek);
@@ -54,6 +56,7 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Create(int pojistnaUdalostId)
         {
             ViewBag.pojistnaUdalostId = pojistnaUdalostId;
+            _db.Dispose();
             return View();
         }
 
@@ -66,6 +69,7 @@ namespace Informacni_System_Pojistovny.Controllers
             if (!ModelState.IsValid || zavazekCreateModel.Vznik > zavazekCreateModel.DatumSplatnosti)
             {
                 ViewBag.pojistnaUdalostId = zavazekCreateModel.PojistnaUdalostId;
+                _db.Dispose();
                 return View();
             }
             try
@@ -77,6 +81,7 @@ namespace Informacni_System_Pojistovny.Controllers
                     ZavazekModel zavazekModel = new ZavazekModel(_db);
                     zavazekModel.CreateZavazek(zavazekCreateModel);
                 }
+                _db.Dispose();
                 return RedirectToAction("Details", "PojistnaUdalost", new { id = zavazekCreateModel.PojistnaUdalostId });
             }
             catch
@@ -96,8 +101,10 @@ namespace Informacni_System_Pojistovny.Controllers
             if (zavazek == null)
             {
                 ViewBag.errorMessage = "Závazek nebyl nalezen";
+                _db.Dispose();
                 return View(new RedirectableZavazekModel());
             }
+            _db.Dispose();
             return View(new RedirectableZavazekModel() { Vznik= zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni= zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
 
@@ -112,6 +119,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 if (!ModelState.IsValid || model.Vznik > model.DatumSplatnosti)
                 {
                     ViewBag.errorMessage = "Formulář není validní";
+                    _db.Dispose();
                     return View(model);
                 }
                 ZavazekModel zavazekModel = new ZavazekModel(_db);
@@ -120,16 +128,18 @@ namespace Informacni_System_Pojistovny.Controllers
 
                 if (model.RedirectedFrom == null)
                 {
+                    _db.Dispose();
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
+                    _db.Dispose();
                     return RedirectToAction("Details", "PojistnaUdalost", new { id = original.PojistnaUdalost.PojistnaUdalostId });
                 }
             }
             catch
             {
-
+                _db.Dispose();
                 return View(model);
             }
         }
@@ -143,8 +153,10 @@ namespace Informacni_System_Pojistovny.Controllers
             if (zavazek == null)
             {
                 ViewBag.errorMessage = "Závazek nebyl nalezen";
+                _db.Dispose();
                 return View(new RedirectableZavazekModel());
             }
+            _db.Dispose();
             return View(new RedirectableZavazekModel() { Vznik = zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni = zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
 
@@ -158,6 +170,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    _db.Dispose();
                     return View(model);
                 }
                 ZavazekModel zavazekModel = new ZavazekModel(_db);
@@ -166,16 +179,19 @@ namespace Informacni_System_Pojistovny.Controllers
 
                 if (model.RedirectedFrom == null)
                 {
+                    _db.Dispose();
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
+                    _db.Dispose();
                     return RedirectToAction("Details", "PojistnaUdalost", new { id = original.PojistnaUdalost.PojistnaUdalostId });
                 }
             }
             catch(Exception ex)
             {
                 ViewBag.errorMessage = ex.Message;
+                _db.Dispose();
                 return View(model);
             }
         }

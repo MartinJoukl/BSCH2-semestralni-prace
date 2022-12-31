@@ -30,6 +30,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            _db.Dispose();
 
             return View(historieUzivatelu);
         }
@@ -42,10 +43,12 @@ namespace Informacni_System_Pojistovny.Controllers
             HistorieUzivatele historie = historieModel.GetHistorie(id);
             if (historie != null)
             {
+                _db.Dispose();
                 return View(historie);
             }
             else
             {
+                _db.Dispose();
                 ViewBag.errorMessage = "Historie nebyla nalezena";
                 return View(historie);
             }

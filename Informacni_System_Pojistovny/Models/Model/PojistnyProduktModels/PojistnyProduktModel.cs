@@ -184,6 +184,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
             pojistnyProduktParametry.Add(":v_max_vyse_plneni", pojistnyProduktInputModel.MaximalniVysePlneni);
 
             int pobockaId = db.ExecuteNonQuery("vytvorit_pojistny_produkt", pojistnyProduktParametry, false, true);
+            db.Dispose();
             return true;
         }
 
@@ -196,6 +197,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
             pojistnyProduktParametry.Add(":v_max_vyse_plneni", pojistnyProduktInputModel.MaximalniVysePlneni);
 
             int pobockaId = db.ExecuteNonQuery("zmenit_pojistny_produkt", pojistnyProduktParametry, false, true);
+            db.Dispose();
             return true;
         }
 
@@ -205,6 +207,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
             pojistnyProduktParametry.Add(":v_id", id);
 
             db.ExecuteNonQuery("zmenit_stav_pojistny_produkt", pojistnyProduktParametry, false, true);
+            db.Dispose();
             return true;
         }
 

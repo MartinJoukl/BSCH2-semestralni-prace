@@ -31,6 +31,7 @@ namespace Informacni_System_Pojistovny.Controllers
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.CurrentFilter = CurrentFilter;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            _db.Dispose();
 
             return View("Index", uzivatelModel.ListUzivatel(pageInfo, CurrentFilter));
         }
@@ -41,6 +42,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
             List<UzivatelHierarchicalModel> uzivatele = uzivatelModel.ListUzivatelHierarchical();
+            _db.Dispose();
             return View(uzivatele);
         }
 
@@ -57,6 +59,7 @@ namespace Informacni_System_Pojistovny.Controllers
             else
             {
                 ViewBag.errorMessage = "Uživatel nebyl nalezen";
+                _db.Dispose();
                 return Index(new PageInfo(), null);
             }
         }
@@ -88,12 +91,14 @@ namespace Informacni_System_Pojistovny.Controllers
                 {
                     UzivatelModel uzivatelModel = new UzivatelModel(_db);
                     uzivatelModel.Create(model);
+                     _db.Dispose();
                     return await LoginAsync(new UzivatelLoginFormModel() { Heslo = model.Heslo, Mail = model.Mail });
                 }
                 catch
                 {
                     ViewData["error"] = "Registrace selhala";
                     ViewBag.errorMessage = "Registrace selhala";
+                    _db.Dispose();
                     return View();
                 }
             }
@@ -123,6 +128,7 @@ namespace Informacni_System_Pojistovny.Controllers
             if (uzivatel != null)
             {
                 await LoginUser(uzivatel);
+                _db.Dispose();
 
                 if (model.RedirectToUrl != null)
                 {
@@ -169,6 +175,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                _db.Dispose();
                 return RedirectToAction("Index", "Home");
             }
             return View("Login", new UzivatelLoginFormModel { RedirectToUrl = returnUrl });
@@ -190,6 +197,7 @@ namespace Informacni_System_Pojistovny.Controllers
             Uzivatel impersonifikovany = uzivatelModel.GetUzivatel(id);
             if (impersonifikovany == null)
             {
+                _db.Dispose();
                 throw new Exception("Impersonifikace selhala!");
             }
 
@@ -240,7 +248,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
-
+            _db.Dispose();
             return RedirectToAction(nameof(Index), "Home");
         }
 
@@ -257,7 +265,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
 
             LoginUser(uzivatel);
-
+            _db.Dispose();
             return RedirectToAction(nameof(Index), "Home");
         }
 
@@ -270,6 +278,7 @@ namespace Informacni_System_Pojistovny.Controllers
             Uzivatel uzivatel = uzivatelModel.GetUzivatel(id);
             if (uzivatel != null)
             {
+                _db.Dispose();
                 return View(uzivatel);
             }
             else
@@ -286,6 +295,7 @@ namespace Informacni_System_Pojistovny.Controllers
             int id = int.Parse(HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value);
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
             Uzivatel uzivatel = uzivatelModel.GetUzivatel(id);
+            _db.Dispose();
             return View(new EditOwnProfileModel() { Jmeno = uzivatel.Jmeno, Mail = uzivatel.Email, Prijmeni = uzivatel.Prijmeni });
         }
 
@@ -300,10 +310,12 @@ namespace Informacni_System_Pojistovny.Controllers
             int? manazerId = editovany?.Manazer == null? null : editovany?.Manazer?.Id;
             if (editovany != null)
             {
+                _db.Dispose();
                 return View(new EditUserModel() { Id = id, Role = editovany.Role, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni, ManazerId = manazerId });
             }
             else
             {
+                _db.Dispose();
                 ViewBag.errorMessage = "Uživatel nebyl nalezen";
                 return Index(new PageInfo(),null);
             }
@@ -319,10 +331,12 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 UzivatelModel uzivatelModel = new UzivatelModel(_db);
                 Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, model.Id);
+                _db.Dispose();
                 return Index(new PageInfo(), null);
             }
             else
             {
+                _db.Dispose();
                 return View();
             }
         }
@@ -339,6 +353,7 @@ namespace Informacni_System_Pojistovny.Controllers
             model.Role = uzivatelOriginal.Role;
             model.ManazerId = uzivatelOriginal.Manazer?.Id;
             Uzivatel uzivatel = uzivatelModel.EditUzivatel(model, id);
+            _db.Dispose();
 
             return RedirectToAction(nameof(Index), "Home");
         }
@@ -353,11 +368,13 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 UzivatelModel uzivatelModel = new UzivatelModel(_db);
                 uzivatelModel.DeleteUzivatel(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex) 
             {
                 ViewBag.errorMessage = ex.Message;
+                _db.Dispose();
                 return View();
             }
         }

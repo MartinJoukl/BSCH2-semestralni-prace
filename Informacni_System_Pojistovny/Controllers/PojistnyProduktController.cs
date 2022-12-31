@@ -30,6 +30,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            _db.Dispose();
             return View(pojistnyProdukts);
         }
 
@@ -43,6 +44,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 ViewBag.errorMessage = "Pojistný produkt nebyl nalezen";
             }
+            _db.Dispose();
             return View(pojistnyProdukt);
         }
 
@@ -63,6 +65,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
                 pojistnyProduktModel.CreateInsuranceProduct(pojistnyProduktInputModel);
+                _db.Dispose();
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -90,6 +93,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
                 pojistnyProduktModel.EditInsuranceProduct(pojistnyProduktInputModel, id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             else
@@ -104,6 +108,7 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
             PojistnyProdukt pojistnyProdukt = pojistnyProduktModel.ReadInsuranceProduct(id);
+            _db.Dispose();
             if (pojistnyProdukt == null)
             {
                 ViewBag.errorMessage = "Pojistný produkt nebyl nalezen";
@@ -121,6 +126,7 @@ namespace Informacni_System_Pojistovny.Controllers
             {
                 PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
                 pojistnyProduktModel.ChangeInsuranceProductStatus(id);
+                _db.Dispose();
                 return RedirectToAction(nameof(Details), new { id });
             }
             catch

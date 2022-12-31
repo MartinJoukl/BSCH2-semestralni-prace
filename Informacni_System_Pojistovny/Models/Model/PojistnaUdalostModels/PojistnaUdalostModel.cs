@@ -151,10 +151,10 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels
                     pojistnaUdalost = new PojistnaUdalost()
                     {
                         Klient = klient,
-                        NarokovanaVysePojistky = int.Parse(dr["NAROKOVANA_VYSE_POJISTKY"].ToString()),
+                        NarokovanaVysePojistky = long.Parse(dr["NAROKOVANA_VYSE_POJISTKY"].ToString()),
                         Vznik = DateTime.Parse(dr["vznik"].ToString()),
                         Popis = dr["popis"].ToString(),
-                        PojistnaUdalostId = int.Parse(dr["pojistna_Udalost_Id"].ToString()),
+                        PojistnaUdalostId = long.Parse(dr["pojistna_Udalost_Id"].ToString()),
                         Zavazky = zavazekModel.ListZavazek(id)
                     };
                 }

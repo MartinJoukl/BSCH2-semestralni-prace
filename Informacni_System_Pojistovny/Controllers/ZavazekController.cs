@@ -89,7 +89,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: ZavazkyController/Edit/5
         [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Edit(int id, string redirectedFrom)
+        public ActionResult Edit(int id, string redirectedFrom, string klientId = null)
         {
             ZavazekModel zavazekModel = new ZavazekModel(_db);
             Zavazek zavazek = zavazekModel.GetZavazekUdalost(id);
@@ -98,7 +98,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 ViewBag.errorMessage = "Závazek nebyl nalezen";
                 return View(new RedirectableZavazekModel());
             }
-            return View(new RedirectableZavazekModel() { Vznik= zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni= zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom });
+            return View(new RedirectableZavazekModel() { Vznik= zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni= zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
 
         // POST: ZavazkyController/Edit/5
@@ -136,7 +136,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: ZavazkyController/Delete/5
         [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Delete(int id, string redirectedFrom)
+        public ActionResult Delete(int id, string redirectedFrom, string klientId = null)
         {
             ZavazekModel zavazekModel = new ZavazekModel(_db);
             Zavazek zavazek = zavazekModel.GetZavazekUdalost(id);
@@ -145,7 +145,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 ViewBag.errorMessage = "Závazek nebyl nalezen";
                 return View(new RedirectableZavazekModel());
             }
-            return View(new RedirectableZavazekModel() { Vznik = zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni = zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom });
+            return View(new RedirectableZavazekModel() { Vznik = zavazek.Vznik, Vyse = zavazek.Vyse, Popis = zavazek.Popis, DatumSplaceni = zavazek.DatumSplaceni, DatumSplatnosti = zavazek.DatumSplatnosti, PojistnaUdalostId = zavazek.PojistnaUdalost.PojistnaUdalostId, ZavazekId = zavazek.ZavazekId, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
 
         // POST: ZavazkyController/Delete/5

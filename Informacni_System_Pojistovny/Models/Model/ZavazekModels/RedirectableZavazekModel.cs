@@ -25,5 +25,6 @@ namespace Informacni_System_Pojistovny.Models.Model.ZavazekModels
         [Display(Name = "Pojistná událost"), Required]
         public long PojistnaUdalostId { get; set; }
         public string? RedirectedFrom { get; set; }
+        public string? KlientId { get; set; }
     }
 }

@@ -24,5 +24,6 @@ namespace Informacni_System_Pojistovny.Models.Model.PohledavkaModels
         [Required]
         public int PojistkaId { get; set; }
         public string? RedirectedFrom { get; set; }
+        public string? KlientId { get; set; }
     }
 }

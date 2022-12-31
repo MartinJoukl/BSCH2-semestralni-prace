@@ -348,6 +348,142 @@
     </tbody>
 </table>
 
+<h4>Pohledávky ke klientovi</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Pohledávky ke klientovi
+            </th>
+            <th>
+                Datum splatnosti
+            </th>
+            <th>
+                Výše
+            </th>
+            <th>
+                Datum splacení
+            </th>
+            <th>
+                Popis
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var pojistka in Model.Pojistky) {
+            @foreach (var item in pojistka.Pohledavky) {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Vznik)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DatumSplatnosti)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Vyse)
+                        </td>
+                        <td>
+                            @{
+                                if (item.DatumSplaceni != null)
+                                {
+                                    //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
+                                    <span>@(
+                                                              ((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy")
+                                                              )</span>
+                                }
+                                else
+                                {
+                                    <span>Nesplaceno</span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Popis)
+                        </td>
+                        <td>
+                        @Html.ActionLink("Detail", "Details", "Pohledavka", new { id=item.ID, redirectedFrom= "Klient", klientId = Model.KlientId })
+                            @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                            {
+                            <span> | @Html.ActionLink("Upravit", "Edit","Pohledavka", new { id=item.ID, redirectedFrom= "Klient", klientId = Model.KlientId }) | </span>
+                            @Html.ActionLink("Smazat", "Delete","Pohledavka", new { id=item.ID, redirectedFrom= "Klient", klientId = Model.KlientId })
+                            }
+                        </td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+<h4>Závazky ke klientovi</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Závazky ke klientovi
+            </th>
+            <th>
+                Datum splatnosti
+            </th>
+            <th>
+                Výše
+            </th>
+            <th>
+                Datum splacení
+            </th>
+            <th>
+                Popis
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pojistnaUdalost in Model.PojistneUdalosti) {
+            @foreach (var item in pojistnaUdalost.Zavazky) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vznik)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatumSplatnosti)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vyse)
+                </td>
+                <td>
+                    @{
+                        if (item.DatumSplaceni != null)
+                        {
+                            <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                        }
+                        else
+                        {
+                            <span>Nesplaceno</span>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Popis)
+                </td>
+                <td>
+                        @Html.ActionLink("Detail", "Details", "Zavazek", new { id=item.ZavazekId, redirectedFrom= "Klient", klientId = Model.KlientId })
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                            <span>| @Html.ActionLink("Upravit", "Edit","Zavazek", new { id=item.ZavazekId, redirectedFrom= "Klient", klientId = Model.KlientId }) | </span>
+                            @Html.ActionLink("Smazat", "Delete","Zavazek", new { id=item.ZavazekId, redirectedFrom= "Klient", klientId = Model.KlientId })
+                    }
+                </td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
 <div>
     @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
                     {

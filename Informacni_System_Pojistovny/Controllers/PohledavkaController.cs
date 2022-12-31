@@ -91,7 +91,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: ZavazkyController/Edit/5
         [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Edit(int id, string redirectedFrom)
+        public ActionResult Edit(int id, string redirectedFrom, string klientId = null)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
             Pohledavka pohledavka = pohledavkaModel.GetPohledavkaPojistka(id);
@@ -101,7 +101,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 //return RedirectToAction(nameof(Index));
                 return View(new RedirectablePohledavka());
             }
-            return View(new RedirectablePohledavka() { ID = pohledavka.ID, Vznik = pohledavka.Vznik, DatumSplaceni=pohledavka.DatumSplaceni, DatumSplatnosti= pohledavka.DatumSplatnosti, PojistkaId = pohledavka.ID, Popis = pohledavka.Popis, Vyse = pohledavka.Vyse, RedirectedFrom = redirectedFrom });
+            return View(new RedirectablePohledavka() { ID = pohledavka.ID, Vznik = pohledavka.Vznik, DatumSplaceni=pohledavka.DatumSplaceni, DatumSplatnosti= pohledavka.DatumSplatnosti, PojistkaId = pohledavka.ID, Popis = pohledavka.Popis, Vyse = pohledavka.Vyse, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
 
         // POST: ZavazkyController/Edit/5
@@ -145,7 +145,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: ZavazkyController/Delete/5
         [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Delete(int id, string redirectedFrom)
+        public ActionResult Delete(int id, string redirectedFrom, string klientId = null)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
             Pohledavka pohledavka = pohledavkaModel.GetPohledavkaPojistka(id);
@@ -155,7 +155,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 //return RedirectToAction("Index");
                 return View(new RedirectablePohledavka());
             }
-            return View(new RedirectablePohledavka() { ID = pohledavka.ID, Vznik = pohledavka.Vznik, DatumSplaceni = pohledavka.DatumSplaceni, DatumSplatnosti = pohledavka.DatumSplatnosti, PojistkaId = pohledavka.ID, Popis = pohledavka.Popis, Vyse = pohledavka.Vyse, RedirectedFrom = redirectedFrom });
+            return View(new RedirectablePohledavka() { ID = pohledavka.ID, Vznik = pohledavka.Vznik, DatumSplaceni = pohledavka.DatumSplaceni, DatumSplatnosti = pohledavka.DatumSplatnosti, PojistkaId = pohledavka.ID, Popis = pohledavka.Popis, Vyse = pohledavka.Vyse, RedirectedFrom = redirectedFrom, KlientId = klientId });
         }
 
         // POST: ZavazkyController/Delete/5

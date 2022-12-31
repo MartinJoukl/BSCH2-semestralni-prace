@@ -61,7 +61,14 @@
         {
             <a asp-action="Index">Zpět na detail</a>
         }else{
+            if (Model.RedirectedFrom.Equals("Klient"))
+            { 
+                <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.KlientId>Zpět na klienta</a>
+            }
+            else
+            {
                 <a asp-action="Details" asp-controller="@Model.RedirectedFrom" asp-route-id=@Model.PojistkaId>Zpět na pojistku</a>
+            }
         }
     </form>
 </div>

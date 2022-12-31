@@ -1,0 +1,26 @@
+﻿@model Informacni_System_Pojistovny.Models.Entity.Podminka
+
+@{
+    ViewData["Title"] = "Smazat podmínku";
+}
+
+<h1>Smazat podmínku</h1>
+
+<h3>Opravdu chcete smazat tuto podmínku?</h3>
+<div>
+    <h4>Podmínka</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Popis)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Popis)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Smazat" class="btn btn-danger" /> |
+        @Html.ActionLink("Zpět na podmínku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
+    </form>
+</div>

@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="KlientId" class="control-label"></label>
-                <select name="KlientId" class="form-control" asp-items="@ViewBag.klienti"></select>
+                <select name="KlientId" class="form-control" asp-items="@ViewBag.klienti" asp-for="@ViewContext.RouteData.Values["id"]"></select>
                 <span asp-validation-for="KlientId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -45,7 +45,13 @@
 </div>
 
 <div>
-    @Html.ActionLink("Zpět na pojistku" , "Details", new { id = ViewContext.RouteData.Values["id"]})
+    @if (ViewContext.RouteData.Values["id"] != null)
+    {
+        @Html.ActionLink("Zpět na klienta" , "Details", "Klient", new { id = ViewContext.RouteData.Values["id"]})
+    } else
+    {
+        @Html.ActionLink("Zpět na přehled pojistek", "Index")
+    }
 </div>
 
 @section Scripts {

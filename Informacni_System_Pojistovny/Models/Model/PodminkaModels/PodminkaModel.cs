@@ -40,6 +40,14 @@ namespace Informacni_System_Pojistovny.Models.Model.PodminkaModels
             db.ExecuteNonQuery("zmenit_podminku", podminkaParametry, false, true);
             return true;
         }
+        public bool DeleteCondition(int id)
+        {
+            Dictionary<string, object> podminkaParametry = new Dictionary<string, object>();
+            podminkaParametry.Add("v_id", id);
+
+            db.ExecuteNonQuery("smazat_podminku", podminkaParametry, false, true);
+            return true;
+        }
 
         public Podminka ReadCondition(int id)
         {

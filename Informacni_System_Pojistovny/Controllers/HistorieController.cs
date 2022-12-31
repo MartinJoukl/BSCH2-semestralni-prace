@@ -5,6 +5,8 @@ using Informacni_System_Pojistovny.Models.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Informacni_System_Pojistovny.Models.Model.Historie;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -16,6 +18,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: Historie
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public ActionResult Index(PageInfo pageInfo)
         {
             HistorieModel historieModel = new HistorieModel(_db);

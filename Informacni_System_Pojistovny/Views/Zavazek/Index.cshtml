@@ -73,10 +73,12 @@
                     @Html.ActionLink("Přejít na pojistnou událost", "Details","PojistnaUdalost", new { id=item.PojistnaUdalost.PojistnaUdalostId })
                 </td>
                 <td>
-                    @Html.ActionLink("Detail", "Details", new { id=item.ZavazekId }) |
-
-                    @Html.ActionLink("Upravit", "Edit", new { id=item.ZavazekId }) |
-                    @Html.ActionLink("Smazat", "Delete", new { id=item.ZavazekId })
+                    @Html.ActionLink("Detail", "Details", new { id=item.ZavazekId })
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                        <span> | @Html.ActionLink("Upravit", "Edit", new { id=item.ZavazekId }) |</span>
+                        @Html.ActionLink("Smazat", "Delete", new { id=item.ZavazekId })
+                    }
                 </td>
             </tr>
         }

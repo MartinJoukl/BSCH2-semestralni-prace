@@ -36,14 +36,20 @@
             @Model.Klient
         </dd>
     </dl>
-    @Html.ActionLink("Upravit", "Edit",new { id= Model.PojistnaUdalostId}) |
+    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        <span>@Html.ActionLink("Upravit", "Edit",new { id= Model.PojistnaUdalostId}) |</span>
+    }
     <a asp-action="Index">Zpět na přehled</a>
             <p>
 
 </p>
     <h1>Závazky</h1>
         <p>
-        @Html.ActionLink("Vytvoření nového závazku", "Create","Zavazek", new { pojistnaUdalostId=Model.PojistnaUdalostId })
+        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+        {
+            @Html.ActionLink("Vytvoření nového závazku", "Create","Zavazek", new { pojistnaUdalostId=Model.PojistnaUdalostId })
+        }
 </p>
 
 <table class="table">
@@ -85,11 +91,11 @@
                             if (item.DatumSplaceni != null)
                             {
                     //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
-                                                                                                    <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                               <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
                             }
                             else
                             {
-                                                                                      <span>Nesplaceno</span>
+                              <span>Nesplaceno</span>
                             }
                         }
                                 </td>
@@ -97,11 +103,13 @@
                         @Html.DisplayFor(modelItem => item.Popis)
                                 </td>
                                 <td>
-                        @Html.ActionLink("Detail", "Details", "Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" }) |
-
-                        @Html.ActionLink("Upravit", "Edit","Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" }) |
-                        @Html.ActionLink("Smazat", "Delete","Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" })
-                                </td>
+                        @Html.ActionLink("Detail", "Details", "Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" })
+                        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                        {
+                            <span>| @Html.ActionLink("Upravit", "Edit","Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" }) | </span>
+                            @Html.ActionLink("Smazat", "Delete","Zavazek", new { id=item.ZavazekId, redirectedFrom= "PojistnaUdalost" })
+                        }
+                    </td>
                             </tr>
             }
     </tbody>

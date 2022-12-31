@@ -7,7 +7,10 @@
 <h1>Seznam poboček</h1>
 
 <p>
+                        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
     <a asp-action="Create">Přidat novou pobočku</a>
+                    }
 </p>
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
@@ -31,16 +34,22 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nazev)
-            </td>
-            <td>
-                @Html.ActionLink("Editace", "Edit", new { id=item.PobockaId }) |
-                @Html.ActionLink("Detaily", "Details", new { id=item.PobockaId }) |
-                @Html.ActionLink("Smazat", "Delete", new { id=item.PobockaId })
-            </td>
-        </tr>
+                                                    <tr>
+                                                        <td>
+                    @Html.DisplayFor(modelItem => item.Nazev)
+                                                        </td>
+                                                        <td>
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                        <span>@Html.ActionLink("Editace", "Edit", new { id=item.PobockaId }) |</span>
+                    }
+                    @Html.ActionLink("Detaily", "Details", new { id=item.PobockaId }) 
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                   <span>| @Html.ActionLink("Smazat", "Delete", new { id=item.PobockaId })</span>
+                    }
+                                                        </td>
+                                                    </tr>
         }
     </tbody>
 </table>

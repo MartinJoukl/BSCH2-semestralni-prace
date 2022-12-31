@@ -7,7 +7,10 @@
 <h1>Přehled podmínek</h1>
 
 <p>
+                        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
     <a asp-action="Create">Vytvořit novou podmínku</a>
+                    }
 </p>
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
@@ -42,10 +45,16 @@
                 @Html.DisplayFor(modelItem => item.Popis)
             </td>
             <td>
-                @Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Detaily", "Details", new {  id = item.ID }) |
-                @Html.ActionLink("Smazat", "Delete", new {  id = item.ID })
-            </td>
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                <span>@Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |</span>
+                    }
+                @Html.ActionLink("Detaily", "Details", new {  id = item.ID })
+                @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                {
+                  <span>| @Html.ActionLink("Smazat", "Delete", new {  id = item.ID })</span>
+                }
+                </td>
         </tr>
 }
     </tbody>

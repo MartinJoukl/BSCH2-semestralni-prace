@@ -18,7 +18,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PobockaController
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
@@ -33,7 +33,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PobockaController/Details/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
@@ -43,7 +43,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PobockaController/Create
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create()
         {
             PscModel pscModel = new PscModel(_db);
@@ -55,7 +55,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PobockaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(PobockaCreateModel pobockaEditModel)
         {
             if (ModelState.IsValid)
@@ -68,7 +68,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult AddAddress(int id)
         {
             PscModel pscModel = new PscModel(_db);
@@ -78,7 +78,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult AddAddress(AdresaInputModel adresa, int id)
         {
@@ -96,7 +96,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // Post: PobockaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id, PobockaEditModel pobockaEditModel)
         {
             if (ModelState.IsValid)
@@ -115,7 +115,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PobockaController/Edit/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id)
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
@@ -131,7 +131,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PobockaController/Delete/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id)
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
@@ -142,7 +142,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PobockaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id, PobockaEditModel pobockaEditModel)
         {
             PobockaModel pobockaModel = new PobockaModel(_db);
@@ -151,7 +151,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PobockaController/EditAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult EditAddress(int id, int redirectTo)
         {
             PscModel pscModel = new PscModel(_db);
@@ -164,7 +164,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // ´POST: PobockaController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult EditAddress(AdresaInputModel adresa, int id, int redirectTo, IFormCollection collection)
         {
@@ -179,7 +179,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PobockaController/DeleteAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult DeleteAddress(int id, int redirectTo)
         {
             PscModel pscModel = new PscModel(_db);
@@ -192,7 +192,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // POST: PobockaController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult DeleteAddress(AdresaInputModel adresa, int id, IFormCollection collection)
         {

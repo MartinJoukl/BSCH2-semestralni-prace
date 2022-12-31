@@ -7,7 +7,10 @@
 <h1>Správa PSČ</h1>
 
 <p>
-    <a asp-action="Create">Vytvořit novou PSČ</a>
+            @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        <a asp-action="Create">Vytvořit novou PSČ</a>
+    }
 </p>
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
@@ -41,9 +44,11 @@
                     @Html.DisplayFor(modelItem => item.Mesto)
                 </td>
                 <td>
-                    @Html.ActionLink("Editace", "Edit", new {  id=item.PscCislo }) |
-                    @Html.ActionLink("Detaily", "Details", new {  id=item.PscCislo }) |
-                    @Html.ActionLink("Smazat", "Delete", new {  id=item.PscCislo })
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                    <span>@Html.ActionLink("Editace", "Edit", new {  id=item.PscCislo }) | </span>
+                    <span>@Html.ActionLink("Smazat", "Delete", new {  id=item.PscCislo })</span>
+                    }
                 </td>
             </tr>
     }

@@ -3,8 +3,10 @@ using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
 using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -16,6 +18,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistnyProduktController
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
@@ -31,6 +34,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnyProduktController/Details/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
@@ -39,6 +43,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnyProduktController/Create
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create()
         {
             return View();
@@ -47,6 +52,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistnyProduktController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(PojistnyProduktInputModel pojistnyProduktInputModel)
         {
             if(ModelState.IsValid)
@@ -62,6 +68,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnyProduktController/Edit/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id)
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
@@ -72,6 +79,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistnyProduktController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id, PojistnyProduktInputModel pojistnyProduktInputModel)
         {
             if(ModelState.IsValid)
@@ -87,6 +95,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnyProduktController/Delete/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id)
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
@@ -97,6 +106,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistnyProduktController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id, PojistnyProduktInputModel pojistnyProduktInputModel)
         {
             try

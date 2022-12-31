@@ -25,14 +25,14 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
-            long count = uzivatelModel.GetCount(currentFilter);
+            long count = uzivatelModel.GetCount(CurrentFilter);
             ViewBag.count = count;
 
             ViewBag.PageSize = pageInfo.PageSize;
-            ViewBag.CurrentFilter = currentFilter;
+            ViewBag.CurrentFilter = CurrentFilter;
             ViewBag.PageIndex = pageInfo.PageIndex;
 
-            return View("Index", uzivatelModel.ListUzivatel(pageInfo, currentFilter));
+            return View("Index", uzivatelModel.ListUzivatel(pageInfo, CurrentFilter));
         }
 
         // GET: UzivatelController/Hierarchy

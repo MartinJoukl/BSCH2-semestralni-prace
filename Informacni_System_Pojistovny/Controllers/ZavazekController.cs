@@ -173,9 +173,9 @@ namespace Informacni_System_Pojistovny.Controllers
                     return RedirectToAction("Details", "PojistnaUdalost", new { id = original.PojistnaUdalost.PojistnaUdalostId });
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                ViewBag.errorMessage = ex.Message;
                 return View(model);
             }
         }

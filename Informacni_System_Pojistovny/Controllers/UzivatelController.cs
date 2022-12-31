@@ -275,7 +275,7 @@ namespace Informacni_System_Pojistovny.Controllers
             else
             {
                 ViewBag.errorMessage = "Uživatel nebyl nalezen";
-                return Index(new PageInfo(), null););
+                return Index(new PageInfo(), null);
             }
         }
 
@@ -305,7 +305,7 @@ namespace Informacni_System_Pojistovny.Controllers
             else
             {
                 ViewBag.errorMessage = "Uživatel nebyl nalezen";
-                return Index(new PageInfo());
+                return Index(new PageInfo(),null);
             }
         }
 

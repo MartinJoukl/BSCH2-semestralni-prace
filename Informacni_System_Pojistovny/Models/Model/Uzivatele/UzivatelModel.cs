@@ -102,7 +102,7 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
             return list;
         }
 
-        public List<Uzivatel> ListUzivatel(PageInfo pageInfo)
+        public List<Uzivatel> ListUzivatel(PageInfo pageInfo, string currentFilter = null)
         {
             Db db = new Db();
             List<Uzivatel> list = new List<Uzivatel>();
@@ -114,7 +114,20 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                 { ":pageSize", pageInfo.PageSize }
             };
 
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from uzivatele_view order by id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            string sql;
+            if (currentFilter != null)
+            {
+                sql = "select * from uzivatele_view where jmeno like '%' || :currentFilter || '%' or prijmeni like '%' || :currentFilter || '%' or mail like '%' || :currentFilter || '%' order by id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                parameters.Add(":currentFilter", currentFilter);
+                //sql = "select * from View_vsechny_osoby order by KLIENT_ID OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+            else
+            {
+                sql = "select * from uzivatele_view order by id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql, parameters, true);
+
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -146,11 +159,24 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
             return list;
         }
 
-        public long GetCount()
+        public long GetCount(string currentFilter)
         {
             long count = 0;
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from uzivatele_view");
+
+            OracleDataReader dr;
+            if (currentFilter != null)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object> {
+                    { ":currentFilter", currentFilter }
+                };
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from uzivatele_view where jmeno like '%' || :currentFilter || '%' or prijmeni like '%' || :currentFilter || '%' or mail like '%' || :currentFilter || '%'", parameters, true);
+            }
+            else
+            {
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from uzivatele_view");
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -172,7 +198,8 @@ namespace Informacni_System_Pojistovny.Models.Model.Uzivatele
                 { "p_mail", model.Mail },
                 { "p_jmeno", model.Jmeno },
                 { "p_prijmeni", model.Prijmeni },
-                { "p_uzivatel_role", model.Role.ToString().ToLower() }
+                { "p_uzivatel_role", model.Role.ToString().ToLower() },
+                { "p_manazer", model.ManazerId }
             };
 
             if (!string.IsNullOrEmpty(model.Heslo))

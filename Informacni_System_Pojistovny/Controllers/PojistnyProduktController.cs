@@ -16,13 +16,14 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistnyProduktController
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
-            List<PojistnyProdukt> pojistnyProdukts = pojistnyProduktModel.ReadInsuranceProducts(pageInfo);
+            List<PojistnyProdukt> pojistnyProdukts = pojistnyProduktModel.ReadInsuranceProducts(pageInfo, true, CurrentFilter);
 
-            long count = pojistnyProduktModel.GetCount();
+            long count = pojistnyProduktModel.GetCount(true, CurrentFilter);
             ViewBag.count = count;
+            ViewBag.CurrentFilter = CurrentFilter;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;

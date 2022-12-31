@@ -18,12 +18,13 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: ZavazkyController
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
-            List<Pohledavka> pohledavky = pohledavkaModel.ListPohledavka(pageInfo);
-            long count = pohledavkaModel.GetCount();
+            List<Pohledavka> pohledavky = pohledavkaModel.ListPohledavka(pageInfo, CurrentFilter);
+            long count = pohledavkaModel.GetCount(CurrentFilter);
             ViewBag.count = count;
+            ViewBag.CurrentFilter = CurrentFilter;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;

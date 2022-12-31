@@ -13,6 +13,7 @@ namespace Informacni_System_Pojistovny.Models.Model.HistorieClenstviModels
         }
 
         public List<HistorieClenstvi> ReadMembershipHistories(int id = 0) {
+            Db db = new Db();
             List<HistorieClenstvi> historieClenstvis = new List<HistorieClenstvi>();
 
             KlientModel klientModel = new KlientModel(db);

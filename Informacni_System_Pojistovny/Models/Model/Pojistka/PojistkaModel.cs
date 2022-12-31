@@ -145,9 +145,10 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
             return pojistky;
         }
 
-        public List<Entity.Pojistka> ReadInsurances(PageInfo pageInfo)
+        public List<Entity.Pojistka> ReadInsurances(PageInfo pageInfo, string currentFilter = null)
         {
             List<Entity.Pojistka> pojistky = new List<Entity.Pojistka>();
+            string sql;
 
             int pageStart = pageInfo.PageIndex * pageInfo.PageSize;
             Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -156,7 +157,17 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
                 { ":pageSize", pageInfo.PageSize }
             };
 
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select * from view_pojistky order by pojistka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY", parameters);
+            if (currentFilter != null)
+            {
+                sql = "select * from view_pojistky where nazev like '%' || :currentFilter || '%' order by pojistka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                parameters.Add(":currentFilter", currentFilter);
+            }
+            else
+            {
+                sql = "select * from view_pojistky order by pojistka_id OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            }
+
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql, parameters, true);
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -239,11 +250,24 @@ namespace Informacni_System_Pojistovny.Models.Model.Pojistka
             return pojistky;
         }
 
-        public long GetCount()
+        public long GetCount(string currentFilter = null)
         {
             long count = 0;
             Db db = new Db();
-            OracleDataReader dr = db.ExecuteRetrievingCommand("select count(*) as count from view_pojistky ");
+
+            OracleDataReader dr;
+            if (currentFilter != null)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object> {
+                    { ":currentFilter", currentFilter }
+                };
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from view_pojistky where nazev like '%' || :currentFilter || '%'", parameters, true);
+            }
+            else
+            {
+                dr = db.ExecuteRetrievingCommand("select count(*) as count from view_pojistky");
+            }
+
             if (dr.HasRows)
             {
                 while (dr.Read())

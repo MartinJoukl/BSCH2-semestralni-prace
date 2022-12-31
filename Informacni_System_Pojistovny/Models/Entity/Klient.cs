@@ -13,6 +13,12 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public List<PojistnaUdalost> PojistneUdalosti { get; set; } = new List<PojistnaUdalost>();
         public List<Pojistka> Pojistky { get; set; }
         public List<Dokument> Dokumenty { get; set; }
+        [Display(Name = "Suma nesplacených pohledávek klienta k pojišťovně po termínu")]
+        public int NesplacenePohledavkyPoTerminu { get; set; }
+        [Display(Name = "Suma nesplacených závazků pojišťovny ke klientovi po termínu")]
+        public int NesplaceneZavazkyPoTerminu { get; set; }
+        [Display(Name = "Suma pohledávek klienta k pojišťovně nad 20k po termínu")]
+        public int PohledavkyNad20k { get; set; }
 
         public override bool Equals(object? obj)
         {

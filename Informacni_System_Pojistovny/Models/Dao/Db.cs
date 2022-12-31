@@ -10,17 +10,20 @@
     {
 
         string connString = "Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = fei-sql3.upceucebny.cz)(PORT = 1521))) " +
-            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = BDAS))); User Id = st64135;Password=opice;";
+            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = BDAS))); User Id = st64134;Password=jouklj;";
         public OracleConnection Connection { get; private set; }
         public Db()
         {
             Connection = new OracleConnection(connString);
         }
 
-        public OracleDataReader ExecuteRetrievingCommand(string command, Dictionary<string, object> parameters = null)
+        public OracleDataReader ExecuteRetrievingCommand(string command, Dictionary<string, object> parameters = null, bool bindByName = false)
         {
             parameters = parameters ?? new Dictionary<string, object>();
             OracleCommand oracleCommand = new OracleCommand(command, Connection);
+            if (bindByName) {
+                oracleCommand.BindByName = true;
+            }
             foreach (var paramKey in parameters.Keys)
             {
                 oracleCommand.Parameters.Add(paramKey, parameters[paramKey]);
@@ -43,10 +46,14 @@
             return oracleCommand.ExecuteReader();
         }
 
-        public int ExecuteNonQuery(string command, Dictionary<string, object> parameters = null, bool returnsId = true, bool isProcedure = false, byte[]? blobBytes = null)
+        public int ExecuteNonQuery(string command, Dictionary<string, object> parameters = null, bool returnsId = true, bool isProcedure = false, byte[]? blobBytes = null, bool bindByName = false)
         {
             parameters = parameters ?? new Dictionary<string, object>();
             OracleCommand oracleCommand = new OracleCommand(command, Connection);
+            if (bindByName)
+            {
+                oracleCommand.BindByName = true;
+            }
             if (isProcedure)
             {
                 oracleCommand.CommandType = System.Data.CommandType.StoredProcedure;

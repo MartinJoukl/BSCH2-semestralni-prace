@@ -17,17 +17,18 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: ZavazkyController
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             ZavazekModel zavazekModel = new ZavazekModel(_db);
 
-            long count = zavazekModel.GetCount();
+            long count = zavazekModel.GetCount(CurrentFilter);
             ViewBag.count = count;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
+            ViewBag.CurrentFilter = CurrentFilter;
 
-            List<Zavazek> zavazky = zavazekModel.ListZavazek(pageInfo);
+            List<Zavazek> zavazky = zavazekModel.ListZavazek(pageInfo, CurrentFilter);
             return View(zavazky);
         }
 

@@ -25,17 +25,18 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: KlientController
         [Authorize(Roles = nameof(UzivateleRole.User))]
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             KlientModel klientModel = new KlientModel(_db);
 
-            long count = klientModel.GetCount();
+            long count = klientModel.GetCount(CurrentFilter);
             ViewBag.count = count;
+            ViewBag.CurrentFilter = CurrentFilter;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
 
-            return View(klientModel.ReadClients(pageInfo));
+            return View(klientModel.ReadClients(pageInfo, CurrentFilter));
         }
 
         // GET: KlientController/Details/5

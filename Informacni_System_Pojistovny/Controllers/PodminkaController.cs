@@ -18,17 +18,18 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PodminkyController
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PodminkaModel podminkaModel = new PodminkaModel(_db);
 
-            long count = podminkaModel.GetCount();
+            long count = podminkaModel.GetCount(CurrentFilter);
             ViewBag.count = count;
 
+            ViewBag.CurrentFilter = CurrentFilter;
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;
 
-            List<Podminka> podminky = podminkaModel.ReadConditions(pageInfo);
+            List<Podminka> podminky = podminkaModel.ReadConditions(pageInfo, CurrentFilter);
             return View(podminky);
         }
 

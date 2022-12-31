@@ -54,7 +54,7 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
             return pojistnyProdukts;
         }
 
-        public List<PojistnyProdukt> ReadInsuranceProducts(PageInfo pageInfo,bool activeInactive = true)
+        public List<PojistnyProdukt> ReadInsuranceProducts(PageInfo pageInfo,bool activeInactive = true, string currentFilter = null)
         {
             List<PojistnyProdukt> pojistnyProdukts = new List<PojistnyProdukt>();
 
@@ -66,16 +66,31 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
             };
 
             string sql;
-            if (activeInactive)
+            if (currentFilter != null)
             {
-                sql = "select * from view_pojistne_produkty OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                if (activeInactive)
+                {
+                    sql = "select * from view_pojistne_produkty where nazev like '%' || :currentFilter || '%' or popis like '%' || :currentFilter || '%' OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                    parameters.Add(":currentFilter", currentFilter);
+                }
+                else
+                {
+                    sql = "select * from view_pojistne_produkty where status = 'a' and (nazev like '%' || :currentFilter || '%' or popis like '%' || :currentFilter || '%') OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                    parameters.Add(":currentFilter", currentFilter);
+                }
             }
-            else
-            {
-                sql = "select * from view_pojistne_produkty where status = 'a'  OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+            else {
+                if (activeInactive)
+                {
+                    sql = "select * from view_pojistne_produkty OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                }
+                else
+                {
+                    sql = "select * from view_pojistne_produkty where status = 'a'  OFFSET :pageStart ROWS FETCH NEXT :pageSize ROWS ONLY";
+                }
             }
 
-            OracleDataReader dr = db.ExecuteRetrievingCommand(sql,parameters);
+            OracleDataReader dr = db.ExecuteRetrievingCommand(sql,parameters, true);
             if (dr.HasRows)
             {
                 while (dr.Read())
@@ -103,20 +118,44 @@ namespace Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels
             return pojistnyProdukts;
         }
 
-        public long GetCount(bool activeInactive = true)
+        public long GetCount(bool activeInactive = true, string currentFilter = null)
         {
             long count = 0;
             Db db = new Db();
             string sql;
-            if (activeInactive)
+            OracleDataReader dr;
+
+            if (currentFilter != null)
             {
-                sql = "select count(*) as count from view_pojistne_produkty";
+                if (activeInactive)
+                {
+                    Dictionary<string, object> parameters = new Dictionary<string, object> {
+                        { ":currentFilter", currentFilter }
+                    };
+                    sql = "select count(*) as count from view_pojistne_produkty where nazev like '%' || :currentFilter || '%' or popis like '%' || :currentFilter || '%'";
+                    dr = db.ExecuteRetrievingCommand(sql, parameters, true);
+                }
+                else
+                {
+                    Dictionary<string, object> parameters = new Dictionary<string, object> {
+                    { ":currentFilter", currentFilter }
+                    };
+                    sql = "select count(*) as count from view_pojistne_produkty where status = 'a' and (nazev like '%' || :currentFilter || '%' or popis like '%' || :currentFilter || '%')";
+                    dr = db.ExecuteRetrievingCommand(sql, parameters, true);
+                }
             }
-            else
-            {
-                sql = "select count(*) as count from view_pojistne_produkty where status = 'a'";
+            else {
+                if (activeInactive)
+                {
+                    sql = "select count(*) as count from view_pojistne_produkty";
+                    dr = db.ExecuteRetrievingCommand(sql);
+                }
+                else
+                {
+                    sql = "select count(*) as count from view_pojistne_produkty where status = 'a'";
+                    dr = db.ExecuteRetrievingCommand(sql);
+                }
             }
-            OracleDataReader dr = db.ExecuteRetrievingCommand(sql);
             if (dr.HasRows)
             {
                 while (dr.Read())

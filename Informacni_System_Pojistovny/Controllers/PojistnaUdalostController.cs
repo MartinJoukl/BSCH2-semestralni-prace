@@ -16,13 +16,14 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistnaUdalostController
-        public ActionResult Index(PageInfo pageInfo)
+        public ActionResult Index(PageInfo pageInfo, string CurrentFilter)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
-            List<PojistnaUdalost> pojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(pageInfo);
+            List<PojistnaUdalost> pojistneUdalosti = pojistnaUdalostModel.ListPojistnaUdalost(pageInfo, CurrentFilter);
 
-            long count = pojistnaUdalostModel.GetCount();
+            long count = pojistnaUdalostModel.GetCount(CurrentFilter);
             ViewBag.count = count;
+            ViewBag.CurrentFilter = CurrentFilter;
 
             ViewBag.PageSize = pageInfo.PageSize;
             ViewBag.PageIndex = pageInfo.PageIndex;

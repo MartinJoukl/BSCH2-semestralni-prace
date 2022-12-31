@@ -7,9 +7,15 @@
 
 <h1>Pohledávky</h1>
 
-<p>
-
-</p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Filtrovat dle řetězce: <input type="text" name="CurrentFilter" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Filtruj" class="btn btn-default" /> |
+            <a asp-action="Index">Zrušit filtr</a>
+        </p>
+    </div>
+</form>
 @Html.Partial("_paging")
 <table class="table">
     <thead>
@@ -38,42 +44,42 @@
     <tbody>
         @foreach (var item in Model)
         {
-                    <tr>
-                        <td>
-                    @Html.DisplayFor(modelItem => item.Vznik)
-                        </td>
-                        <td>
-                    @Html.DisplayFor(modelItem => item.DatumSplatnosti)
-                        </td>
-                        <td>
-                    @Html.DisplayFor(modelItem => item.Vyse)
-                        </td>
-                        <td>
-                    @{
-                        if (item.DatumSplaceni != null)
-                        {
-                        //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
-                                                                            <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
-                        }
-                        else
-                        {
-                                                              <span>Nesplaceno</span>
-                        }
-                    }
-                        </td>
-                        <td>
+            <tr>
+                <td>
+            @Html.DisplayFor(modelItem => item.Vznik)
+                </td>
+                <td>
+            @Html.DisplayFor(modelItem => item.DatumSplatnosti)
+                </td>
+                <td>
+            @Html.DisplayFor(modelItem => item.Vyse)
+                </td>
+                <td>
+            @{
+                if (item.DatumSplaceni != null)
+                {
+                    //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
+                    <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                }
+                else
+                {
+                    <span>Nesplaceno</span>
+                }
+            }
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Popis)
-                        </td>
-                        <td>
+                </td>
+                <td>
                     @Html.ActionLink("Přejít na pojistku", "Details","Pojistka", new { id=item.Pojistka.ID })
-                        </td>
-                        <td>
+                </td>
+                <td>
                     @Html.ActionLink("Detail", "Details", new { id=item.ID }) |
 
                     @Html.ActionLink("Upravit", "Edit", new { id=item.ID }) |
                     @Html.ActionLink("Smazat", "Delete", new { id=item.ID })
-                        </td>
-                    </tr>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

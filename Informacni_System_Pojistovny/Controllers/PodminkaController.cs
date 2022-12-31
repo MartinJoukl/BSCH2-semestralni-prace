@@ -41,6 +41,9 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PodminkaModel podminkaModel = new PodminkaModel(_db);
             Podminka podminka = podminkaModel.ReadCondition(id);
+            if (podminka == null) {
+              ViewBag.errorMessage = "Podmínka nebyla nalezena";
+            }
             return View(podminka);
         }
 
@@ -88,8 +91,9 @@ namespace Informacni_System_Pojistovny.Controllers
                 podminkaModel.ChangeCondition(id, podminkaCreateModel);
                 return RedirectToAction(nameof(Details), new { id });
             }
-            catch
+            catch(Exception ex)
             {
+                ViewBag.errorMessage = ex.Message;
                 return View();
             }
         }
@@ -100,6 +104,10 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PodminkaModel podminkaModel = new PodminkaModel(_db);
             Podminka podminka = podminkaModel.ReadCondition(id);
+            if(podminka == null)
+            {
+               ViewBag.errorMessage = "Podmínka nebyla nalezena";
+            }
             return View(podminka);
         }
 

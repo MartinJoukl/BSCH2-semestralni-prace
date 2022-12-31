@@ -5,22 +5,22 @@
 }
 
 <h1>                
-    @if (Model.Status == true)
+    @if (Model?.Status == true)
     {
         @Html.DisplayName("Zneaktivnění ")        
     }
-    @if (Model.Status == false)
+    @if (Model?.Status == false)
     {
         @Html.DisplayName("Zaktivnění ")
     } 
 pojistného produktu</h1>
 
 <h3>Chcete opravdu
-    @if (Model.Status == true)
+    @if (Model?.Status == true)
     {
         @Html.DisplayName("Zneaktivnit ")        
     }
-    @if (Model.Status == false)
+    @if (Model?.Status == false)
     {
         @Html.DisplayName("Zaktivnit ")
     } 
@@ -51,11 +51,11 @@ pojistného produktu</h1>
             @Html.DisplayNameFor(model => model.Status)
         </dt>
         <dd class="col-sm-10">
-            @if (Model.Status == true)
+            @if (Model?.Status == true)
             {
                 @Html.DisplayName("Aktivní")
             }
-            @if (Model.Status == false)
+            @if (Model?.Status == false)
             {
                 @Html.DisplayName("Neaktivní")
             }

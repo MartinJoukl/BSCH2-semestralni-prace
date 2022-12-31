@@ -39,7 +39,7 @@
             @Html.DisplayNameFor(model => model.Data)
         </dt>
         <dd class = "col-sm-10">
-            @Html.ActionLink("Stáhnout dokument", "DownloadDocument", new { documentId = Model.DokumentId })
+            @Html.ActionLink("Stáhnout dokument", "DownloadDocument", new { documentId = Model?.DokumentId })
         </dd>
     </dl>
     

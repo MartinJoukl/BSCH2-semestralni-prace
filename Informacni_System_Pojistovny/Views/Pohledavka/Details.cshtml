@@ -34,7 +34,7 @@
         </dt>
         <dd class = "col-sm-10">
             @{
-                if (Model.DatumSplaceni != null)
+                if (Model != null && Model.DatumSplaceni != null)
                 {
                 //Html.DisplayFor(modelItem => item.DatumSplaceni);
                                                                     <span>@(((DateTime)Model.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
@@ -55,14 +55,14 @@
             @Html.DisplayNameFor(model => model.Pojistka)
         </dt>
         <dd class = "col-sm-10">
-            @Html.ActionLink("Detail pojistky", "Details","Pojistka", new { id=Model.Pojistka.ID })
+            @Html.ActionLink("Detail pojistky", "Details","Pojistka", new { id=Model?.Pojistka.ID })
         </dd>
     </dl>
 </div>
 <div>
     @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
                     {
-   <span> @Html.ActionLink("Upravit", "Edit", new {  id = Model.ID }) |</span>
+   <span> @Html.ActionLink("Upravit", "Edit", new {  id = Model?.ID }) |</span>
                     }
     <a asp-action="Index">Zpět na přehled</a>
 

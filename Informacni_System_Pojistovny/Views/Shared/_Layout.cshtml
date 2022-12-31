@@ -91,6 +91,23 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (@ViewBag.errorMessage != null)
+            {
+                <div class="errorDiv" id="errorModal">
+                    <div class="closeModal">
+                            <div id="closeX">X</div>
+                    </div>
+                    <h5>Došlo k aplikační chybě</h5>
+                    @ViewBag.errorMessage
+                </div>
+                <script>
+                        let errorModal = document.querySelector("#errorModal")
+                            let close = document.querySelector("#closeX")
+                                    close.onclick = (event) =>{
+                                        errorModal.style.display="none"
+                            }
+                </script>
+            }
             @RenderBody()
         </main>
     </div>

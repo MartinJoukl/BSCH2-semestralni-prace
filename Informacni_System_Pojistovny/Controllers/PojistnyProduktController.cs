@@ -38,6 +38,10 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
             PojistnyProdukt pojistnyProdukt = pojistnyProduktModel.ReadInsuranceProduct(id);
+            if(pojistnyProdukt == null)
+            {
+                ViewBag.errorMessage = "Pojistný produkt nebyl nalezen";
+            }
             return View(pojistnyProdukt);
         }
 
@@ -99,6 +103,10 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
             PojistnyProdukt pojistnyProdukt = pojistnyProduktModel.ReadInsuranceProduct(id);
+            if (pojistnyProdukt == null)
+            {
+                ViewBag.errorMessage = "Pojistný produkt nebyl nalezen";
+            }
             return View(pojistnyProdukt);
         }
 

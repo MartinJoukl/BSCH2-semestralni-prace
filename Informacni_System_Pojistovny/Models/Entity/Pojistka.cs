@@ -18,6 +18,6 @@ namespace Informacni_System_Pojistovny.Models.Entity
         public List<Podminka> Podminky { get; set; } = new List<Podminka>();
         public Klient Klient { get; set; }
         [Display(Name = "Pohledávky")]
-        public List<Pohledavka> Pohledavky { get; set; }
+        public List<Pohledavka> Pohledavky { get; set; } = new List<Pohledavka>();
     }
 }

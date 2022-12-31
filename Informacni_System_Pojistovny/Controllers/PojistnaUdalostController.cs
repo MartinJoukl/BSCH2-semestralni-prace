@@ -6,6 +6,7 @@ using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
@@ -34,13 +35,19 @@ namespace Informacni_System_Pojistovny.Controllers
 
         // GET: PojistnaUdalostController/Details/5
         [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, string exceptionMessage)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
             PojistnaUdalost pojistnaUdalost = pojistnaUdalostModel.GetPojistnaUdalost(id);
             if (pojistnaUdalost == null)
             {
-                return RedirectToAction(nameof(Index));
+                ViewBag.errorMessage = "Pojistná událost nebyla nalezena";
+
+                //return RedirectToAction(nameof(Index));
+            }
+            else if(exceptionMessage != null)
+            {
+                ViewBag.errorMessage = exceptionMessage;
             }
             return View(pojistnaUdalost);
         }
@@ -77,18 +84,19 @@ namespace Informacni_System_Pojistovny.Controllers
                 Klient klient = klientModel.GetClient(model.KlientId);
                 if (klient == null)
                 {
+                    ViewBag.errorMessage = "Zvolený klient nebyl nalezen";
                     return View();
                 }
                 PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
                 pojistnaUdalostModel.CreatePojistnaUdalost(new PojistnaUdalost() { Klient = klient, NarokovanaVysePojistky = model.PojistnaUdalost.NarokovanaVysePojistky, Popis = model.PojistnaUdalost.Popis, Vznik = model.PojistnaUdalost.Vznik });
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
                 PojistnaUdalost pojistneUdalosti = new PojistnaUdalost();
                 KlientModel klientModel = new KlientModel(_db);
                 List<Klient> klients = klientModel.ReadClients();
-
+                ViewBag.errorMessage = ex.Message;
                 return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
             }
         }
@@ -98,11 +106,15 @@ namespace Informacni_System_Pojistovny.Controllers
         public ActionResult Edit(int id)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
-            PojistnaUdalost pojistneUdalosti = pojistnaUdalostModel.GetPojistnaUdalost(id);
+            PojistnaUdalost pojistnaUdalost = pojistnaUdalostModel.GetPojistnaUdalost(id);
+            if (pojistnaUdalost == null)
+            {
+                ViewBag.errorMessage = "Pojistná událost nebyla nalezena";
+            }
             KlientModel klientModel = new KlientModel(_db);
             List<Klient> klients = klientModel.ReadClients();
 
-            return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistneUdalosti });
+            return View(new PojistnaUdalostCreateEditModel() { Klients = klients, PojistnaUdalost = pojistnaUdalost });
         }
 
         // POST: PojistnaUdalostController/Edit/5
@@ -157,7 +169,8 @@ namespace Informacni_System_Pojistovny.Controllers
             PojistnaUdalost pojistnaUdalost = pojistnaUdalostModel.GetPojistnaUdalost(id);
             if (pojistnaUdalost == null)
             {
-                return RedirectToAction(nameof(Index));
+                ViewBag.errorMessage = "Pojistná událost nebyla nalezena";
+                // return RedirectToAction(nameof(Index));
             }
             return View(pojistnaUdalost);
         }
@@ -172,11 +185,12 @@ namespace Informacni_System_Pojistovny.Controllers
             try
             {
                 pojistnaUdalostModel.DeletePojistnaUdalost(id);
-                return RedirectToAction(nameof(Details), new { id });
+                return RedirectToAction(nameof(Index), new { id });
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction(nameof(Delete), new { id });
+                ViewBag.errorMessage = ex.Message;
+                return RedirectToAction(nameof(Details), new { id, exceptionMessage = ex.Message });
             }
         }
     }

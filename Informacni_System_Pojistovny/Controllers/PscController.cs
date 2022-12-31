@@ -32,12 +32,6 @@ namespace Informacni_System_Pojistovny.Controllers
 
             return View(pscModel.ReadPscs(pageInfo));
         }
-        // GET: PscController/Details/5
-        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: PscController/Create
         [HttpPost]
@@ -93,6 +87,9 @@ namespace Informacni_System_Pojistovny.Controllers
         {
             PscModel pscModel = new PscModel(_db);
             Psc psc = pscModel.ReadPsc(id);
+            if(psc == null) {
+                ViewBag.errorMessage = "Psč nebylo nalezeno";
+            }
             return View(psc);
         }
 

@@ -35,7 +35,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: UzivatelController/Hierarchy
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public ActionResult Hierarchy()
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
@@ -55,6 +55,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             else
             {
+                ViewBag.errorMessage = "Uživatel nebyl nalezen";
                 return Index(new PageInfo());
             }
         }
@@ -91,6 +92,7 @@ namespace Informacni_System_Pojistovny.Controllers
                 catch
                 {
                     ViewData["error"] = "Registrace selhala";
+                    ViewBag.errorMessage = "Registrace selhala";
                     return View();
                 }
             }
@@ -132,6 +134,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             else
             {
+                ViewBag.errorMessage = "Přihlášení se nezdařilo";
                 return LoginGet(model.RedirectToUrl);
             }
         }
@@ -270,6 +273,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             else
             {
+                ViewBag.errorMessage = "Uživatel nebyl nalezen";
                 return Index(new PageInfo());
             }
         }
@@ -292,8 +296,16 @@ namespace Informacni_System_Pojistovny.Controllers
             Uzivatel editovany = uzivatelModel.GetUzivatel(id);
             List<SelectListItem> uzivateleBag = uzivatelModel.ListUzivatelSelectItemsWithoutCurrentUserWithNull(id);
             ViewBag.uzivatele = uzivateleBag;
-            int? manazerId = editovany.Manazer == null? null : editovany.Manazer.Id;
-            return View(new EditUserModel() { Id = id, Role = editovany.Role, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni, ManazerId = manazerId });
+            int? manazerId = editovany?.Manazer == null? null : editovany?.Manazer?.Id;
+            if (editovany != null)
+            {
+                return View(new EditUserModel() { Id = id, Role = editovany.Role, Jmeno = editovany.Jmeno, Mail = editovany.Email, Prijmeni = editovany.Prijmeni, ManazerId = manazerId });
+            }
+            else
+            {
+                ViewBag.errorMessage = "Uživatel nebyl nalezen";
+                return Index(new PageInfo());
+            }
         }
 
         // GET: UzivatelController/Edit

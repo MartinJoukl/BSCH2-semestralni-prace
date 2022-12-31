@@ -5,9 +5,11 @@ using Informacni_System_Pojistovny.Models.Model.PodminkaModels;
 using Informacni_System_Pojistovny.Models.Model.PohledavkaModels;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnyProduktModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -20,6 +22,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistkaController
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Index(PageInfo pageInfo)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
@@ -34,6 +37,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistkaController/Details/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
@@ -43,6 +47,7 @@ namespace Informacni_System_Pojistovny.Controllers
             return View(pojistka);
         }
 
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult AddCondition(int id)
         {
             PodminkaModel podminkaModel = new PodminkaModel(_db);
@@ -53,6 +58,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult AddCondition(int id, PojistkaAddConditionModel pojistkaAddConditionModel)
         {
             if (ModelState.IsValid)
@@ -65,6 +71,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistkaController/Create
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create()
         {
             PojistnyProduktModel pojistnyProduktModel = new PojistnyProduktModel(_db);
@@ -77,6 +84,7 @@ namespace Informacni_System_Pojistovny.Controllers
             return View();
         }
         // GET: PojistkaController/RemoveCondition
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult RemoveCondition(int id, int redirectTo) { 
             PodminkaModel podminkaModel = new PodminkaModel(_db);
             podminkaModel.RemoveConditionFromInsurance(id, redirectTo);
@@ -86,6 +94,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistkaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(PojistkaCreateModel pojistkaCreateModel)
         {
             if(ModelState.IsValid)
@@ -101,6 +110,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistkaController/Edit/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
@@ -111,6 +121,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistkaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id, PojistkaEditModel pojistkaEditModel)
         {
             if(ModelState.IsValid)
@@ -126,6 +137,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistkaController/Delete/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
@@ -136,6 +148,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistkaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
@@ -152,6 +165,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
 
         // GET: PojistkaController/PermanentDelete/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult PermanentDelete(int id)
         {
             PojistkaModel pojistkaModel = new PojistkaModel(_db);
@@ -162,6 +176,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistkaController/PermanentDelete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult PermanentDelete(int id, IFormCollection collection)
         {
             try

@@ -77,7 +77,10 @@
         }
     </dl>
     <h4>Adresy klienta</h4>
-    @Html.ActionLink("Přidat adresu", "AddAddress", new { id = ViewContext.RouteData.Values["id"] })
+    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        @Html.ActionLink("Přidat adresu", "AddAddress", new { id = ViewContext.RouteData.Values["id"] })
+    }
     <hr />
 </div>
 <table class="table">
@@ -115,11 +118,14 @@
                     @adresa.CisloPopisne
                 </td>
                 <td>
-                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId, redirectTo = Model.KlientId })
-                    @if (Model.Adresy.Count > 1)
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
                     {
-                        <span>|</span>
-                        @Html.ActionLink("Smazat adresu", "DeleteAddress", new { id = adresa.AdresaId, redirectTo = Model.KlientId })
+                        @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId, redirectTo = Model.KlientId })
+                        @if (Model.Adresy.Count > 1)
+                        {
+                            <span>|</span>
+                            @Html.ActionLink("Smazat adresu", "DeleteAddress", new { id = adresa.AdresaId, redirectTo = Model.KlientId })
+                        }
                     }
                 </td>
             </tr>
@@ -129,7 +135,10 @@
 
 <h4>Pojistky klienta</h4>
 <p>
-    @Html.ActionLink("Vytvoření nové pojistky", "Create","Pojistka", new { id = Model.KlientId })
+       @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        @Html.ActionLink("Vytvoření nové pojistky", "Create","Pojistka", new { id = Model.KlientId })
+    }
 </p>
 <hr />
 <table class="table">
@@ -191,7 +200,10 @@
 
 <h4>Pojistné události klienta</h4>
 <p>
-    @Html.ActionLink("Vytvoření nové pojistné události", "Create","PojistnaUdalost", new { id = Model.KlientId })
+    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        @Html.ActionLink("Vytvoření nové pojistné události", "Create","PojistnaUdalost", new { id = Model.KlientId })
+    }
 </p>
 <hr />
 <table class="table">
@@ -259,7 +271,10 @@
 
 <h4>Dokumenty klienta</h4>
 <p>
-    @Html.ActionLink("Nahrát nový dokument", "AddDocument", new { id = Model.KlientId })
+    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        @Html.ActionLink("Nahrát nový dokument", "AddDocument", new { id = Model.KlientId })
+    }
 </p>
 <hr />
 <table class="table">
@@ -305,7 +320,10 @@
                     @Html.ActionLink("Stáhnout dokument", "DownloadDocument", new { documentId = dokument.DokumentId, redirectTo = Model.KlientId })
                 </td>
                 <td>
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
                     @Html.ActionLink("Smazat dokument", "DeleteDocument", new { id = dokument.DokumentId, redirectTo = Model.KlientId })
+                    }
                 </td>
              </tr>
         }
@@ -313,6 +331,9 @@
 </table>
 
 <div>
-    @Html.ActionLink("Upravit klienta", "Edit", new { id = ViewContext.RouteData.Values["id"] }) |
+    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+    <span>@Html.ActionLink("Upravit klienta", "Edit", new { id = ViewContext.RouteData.Values["id"] }) |</span>
+                    }
     <a asp-action="Index">Zpět na přehled klientů</a>
 </div>

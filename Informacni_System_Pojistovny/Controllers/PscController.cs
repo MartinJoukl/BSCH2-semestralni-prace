@@ -19,7 +19,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PscController
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Index(PageInfo pageInfo)
         {
             PscModel pscModel = new PscModel(_db);
@@ -32,18 +32,17 @@ namespace Informacni_System_Pojistovny.Controllers
 
             return View(pscModel.ReadPscs(pageInfo));
         }
-
         // GET: PscController/Details/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
             return View();
         }
 
         // GET: PscController/Create
-        [Authorize(Roles = nameof(UzivateleRole.User))]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(Psc psc)
         {
             if (ModelState.IsValid)
@@ -58,14 +57,14 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Create
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create()
         {
             return View();
         }
 
         // GET: PscController/Edit/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(string id)
         {
             PscModel pscModel = new PscModel(_db);
@@ -74,7 +73,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // POST: PscController/Edit/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, PscEditModel pscEditModel)
@@ -89,6 +88,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PscController/Delete/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(string id)
         {
             PscModel pscModel = new PscModel(_db);
@@ -99,6 +99,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PscController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(string id, Psc psc)
         {
             try

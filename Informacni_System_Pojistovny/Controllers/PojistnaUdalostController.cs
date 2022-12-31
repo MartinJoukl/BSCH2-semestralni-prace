@@ -3,8 +3,10 @@ using Informacni_System_Pojistovny.Models.Entity;
 using Informacni_System_Pojistovny.Models.Model;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -16,6 +18,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: PojistnaUdalostController
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Index(PageInfo pageInfo)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
@@ -30,6 +33,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnaUdalostController/Details/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
@@ -42,6 +46,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnaUdalostController/Create
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(int id = 0)
         {
             PojistnaUdalost pojistneUdalosti = new PojistnaUdalost();
@@ -54,6 +59,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistnaUdalostController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(PojistnaUdalostCreateModel model)
         {
             ModelState.Remove("PojistnaUdalost.Klient");
@@ -88,6 +94,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnaUdalostController/Edit/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
@@ -101,6 +108,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistnaUdalostController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id, PojistnaUdalostEditModel model)
         {
             string klientId = model.KlientId;
@@ -142,6 +150,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PojistnaUdalostController/Delete/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);
@@ -156,6 +165,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PojistnaUdalostController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             PojistnaUdalostModel pojistnaUdalostModel = new PojistnaUdalostModel(_db);

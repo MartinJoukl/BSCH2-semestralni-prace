@@ -8,7 +8,10 @@
 <h1>Správa klientů</h1>
 
 <p>
-    <a asp-action="Create">Vytvořit nového klienta</a>
+   @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        <a asp-action="Create">Vytvořit nového klienta</a>
+    }
 </p>
 @Html.Partial("_paging")
 
@@ -43,64 +46,73 @@
         </tr>
     </thead>
     <tbody>
-    @foreach (var klient in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => klient.KlientId)
-            </td>
-            <td>
-                @if (klient.Stav)
+        @foreach (var klient in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => klient.KlientId)
+                </td>
+                <td>
+                    @if (klient.Stav)
+                    {
+                        @Html.DisplayName("Aktivní")
+                    }
+                    else
+                    {
+                        @Html.DisplayName("Neaktivní")
+                    }
+                </td>
+
+                @if (klient.GetType() == typeof(FyzickaOsoba))
                 {
-                    @Html.DisplayName("Aktivní")
+                    FyzickaOsoba klientFyz = klient as FyzickaOsoba;
+                                <td>
+                                    <!-- Fyz. osoba nema ico -->
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => klientFyz.Jmeno)
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => klientFyz.Prijmeni)
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => klientFyz.RodneCislo)
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => klientFyz.Telefon)
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => klientFyz.Email)
+                                </td>
                 }
                 else
                 {
-                    @Html.DisplayName("Neaktivní")
+                    PravnickaOsoba pravnickaOsoba = (PravnickaOsoba)klient;
+                                <td>
+                        @Html.DisplayFor(modelItem => pravnickaOsoba.Ico)
+                                </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => pravnickaOsoba.Nazev)
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                 }
-            </td>
+                <td>
 
-            @if (klient.GetType() == typeof(FyzickaOsoba))
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
                     {
-                        FyzickaOsoba klientFyz = klient as FyzickaOsoba;
-                        <td>
-                            <!-- Fyz. osoba nema ico -->
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => klientFyz.Jmeno)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => klientFyz.Prijmeni)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => klientFyz.RodneCislo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => klientFyz.Telefon)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => klientFyz.Email)
-                        </td>
-                    } else
-                    {
-                        PravnickaOsoba pravnickaOsoba = (PravnickaOsoba)klient;
-                        <td>
-                            @Html.DisplayFor(modelItem => pravnickaOsoba.Ico)
-                        </td>
-                        <td>
-                             @Html.DisplayFor(modelItem => pravnickaOsoba.Nazev)
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                                     <span>@Html.ActionLink("Editovat", "Edit", new { id=klient.KlientId }) |</span>
                     }
-            <td>
-                @Html.ActionLink("Editovat", "Edit", new { id=klient.KlientId }) |
-                @Html.ActionLink("Detail", "Details", new { id=klient.KlientId }) |
-                @Html.ActionLink(klient.Stav? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=klient.KlientId })
-            </td>
-        </tr>
+                    @Html.ActionLink("Detail", "Details", new { id=klient.KlientId })
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                             <span>| @Html.ActionLink(klient.Stav? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=klient.KlientId })</span>
+                    }
+                </td>
+            </tr>
 
-    }
+        }
     </tbody>
 </table>

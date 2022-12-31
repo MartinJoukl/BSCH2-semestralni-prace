@@ -5,8 +5,10 @@ using Informacni_System_Pojistovny.Models.Model.PohledavkaModels;
 using Informacni_System_Pojistovny.Models.Model.Pojistka;
 using Informacni_System_Pojistovny.Models.Model.PojistnaUdalostModels;
 using Informacni_System_Pojistovny.Models.Model.ZavazekModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Informacni_System_Pojistovny.Controllers
 {
@@ -18,6 +20,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: ZavazkyController
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Index(PageInfo pageInfo)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
@@ -31,6 +34,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: ZavazkyController/Details/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
@@ -43,6 +47,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: PohledavkyController/Create
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(int pojistkaId)
         {
             ViewBag.pojistkaId = pojistkaId;
@@ -52,6 +57,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: PohledavkyController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(PohledavkaCreateModel pohledavkaCreateModel)
         {
             if (!ModelState.IsValid || pohledavkaCreateModel.Vznik > pohledavkaCreateModel.DatumSplatnosti)
@@ -78,6 +84,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: ZavazkyController/Edit/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id, string redirectedFrom)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
@@ -92,6 +99,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: ZavazkyController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id, RedirectablePohledavka model)
         {
             try
@@ -121,6 +129,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: ZavazkyController/Delete/5
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id, string redirectedFrom)
         {
             PohledavkaModel pohledavkaModel = new PohledavkaModel(_db);
@@ -135,6 +144,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: ZavazkyController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id, RedirectablePohledavka model)
         {
             try

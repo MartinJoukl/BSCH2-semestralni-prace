@@ -7,7 +7,10 @@
 <h1>Správa pojistných produktů</h1>
 
 <p>
-    <a asp-action="Create">Vytvořit nový pojistný produkt</a>
+    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        <a asp-action="Create">Vytvořit nový pojistný produkt</a>
+    }
 </p>
 @Html.Partial("_paging")
 <table class="table">
@@ -57,9 +60,15 @@
                 }
             </td>
             <td>
-                @Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Detaily", "Details", new { id = item.ID }) |
-                @Html.ActionLink(item.Status? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=item.ID })
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                <span>@Html.ActionLink("Editovat", "Edit", new { id = item.ID }) | </span>
+                    }
+                @Html.ActionLink("Detaily", "Details", new { id = item.ID }) 
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                <span> | @Html.ActionLink(item.Status? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=item.ID })</span>
+                    }
             </td>
         </tr>
 }

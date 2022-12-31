@@ -55,7 +55,10 @@
         </dd>
     </dl>
     <h4>Podmínky pojistky</h4>
+        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
         @Html.ActionLink("Přidat podmínku", "AddCondition", new { id = ViewContext.RouteData.Values["id"]})
+                    }
     <hr/>
 </div>
 <table class="table">
@@ -76,21 +79,30 @@
                     @podminka.Popis
                 </td>
                 <td>
-                    @Html.ActionLink("Odebrat podmínku", "RemoveCondition", new {  id = podminka.ID, redirectTo = Model.ID})
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                        @Html.ActionLink("Odebrat podmínku", "RemoveCondition", new {  id = podminka.ID, redirectTo = Model.ID})
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
 <div>
-    @Html.ActionLink("Editovat", "Edit", new {  id = Model.ID }) |
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+    <span>@Html.ActionLink("Editovat", "Edit", new {  id = Model.ID }) |</span>
+                    }
     <a asp-action="Index">Zpět na přehled pojistek</a>
                 <p>
 
 </p>
     <h1>Pohledávky</h1>
         <p>
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
         @Html.ActionLink("Vytvoření nové pohledávky", "Create","Pohledavka", new { pojistkaId=Model.ID })
+                    }
 </p>
 
 <table class="table">
@@ -132,11 +144,11 @@
                             if (item.DatumSplaceni != null)
                             {
                     //Html.DisplayFor(modelItem => item.DatumSplaceni);  -- hmm, s dateTime? to hodně funguje...
-                                                                                                                                        <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
+                                   <span>@(((DateTime)item.DatumSplaceni).ToString("dd.MM.yyyy"))</span>
                             }
                             else
                             {
-                                                                                                                          <span>Nesplaceno</span>
+                                   <span>Nesplaceno</span>
                             }
                         }
                                             </td>
@@ -144,11 +156,13 @@
                         @Html.DisplayFor(modelItem => item.Popis)
                                             </td>
                                             <td>
-                        @Html.ActionLink("Detail", "Details", "Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" }) |
-
-                        @Html.ActionLink("Upravit", "Edit","Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" }) |
-                        @Html.ActionLink("Smazat", "Delete","Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" })
-                                            </td>
+                        @Html.ActionLink("Detail", "Details", "Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" })
+                        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                        {
+                            <span> | @Html.ActionLink("Upravit", "Edit","Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" }) | </span>
+                            @Html.ActionLink("Smazat", "Delete","Pohledavka", new { id=item.ID, redirectedFrom= "Pojistka" })
+                        }
+                    </td>
                                         </tr>
             }
     </tbody>

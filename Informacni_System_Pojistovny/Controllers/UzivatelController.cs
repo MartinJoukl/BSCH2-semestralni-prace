@@ -19,7 +19,7 @@ namespace Informacni_System_Pojistovny.Controllers
             _db = db;
         }
         // GET: UzivatelController
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public ActionResult Index(PageInfo pageInfo)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
@@ -33,7 +33,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: UzivatelController/Details/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public ActionResult Details(int id)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
@@ -167,7 +167,8 @@ namespace Informacni_System_Pojistovny.Controllers
     CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(Index), "Home");
         }
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public async Task<ActionResult> ImpersonifikaceAsync(int id)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
@@ -227,8 +228,9 @@ namespace Informacni_System_Pojistovny.Controllers
 
             return RedirectToAction(nameof(Index), "Home");
         }
+
         [HttpGet]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult ZrusImpersonifikaci()
         {
             string originalId = HttpContext.User.Claims.Where((claim) => claim.Type == "originalId").First().Value;
@@ -246,7 +248,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
 
         // GET: UzivatelController/Delete/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public ActionResult Delete(int id)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
@@ -262,7 +264,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: UzivatelController/EditOwnProfile
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult EditOwnProfile()
         {
             int id = int.Parse(HttpContext.User.Claims.Where((claim) => claim.Type == "Id").First().Value);
@@ -272,7 +274,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: UzivatelController/Edit
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public ActionResult Edit(int id)
         {
             UzivatelModel uzivatelModel = new UzivatelModel(_db);
@@ -280,8 +282,8 @@ namespace Informacni_System_Pojistovny.Controllers
             return View(new EditUserModel() { Id = id, Jmeno = editovany.Jmeno, Role = editovany.Role, Mail = editovany.Email, Prijmeni = editovany.Prijmeni });
         }
 
-        // GET: UzivatelController/EditOwnProfile
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        // GET: UzivatelController/Edit
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         [HttpPost]
         [ActionName("Edit")]
         public ActionResult EditPost(EditUserModel model)
@@ -299,7 +301,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: UzivatelController/EditOwnProfile
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         [ActionName("EditOwnProfile")]
         public ActionResult EditOwnProfilePost(EditOwnProfileModel model)
@@ -316,7 +318,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: UzivatelController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = nameof(UzivateleRole.Admin))]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

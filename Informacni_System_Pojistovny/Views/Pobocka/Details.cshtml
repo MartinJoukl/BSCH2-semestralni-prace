@@ -21,7 +21,10 @@
     <h4>Adresa pobočky</h4>
     @if (Model.Adresa == null)
     {
-        @Html.ActionLink("Přidat adresu", "AddAddress", new { id = ViewContext.RouteData.Values["id"] })
+        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+        {
+            @Html.ActionLink("Přidat adresu", "AddAddress", new { id = ViewContext.RouteData.Values["id"] })
+        }
     }
     <hr />
 </div>
@@ -61,13 +64,19 @@
                 @adresa.CisloPopisne
                 </td>
                 <td>
-                    @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId, redirectTo = Model.PobockaId })
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                        @Html.ActionLink("Změnit adresu", "EditAddress", new { id = adresa.AdresaId, redirectTo = Model.PobockaId })
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
 <div>
-    @Html.ActionLink("Upravit pobočku", "Edit", new { id=Model.PobockaId }) |
+    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+   <span>@Html.ActionLink("Upravit pobočku", "Edit", new { id=Model.PobockaId }) |</span>
+                    }
     <a asp-action="Index">Zpět na přehled poboček</a>
 </div>

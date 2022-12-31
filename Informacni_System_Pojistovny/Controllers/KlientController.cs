@@ -24,7 +24,7 @@ namespace Informacni_System_Pojistovny.Controllers
 
 
         // GET: KlientController
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)} ")]
         public ActionResult Index(PageInfo pageInfo)
         {
             KlientModel klientModel = new KlientModel(_db);
@@ -39,7 +39,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Details/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Details(int id)
         {
             KlientModel klientDb = new KlientModel(_db);
@@ -50,7 +50,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Create
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create()
         {
             PscModel pscModel = new PscModel(_db);
@@ -60,7 +60,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult AddAddress(int id)
         {
             PscModel pscModel = new PscModel(_db);
@@ -70,7 +70,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // POST: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult AddAddress(AdresaInputModel adresa, int id)
         {
@@ -83,7 +83,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/EditAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult EditAddress(int id, int redirectTo)
         {
             PscModel pscModel = new PscModel(_db);
@@ -96,7 +96,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // ´POST: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult EditAddress(AdresaInputModel adresa, int id, IFormCollection collection)
         {
@@ -111,7 +111,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/DeleteAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult DeleteAddress(int id, int redirectTo)
         {
             PscModel pscModel = new PscModel(_db);
@@ -124,7 +124,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // ´POST: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult DeleteAddress(AdresaInputModel adresa, int id, IFormCollection collection)
         {
@@ -137,7 +137,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: KlientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Create(KlientCreateModel model, IFormCollection collection)
         {
             if (collection["zvolenyTypOsoby"].Equals("F"))
@@ -162,7 +162,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Edit/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id)
         {
             KlientModel klientDb = new KlientModel(_db);
@@ -180,7 +180,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: KlientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Edit(int id, KlientEditModel model, IFormCollection collection)
         {
             if (collection["zvolenyTypOsoby"].Equals("F"))
@@ -209,7 +209,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/Delete/5
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id)
         {
             KlientModel klientDb = new KlientModel(_db);
@@ -225,7 +225,7 @@ namespace Informacni_System_Pojistovny.Controllers
         // POST: KlientController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult Delete(int id, KlientEditModel klient)
         {
             try
@@ -241,7 +241,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult AddDocument(int id)
         {
             KlientModel klientModel = new KlientModel(_db);
@@ -251,7 +251,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.User)},{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult DownloadDocument(int documentId)
         {
             KlientModel klientModel = new KlientModel(_db);
@@ -261,7 +261,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // POST: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult AddDocument(DokumentUploadModel dokumentUploadModel, int id)
         {
@@ -276,7 +276,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // GET: KlientController/DeleteAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         public ActionResult DeleteDocument(int id, int redirectTo)
         {
             KlientModel klientModel = new KlientModel(_db);
@@ -287,7 +287,7 @@ namespace Informacni_System_Pojistovny.Controllers
         }
 
         // ´POST: KlientController/AddAddress
-        [Authorize(Roles = nameof(UzivateleRole.User))]
+        [Authorize(Roles = $"{nameof(UzivateleRole.PriviledgedUser)},{nameof(UzivateleRole.Admin)}")]
         [HttpPost]
         public ActionResult DeleteDocument(Dokument dokument, int id, IFormCollection collection)
         {

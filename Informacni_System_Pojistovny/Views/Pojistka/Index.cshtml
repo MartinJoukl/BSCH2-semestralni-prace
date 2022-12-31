@@ -7,7 +7,10 @@
 <h1>Správa pojistek</h1>
 
 <p>
+   @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+   {
     <a asp-action="Create">Vytvořit novou pojistku</a>
+   }
 </p>
 @Html.Partial("_paging")
 <table class="table">
@@ -69,10 +72,16 @@
                 @Html.DisplayFor(modelItem => item.Klient.CeleJmeno)
             </td>
             <td>
-                @Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Detaily", "Details", new { id = item.ID }) |
-                @Html.ActionLink(item.Status? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=item.ID }) |
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                        <span>@Html.ActionLink("Editovat", "Edit", new { id = item.ID }) |</span>
+                    }
+                @Html.ActionLink("Detaily", "Details", new { id = item.ID }) 
+                    @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                    {
+                <span> | @Html.ActionLink(item.Status? "Zneaktivnit" : "Zaktivnit", "Delete", new {  id=item.ID }) |</span>
                 @Html.ActionLink("Smazat", "PermanentDelete", new { id = item.ID })
+                    }
             </td>
         </tr>
 }

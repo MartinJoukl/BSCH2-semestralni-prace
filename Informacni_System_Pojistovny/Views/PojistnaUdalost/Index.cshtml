@@ -9,7 +9,10 @@
 <h1>Přehled pojistných událostí</h1>
 
 <p>
-    <a asp-action="Create">Vytvořit novou pojistnou událost</a>
+        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+    {
+        <a asp-action="Create">Vytvořit novou pojistnou událost</a>
+    }
 </p>
 @Html.Partial("_paging")
 <table class="table">
@@ -47,9 +50,15 @@
             </td>
                 <td>
                     <div class="noWrap">
-                    @Html.ActionLink("Upravit", "Edit", new { id=item.PojistnaUdalostId }) |
-                    @Html.ActionLink("Detail", "Details", new { id=item.PojistnaUdalostId }) |
-                    @Html.ActionLink("Smazat", "Delete", new { id=item.PojistnaUdalostId })
+                        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                        {
+                            <span>@Html.ActionLink("Upravit", "Edit", new { id=item.PojistnaUdalostId }) |</span>
+                        }
+                        @Html.ActionLink("Detail", "Details", new { id=item.PojistnaUdalostId })
+                        @if (Context.User.IsInRole(UzivateleRole.Admin.ToString()) || Context.User.IsInRole(UzivateleRole.PriviledgedUser.ToString()))
+                        {
+                        <span> | @Html.ActionLink("Smazat", "Delete", new { id=item.PojistnaUdalostId })</span>
+                        }
                     </div>
             </td>
         </tr>

@@ -10,7 +10,7 @@
     {
 
         string connString = "Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = fei-sql3.upceucebny.cz)(PORT = 1521))) " +
-            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = BDAS))); User Id = st64134;Password=jouklj;";
+            "(CONNECT_DATA = (SERVER = DEDICATED)(SID = BDAS))); User Id = st64135;Password=opice;";
         public OracleConnection Connection { get; private set; }
         public Db()
         {

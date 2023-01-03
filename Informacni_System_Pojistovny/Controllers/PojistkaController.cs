@@ -191,6 +191,7 @@ namespace Informacni_System_Pojistovny.Controllers
             }
             catch
             {
+                ViewBag.errorMessage = "Nastala chyba při změně stavu pojistky";
                 return View();
             }
         }
